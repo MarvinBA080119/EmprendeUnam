@@ -58,6 +58,15 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        // Acciones del administrador (activar, aprobar, rechazar, responder).
+        'admin' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/admin.log'),
+            'level' => 'info',
+            'days' => env('LOG_ADMIN_DAYS', 365),
+            'replace_placeholders' => true,
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

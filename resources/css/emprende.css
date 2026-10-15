@@ -179,3 +179,26 @@ main {
     color: var(--emp-cafe);
     padding: 0.5rem 1rem;
 }
+
+/* --- Alertas con la paleta: fondo claro, borde lateral y texto negro ---- */
+.alert {
+    color: var(--emp-negro);
+    background-color: var(--emp-blanco);
+    border: 1px solid var(--emp-azul-10);
+    border-left-width: 5px;
+}
+
+.alert-success,
+.alert-info {
+    border-left-color: var(--emp-azul);
+    background-color: var(--emp-azul-10);
+}
+
+.alert-warning {
+    border-left-color: var(--emp-cafe);
+    background-color: var(--emp-cafe-10);
+}
+
+.alert-danger {
+    border-left-color: var(--emp-negro);
+}

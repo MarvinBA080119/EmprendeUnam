@@ -62,10 +62,10 @@ return [
     */
 
     'providers' => [
-        // En la fase B este proveedor cambia al driver propio 'usuarios'
-        // (App\Auth\UsuarioProvider), que busca por correo o nombre de usuario.
+        // Driver propio (App\Auth\UsuarioProvider, registrado en AppServiceProvider):
+        // busca por correo (tabla comunicacion) o por nombre de usuario.
         'usuarios' => [
-            'driver' => 'eloquent',
+            'driver' => 'usuarios',
             'model' => Usuario::class,
         ],
     ],

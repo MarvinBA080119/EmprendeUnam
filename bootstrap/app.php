@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\TienePrivilegio;
+use App\Models\Usuario;
+use App\Services\AccesoService;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -24,7 +27,16 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'privilegio' => TienePrivilegio::class,
+        ]);
+
+        $middleware->redirectGuestsTo(fn () => route('login'));
+
+        // Quien ya inició sesión y abre /iniciar-sesion o /registro va a su panel.
+        $middleware->redirectUsersTo(fn (Request $request) => $request->user() instanceof Usuario
+            ? app(AccesoService::class)->rutaInicio($request->user())
+            : route('inicio'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

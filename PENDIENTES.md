@@ -13,6 +13,7 @@
 - [ ] Respaldo diario de la base y de los PDF (RNF-06; tarea de infraestructura).
 - [ ] "Ver detalle" del artículo para el autor (RF-AUT-04): por ahora lo cubre el historial, que muestra el motivo de rechazo.
 - [ ] Meta de rendimiento del buscador (RNF-07, por confirmar).
+- [ ] Texto oficial y enlace del aviso de privacidad (RNF-04). Por ahora el registro muestra un texto breve provisional.
 
 ## Decisiones tomadas
 
@@ -26,3 +27,5 @@
 | 2026-10-15 | Pruebas del login del administrador: cambian temporalmente su hash dentro de la transacción de la prueba, que se revierte; la contraseña real nunca se escribe. |
 | 2026-10-15 | Resuscripción al newsletter: se agrega una fila en `tema_news` solo si ese tema no está ya registrado para la persona. |
 | 2026-10-15 | Tipografía del PDF de la constancia: DejaVu Serif/Sans (incluidas en dompdf). |
+| 2026-10-15 | El panel `/admin` exige cualquiera de los 6 privilegios exclusivos del administrador (`privilegio:A,B,…` = basta uno). |
+| 2026-10-15 | La recuperación de contraseña responde lo mismo exista o no el correo, para no revelar cuentas. |

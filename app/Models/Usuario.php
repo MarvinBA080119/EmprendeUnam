@@ -51,6 +51,17 @@ class Usuario extends Authenticatable
         return $this->belongsToMany(Rol::class, 'rol_usuario', 'usua_id_usuario', 'rol_id_rol');
     }
 
+    public function tieneRol(string $nombre): bool
+    {
+        return $this->roles->contains('rol_nombre', $nombre);
+    }
+
+    /** Correo activo de la persona (usuario no tiene columna de correo). */
+    public function correo(): ?string
+    {
+        return $this->loadMissing('persona.correo')->persona?->correo?->comu_valor_comunicacion;
+    }
+
     /* ---- Autenticación: la contraseña está en usua_clave_acceso ---- */
 
     public function getAuthPasswordName(): string
@@ -61,6 +72,18 @@ class Usuario extends Authenticatable
     public function getAuthPassword(): string
     {
         return $this->usua_clave_acceso;
+    }
+
+    /** El token de recuperación se liga al correo de comunicacion. */
+    public function getEmailForPasswordReset(): string
+    {
+        return (string) $this->correo();
+    }
+
+    /** Destino de los correos de Laravel (por si se usa Notification). */
+    public function routeNotificationForMail(): ?string
+    {
+        return $this->correo();
     }
 
     /** La tabla no tiene remember_token: "recordarme" está desactivado. */
