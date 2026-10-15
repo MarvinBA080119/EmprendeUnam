@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Mail\ArticuloAprobado;
 use App\Mail\ArticuloRechazado;
 use App\Mail\ArticuloRecibido;
+use App\Mail\AvisoNuevaEdicion;
+use App\Mail\ConfirmarSuscripcion;
 use App\Mail\CuentaActivada;
 use App\Mail\CuentaRecibida;
 use App\Mail\RecuperarClave;
@@ -69,5 +71,23 @@ class CorreosTest extends TestCase
 
         $correo->assertHasSubject('Dictamen de tu artículo');
         $correo->assertSeeInHtml('No cumple con las normas editoriales.');
+    }
+
+    public function test_confirmar_suscripcion_lleva_enlaces_de_confirmacion_y_baja(): void
+    {
+        $correo = new ConfirmarSuscripcion('Sofía', 'https://revista.test/newsletter/confirmar/abc', 'https://revista.test/newsletter/baja/abc');
+
+        $correo->assertHasSubject('Confirma tu suscripción al newsletter EmprendeUNAM');
+        $correo->assertSeeInHtml('https://revista.test/newsletter/confirmar/abc');
+        $correo->assertSeeInHtml('https://revista.test/newsletter/baja/abc');
+    }
+
+    public function test_aviso_de_nueva_edicion_lleva_liga_y_baja(): void
+    {
+        $correo = new AvisoNuevaEdicion('Sofía', 'Edición 02', 'https://revista.test/newsletter/02', 'https://revista.test/newsletter/baja/abc');
+
+        $correo->assertHasSubject('Ya está disponible: Edición 02');
+        $correo->assertSeeInHtml('https://revista.test/newsletter/02');
+        $correo->assertSeeInHtml('darte de baja aquí');
     }
 }

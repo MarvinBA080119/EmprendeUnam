@@ -25,6 +25,15 @@ npm run build                 # o: npm run dev
 php artisan serve
 ```
 
+## Sitio público
+
+El sitio público conserva el diseño del sitio original de la revista:
+
+- Plantilla: `resources/views/layouts/sitio.blade.php`; páginas en `resources/views/sitio/`.
+- Contenido editable (edición actual, histórico, temáticas, podcasts, 10 de 10…): `config/sitio/*.php`.
+- Estilos y scripts propios: `resources/css/sitio/` y `resources/js/sitio/` (compilados con Vite).
+- Imágenes y PDF: copiar las carpetas `img/` y `pdf/` del sitio original a `public/img/` y `public/pdf/`.
+
 ## Pruebas
 
 ```bash

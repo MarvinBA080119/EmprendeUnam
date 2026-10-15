@@ -13,7 +13,13 @@
 - [ ] Respaldo diario de la base y de los PDF (RNF-06; tarea de infraestructura).
 - [ ] "Ver detalle" del artículo para el autor (RF-AUT-04): por ahora lo cubre el historial, que muestra el motivo de rechazo.
 - [ ] Meta de rendimiento del buscador (RNF-07, por confirmar).
-- [ ] Texto oficial y enlace del aviso de privacidad (RNF-04). Por ahora el registro muestra un texto breve provisional.
+- [ ] Texto oficial y enlace del aviso de privacidad (RNF-04). Por ahora el registro muestra un texto breve provisional (el sitio público enlaza el PDF de la FCA).
+- [ ] **Lineamientos para autores** (`/lineamientos`, texto oficial del sitio, sin cambios): piden archivo en Word, un resumen de 50 palabras y «hasta dos personas autoras», pero el sistema solo acepta PDF, no pide resumen (RN-06) y admite hasta 10 coautores. ¿Se actualiza el texto o se ajusta el sistema?
+- [ ] Página «Envío de artículos»: se ajustaron dos lineamientos a las reglas del sistema («Formato»: PDF de hasta 7 MB; «Revisión por pares» → «Dictamen editorial», porque no hay revisores externos, RN-07) y el «Compromiso UNAM» ya no promete la fase de revisión por pares en 15 días. Confirmar redacción.
+- [ ] El formulario del consultorio del sitio tenía un campo «Tema»; se retiró porque `mensaje` no tiene columna para guardarlo.
+- [ ] Imágenes y PDF del sitio público: copiar las carpetas `img/` y `pdf/` del sitio original a `public/img/` y `public/pdf/` (mismas rutas). Las imágenes del newsletter ya están en `public/img/newsletter/`.
+- [ ] Índice GIN para el buscador (requiere cambio en la BD; por ahora el texto completo se calcula en cada consulta, suficiente para el volumen esperado).
+- [ ] Contador de visitas del sitio original (`includes/contador.php`): no se usaba en ninguna página y no se migró.
 
 ## Decisiones tomadas
 
@@ -38,3 +44,8 @@
 | 2026-10-15 | La lista de suscriptores distingue un tercer estado, «Sin confirmar» (se suscribió pero no confirmó), además de activo y baja. El CSV neutraliza celdas que empiezan con = + - @. |
 | 2026-10-15 | Cursos: de 1 a 5 palabras clave (la sección 6.7 dice «hasta 5» y el anexo las marca como obligatorias). |
 | 2026-10-15 | Los filtros del administrador ignoran mayúsculas y acentos con `translate()` (ver `BuscadorService::sinAcentos`). |
+| 2026-10-15 | El sitio público original se integró en Laravel conservando su diseño (CSS/JS propios vía Vite; Bootstrap, iconos y tipografías Barlow desde npm, sin CDN). Su contenido pasó a `config/sitio/*.php` sin cambios de texto. |
+| 2026-10-15 | Las direcciones `.php` del sitio original redirigen con 301 a las nuevas (`/consultorio.php` → `/consultorio`, `/diezdediez-detalle.php?tema=x` → `/10-de-10/x`, etc.). |
+| 2026-10-15 | Consultorio público: muestra nombre y lugar del lector (como el sitio original), nunca su correo. Primero las consultas contestadas en el sistema y después el archivo del sitio anterior. |
+| 2026-10-15 | Newsletter: la ventana y la página de suscripción usan los campos de la especificación (tema de la lista de 13 temas). Toda (re)suscripción se confirma de nuevo por correo. La baja pide confirmación con un botón (los filtros antispam visitan los enlaces). |
+| 2026-10-15 | Buscador: año = año de aprobación del artículo o de inicio del curso; con un tema elegido solo se muestran artículos; cada término busca también por prefijo. |

@@ -50,6 +50,8 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('registro', fn (Request $request) => Limit::perHour(10)->by($request->ip()));
         RateLimiter::for('recuperar-clave', fn (Request $request) => Limit::perMinute(5)->by($request->ip()));
         RateLimiter::for('verificar-constancia', fn (Request $request) => Limit::perMinute(30)->by($request->ip()));
+        RateLimiter::for('buscador', fn (Request $request) => Limit::perMinute(60)->by($request->ip()));
+        RateLimiter::for('newsletter', fn (Request $request) => Limit::perMinutes(10, 6)->by($request->ip()));
 
         Paginator::useBootstrapFive();
 

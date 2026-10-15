@@ -1,0 +1,81 @@
+/* ==========================================================================
+   Piezas agregadas al integrar el sitio con el sistema. Usan las variables y
+   el lenguaje visual de styles.css; no modifican las hojas originales.
+   ========================================================================== */
+
+/* Accesos del sistema en el pie */
+.footer-lux__enlaces {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem 1.25rem;
+  font-size: .78rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+/* Campo trampa (honeypot): fuera de la vista y del orden de tabulación */
+.campo-trampa {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Pasos del envío de artículos */
+.pasos-envio {
+  margin: 1.25rem 0 0;
+  padding-left: 1.25rem;
+}
+.pasos-envio li {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+.pasos-envio li::marker {
+  font-family: var(--serif);
+  font-weight: 700;
+  color: var(--rojo);
+}
+
+/* Detalle de cada curso en la lista */
+.curso-vip__detalle {
+  display: block;
+  font-size: .82rem;
+  opacity: .75;
+  margin-top: .2rem;
+}
+
+/* Buscador */
+.buscador__filtros { margin-bottom: 2rem; }
+.buscador__resultados .post { padding-top: 1.5rem; }
+mark.resaltado {
+  background: transparent;
+  color: var(--rojo);
+  padding: 0;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: .2em;
+}
+
+/* Paginación con la paleta del sitio */
+.pagination .page-link { color: var(--negro); border-radius: 0; }
+.pagination .page-item.active .page-link { background: var(--negro); border-color: var(--negro); color: var(--blanco); }
+.pagination .page-link:focus { box-shadow: 0 0 0 .2rem rgba(200, 16, 46, .25); }
+
+/* Verificación de constancias */
+.verificacion { display: grid; grid-template-columns: max-content 1fr; gap: .5rem 1.5rem; margin: 1.25rem 0; }
+.verificacion dt { font-size: .75rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--gris-txt); padding-top: .2rem; }
+.verificacion dd { margin: 0; font-family: var(--serif); font-size: 1.25rem; }
+
+/* Acciones del envío de artículos: dos botones en línea */
+.acciones-envio { display: flex; flex-wrap: wrap; gap: 1rem; align-items: stretch; margin-top: 1.5rem; }
+.acciones-envio .btn-enviar { width: auto; margin-top: 0; padding-left: 2rem; padding-right: 2rem; }
+.acciones-envio .btn-lux { display: inline-flex; align-items: center; }
+
+/* Enlaces de acción secundarios con la tipografía y color del sitio */
+.buscador__filtros .btn-link { color: var(--negro); font-size: .85rem; text-underline-offset: .25em; }
+.buscador__filtros .btn-link:hover { color: var(--rojo); }

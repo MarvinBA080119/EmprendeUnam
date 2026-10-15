@@ -58,4 +58,5 @@ Route::middleware('privilegio:CONSULTAR_SUSCRIPTORES')->group(function () {
     Route::get('/newsletter', [NewsletterController::class, 'index'])->name('newsletter.index');
     Route::get('/newsletter/datos', [NewsletterController::class, 'datos'])->name('newsletter.datos');
     Route::get('/newsletter/exportar', [NewsletterController::class, 'exportar'])->name('newsletter.exportar');
+    Route::post('/newsletter/avisar', [NewsletterController::class, 'avisar'])->name('newsletter.avisar');
 });

@@ -1,0 +1,996 @@
+/* ==========================================================================
+   REVISTA FCA UNAM · secciones_vivas.css
+   Podcasts · Temáticas · Acerca de la revista · Lineamientos
+   Se carga DESPUÉS de css/styles.css y hereda sus variables
+   ========================================================================== */
+
+:root {
+  --rojo:     #C8102E;
+  --rojo-osc: #A50D26;
+  --negro:    #0A0A0A;
+  --blanco:   #FFFFFF;
+  --linea:    #E4E4E4;
+  --gris-txt: #5A5C60;
+  --gris-bg:  #F8F9FA;
+}
+
+/* --------------------------------------------------------------------------
+   1. ESCALA TIPOGRÁFICA
+   El cuerpo sube a 1.15rem: la mancha de texto crece y el espacio en blanco
+   se reduce solo, sin rellenar con cajas de adorno.
+   -------------------------------------------------------------------------- */
+body { font-size: 1.15rem; line-height: 1.75; }
+
+.lead-xl {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--negro);
+}
+
+/* --------------------------------------------------------------------------
+   2. ENCABEZADO DE SECCIÓN
+   -------------------------------------------------------------------------- */
+.head-solo { padding: 3.5rem 0 2rem; }
+
+/* Títulos de sección: Source Serif 4 en semibold, a un cuerpo bastante menor.
+   Playfair tiene un contraste de trazo muy alto y remates finos, lo que a
+   5rem daba un aire de revista de moda; esta tiene el eje vertical y los
+   remates rectos, así que a menor tamaño sigue leyéndose institucional. */
+.head-solo h1 {
+  font-family: var(--serif-titulo, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -.015em;
+  color: var(--negro);
+  margin: 0;
+}
+
+.head-solo h1 em { font-style: italic; }
+
+.bloque-titulo {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--negro);
+  padding-bottom: 1.1rem;
+  border-bottom: 2px solid var(--negro);
+  margin-bottom: 2.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   3. PODCASTS · Hero Player
+   -------------------------------------------------------------------------- */
+.player {
+  background: var(--negro);
+  color: var(--blanco);
+  border-radius: 0;
+  margin-bottom: 5rem;
+}
+
+.player__figure {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1 / 1;
+  background: #1A1A1A;
+  overflow: hidden;
+}
+
+.player__figure img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.player__eyebrow {
+  display: block;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--rojo);
+  margin-bottom: 1.25rem;
+}
+
+.player__titulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -.02em;
+  color: var(--blanco);
+  margin: 0 0 .9rem;
+}
+
+.player__invitado {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .85rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--rojo);
+  margin: 0 0 1.25rem;
+}
+
+.player__desc {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, .7);
+  margin: 0 0 2.5rem;
+  max-width: 52ch;
+}
+
+/* ── Controles ── */
+.player__controles { display: flex; align-items: center; gap: 1.5rem; }
+
+.btn-play {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--rojo);
+  color: var(--blanco);
+  font-size: 1.4rem;
+  line-height: 1;
+  padding: 0;
+  transition: background .3s ease, transform .3s ease;
+}
+
+.btn-play:hover { background: var(--rojo-osc); transform: scale(1.06); }
+.btn-play:active { transform: scale(.97); }
+
+.btn-play i { pointer-events: none; }
+
+/* El triángulo de play va ligeramente a la derecha para verse centrado */
+.btn-play .bi-play-fill { margin-left: 3px; }
+.btn-play .bi-pause-fill { margin-left: 0; }
+
+.player__pista { flex: 1 1 auto; min-width: 0; }
+
+.player__barra {
+  position: relative;
+  height: 3px;
+  background: rgba(255, 255, 255, .18);
+  cursor: pointer;
+  margin-bottom: .7rem;
+}
+
+.player__avance {
+  position: absolute;
+  left: 0; top: 0;
+  height: 100%;
+  width: 0;
+  background: var(--rojo);
+  transition: width .2s linear;
+}
+
+/* Punto que marca la posición actual */
+.player__avance::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--rojo);
+}
+
+.player__tiempos {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .12em;
+  color: rgba(255, 255, 255, .55);
+}
+
+/* ── Tarjetas de episodios ── */
+.ep-card {
+  background: var(--negro);
+  color: var(--blanco);
+  border-radius: 0;
+  height: 100%;
+  transition: transform .4s cubic-bezier(.4, 0, .2, 1);
+}
+
+.ep-card:hover { transform: translateY(-6px); }
+
+.ep-card img { border-radius: 0 !important; }
+
+.ep-card__figure {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 16 / 9;
+  background: #1A1A1A;
+  overflow: hidden;
+}
+
+.ep-card__figure img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity .4s ease;
+}
+
+.ep-card:hover .ep-card__figure img { opacity: .55; }
+
+/* Botón de play que aparece sobre la miniatura */
+.ep-card__play {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%) scale(.8);
+  width: 48px; height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--rojo);
+  color: var(--blanco);
+  opacity: 0;
+  transition: opacity .4s ease, transform .4s ease;
+}
+
+.ep-card:hover .ep-card__play { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+.ep-card__titulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--blanco);
+  margin: 0 0 .6rem;
+}
+
+.ep-card__autor {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--rojo);
+  margin: 0 0 .8rem;
+}
+
+.ep-card__meta {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .78rem;
+  color: rgba(255, 255, 255, .5);
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   4. TEMÁTICAS · bento interactivo
+   -------------------------------------------------------------------------- */
+.bento {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 250px;
+  height: 100%;
+  padding: 2.25rem;
+  background: var(--gris-bg);
+  border-bottom: 3px solid var(--negro);
+  overflow: hidden;
+  transition: background .45s cubic-bezier(.4, 0, .2, 1),
+              border-color .45s cubic-bezier(.4, 0, .2, 1);
+}
+
+.bento:hover,
+.bento:focus-within { background: var(--negro); border-bottom-color: var(--rojo); }
+
+.bento__nombre {
+  position: relative;
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -.015em;
+  color: var(--negro);
+  margin: 0;
+  transition: color .45s ease, transform .45s cubic-bezier(.4, 0, .2, 1);
+}
+
+.bento:hover .bento__nombre,
+.bento:focus-within .bento__nombre { color: var(--blanco); transform: translateY(-8px); }
+
+/* El detalle está oculto en reposo y se revela al interactuar */
+.bento__detalle {
+  position: relative;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height .45s cubic-bezier(.4, 0, .2, 1),
+              opacity .35s ease,
+              margin-top .45s ease;
+}
+
+.bento:hover .bento__detalle,
+.bento:focus-within .bento__detalle { max-height: 220px; opacity: 1; margin-top: .5rem; }
+
+.bento__dato {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--rojo);
+  margin: 0 0 .75rem;
+}
+
+.bento__ultimo {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .92rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, .72);
+  margin: 0 0 1rem;
+}
+
+.bento__link {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--blanco);
+  border-bottom: 1px solid var(--rojo);
+  padding-bottom: 3px;
+}
+
+.bento__link:hover { color: var(--rojo); }
+
+/* Número de orden como marca de agua */
+.bento__indice {
+  position: absolute;
+  right: 1.25rem; top: .75rem;
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 2.5rem;
+  line-height: 1;
+  color: rgba(10, 10, 10, .07);
+  transition: color .45s ease;
+  pointer-events: none;
+}
+
+.bento:hover .bento__indice { color: rgba(255, 255, 255, .12); }
+
+/* --------------------------------------------------------------------------
+   5. ACERCA DE · comité interactivo
+   -------------------------------------------------------------------------- */
+.intro-split { padding-bottom: 4rem; margin-bottom: 4rem; border-bottom: 1px solid var(--linea); }
+
+.metrica-xl { padding-top: 1.5rem; border-top: 2px solid var(--negro); height: 100%; }
+
+.metrica-xl__cifra {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 3.4rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--negro);
+  margin: 0 0 .85rem;
+}
+
+.metrica-xl p { font-size: .98rem; line-height: 1.65; color: var(--gris-txt); margin: 0; }
+
+/* Tarjeta flotante con el cargo */
+.persona {
+  position: relative;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--linea);
+  cursor: default;
+}
+
+.persona__nombre {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--negro);
+  margin: 0;
+  transition: color .3s ease, padding-left .3s ease;
+}
+
+.persona:hover .persona__nombre { color: var(--rojo); padding-left: .5rem; }
+
+.persona__cargo {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% - .5rem);
+  z-index: 10;
+  background: var(--negro);
+  color: var(--blanco);
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .78rem;
+  letter-spacing: .04em;
+  line-height: 1.4;
+  padding: .7rem 1rem;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity .3s ease, transform .3s ease;
+}
+
+.persona:hover .persona__cargo,
+.persona:focus-within .persona__cargo { opacity: 1; transform: translateY(0); }
+
+/* Punta del globo */
+.persona__cargo::after {
+  content: '';
+  position: absolute;
+  left: 1.25rem; top: 100%;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--negro);
+}
+
+.datos-legales {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--linea);
+  font-size: .95rem;
+  line-height: 1.8;
+  color: var(--gris-txt);
+}
+
+.datos-legales strong {
+  display: block;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--negro);
+  margin-bottom: .5rem;
+}
+
+.datos-legales a { color: var(--gris-txt); border-bottom: 1px solid var(--linea); }
+.datos-legales a:hover { color: var(--rojo); border-bottom-color: var(--rojo); }
+
+/* --------------------------------------------------------------------------
+   6. LINEAMIENTOS · pestañas verticales sin scroll
+   -------------------------------------------------------------------------- */
+.pills-lux { border-right: 1px solid var(--linea); }
+
+.pills-lux .nav-link {
+  position: relative;
+  width: 100%;
+  text-align: left;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .82rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  color: var(--negro);
+  background: var(--blanco);
+  border: 0;
+  border-bottom: 1px solid var(--linea);
+  border-radius: 0;
+  padding: 1.15rem 1.25rem 1.15rem 0;
+  transition: color .3s ease, background .3s ease, padding-left .3s ease;
+}
+
+.pills-lux .nav-link:hover { color: var(--rojo); padding-left: .6rem; }
+
+/* La pestaña activa invierte el color */
+.pills-lux .nav-link.active {
+  background: var(--rojo);
+  color: var(--blanco);
+  font-weight: 600;
+  padding-left: 1.25rem;
+}
+
+.pills-lux .nav-link .indice-num {
+  display: inline-block;
+  width: 1.9rem;
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: .95rem;
+  color: var(--gris-txt);
+  transition: color .3s ease;
+}
+
+.pills-lux .nav-link.active .indice-num { color: rgba(255, 255, 255, .7); }
+
+/* Panel: altura mínima estable para que la página no salte al cambiar */
+.panel-norma { min-height: 30rem; padding-left: 1rem; }
+
+.panel-norma h2 {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.7rem, 3.2vw, 2.3rem);
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: -.02em;
+  color: var(--negro);
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.75rem;
+  border-bottom: 1px solid var(--linea);
+}
+
+.panel-norma p { font-size: 1.1rem; line-height: 1.8; color: var(--negro); margin-bottom: 1.35rem; max-width: 68ch; }
+
+.panel-norma__sub {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--negro);
+  margin: 2.25rem 0 1rem;
+}
+
+.lista-norma { list-style: none; padding: 0; margin: 0 0 1.5rem; max-width: 68ch; }
+
+.lista-norma li {
+  position: relative;
+  padding-left: 1.6rem;
+  margin-bottom: .85rem;
+  font-size: 1.08rem;
+  line-height: 1.7;
+  color: var(--negro);
+}
+
+.lista-norma li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: .68em;
+  width: 6px; height: 6px;
+  background: var(--negro);
+}
+
+.lista-areas { list-style: none; padding: 0; margin: 0; }
+
+.lista-areas li {
+  padding: .65rem 0;
+  border-bottom: 1px solid var(--linea);
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 1.2rem;
+  color: var(--negro);
+  break-inside: avoid;
+}
+
+@media (min-width: 768px) { .lista-areas { column-count: 2; column-gap: 2.5rem; } }
+
+/* Tabla APA */
+.tabla-apa { width: 100%; border-collapse: collapse; }
+
+.tabla-apa th {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--negro);
+  text-align: left;
+  padding: 0 1.25rem 1rem 0;
+  border-bottom: 2px solid var(--negro);
+}
+
+.tabla-apa td {
+  padding: 1.25rem 1.25rem 1.25rem 0;
+  border-bottom: 1px solid var(--linea);
+  vertical-align: top;
+  font-size: .95rem;
+  line-height: 1.7;
+}
+
+.tabla-apa td:first-child {
+  width: 22%;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-weight: 600;
+  color: var(--negro);
+}
+
+.tabla-apa .estructura { display: block; color: var(--negro); margin-bottom: .4rem; }
+.tabla-apa .ejemplo { display: block; color: var(--gris-txt); }
+
+/* --------------------------------------------------------------------------
+   7. RESPONSIVO
+   -------------------------------------------------------------------------- */
+@media (max-width: 991.98px) {
+  body { font-size: 1.08rem; }
+  .head-solo { padding: 2.75rem 0 1.75rem; }
+  .lead-xl { font-size: 1.25rem; }
+
+  /* El reproductor se apila: portada arriba, controles abajo */
+  .player__figure { aspect-ratio: 16 / 9; }
+  .player { margin-bottom: 3.5rem; }
+  .player__desc { margin-bottom: 2rem; }
+
+  /* Las pestañas verticales pasan a barra horizontal deslizable */
+  .pills-lux {
+    flex-direction: row !important;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--linea);
+    margin-bottom: 2.5rem;
+    scrollbar-width: none;
+  }
+
+  .pills-lux::-webkit-scrollbar { display: none; }
+
+  .pills-lux .nav-link {
+    white-space: nowrap;
+    width: auto;
+    border-bottom: 2px solid transparent;
+    padding: .9rem 1.1rem;
+  }
+
+  .pills-lux .nav-link:hover { padding-left: 1.1rem; }
+  .pills-lux .nav-link.active { padding-left: 1.1rem; }
+  .pills-lux .nav-link .indice-num { display: none; }
+
+  .panel-norma { min-height: 0; padding-left: 0; }
+}
+
+@media (max-width: 575.98px) {
+  .bento { min-height: 200px; padding: 1.75rem; }
+  .bento__nombre { font-size: 1.45rem; }
+
+  /* Sin hover en táctil: el detalle queda visible */
+  .bento__detalle { max-height: 220px; opacity: 1; margin-top: .5rem; }
+  .bento { background: var(--negro); border-bottom-color: var(--rojo); }
+  .bento__nombre { color: var(--blanco); }
+  .bento__indice { color: rgba(255, 255, 255, .12); }
+
+  .persona__cargo { position: static; opacity: 1; transform: none; white-space: normal; background: transparent; color: var(--gris-txt); padding: .35rem 0 0; }
+  .persona__cargo::after { display: none; }
+
+  .player__controles { gap: 1rem; }
+  .btn-play { width: 52px; height: 52px; font-size: 1.15rem; }
+  .tabla-apa td:first-child { width: 32%; font-size: .85rem; }
+  .tabla-apa td { font-size: .88rem; padding-right: .75rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bento, .bento__nombre, .bento__detalle, .ep-card, .persona__cargo,
+  .btn-play, .player__avance { transition: none !important; }
+  .ep-card:hover { transform: none; }
+}
+
+/* --------------------------------------------------------------------------
+   PODCASTS · fachada + reproductor incrustado (sólo rejilla de la serie)
+   La miniatura ocupa el marco 16:9; al pulsar, el iframe lo hereda entero.
+   -------------------------------------------------------------------------- */
+.yt-destacado { margin-bottom: 4.5rem; }
+
+.yt-marco {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  background: var(--negro, #0A0A0A);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.yt-marco img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity .4s ease, transform .8s cubic-bezier(.4, 0, .2, 1);
+}
+
+.yt-marco:hover img { opacity: .72; transform: scale(1.03); }
+
+.yt-marco iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.yt-marco.yt-activo { cursor: default; }
+.yt-marco.yt-activo:hover img { opacity: 1; transform: none; }
+
+/* Botón de reproducción */
+.yt-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 76px;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--rojo, #C8102E);
+  color: #FFFFFF;
+  font-size: 2rem;
+  pointer-events: none;
+  transition: transform .35s cubic-bezier(.4, 0, .2, 1), background .3s ease;
+}
+
+.yt-marco:hover .yt-play { transform: translate(-50%, -50%) scale(1.08); }
+
+.yt-play--chico { width: 52px; height: 52px; font-size: 1.4rem; }
+
+/* Episodio aún no publicado en el canal */
+.yt-marco--vacio { cursor: default; }
+.yt-marco--vacio:hover img { opacity: 1; transform: none; }
+
+.yt-pendiente {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: .55rem 1rem;
+  background: rgba(10, 10, 10, .82);
+  color: rgba(255, 255, 255, .85);
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .55rem;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.yt-pendiente--chico { font-size: .5rem; padding: .45rem .8rem; }
+
+.yt-meta {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .6rem;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gris-txt, #5A5C60);
+  margin: 1.5rem 0 1.75rem;
+}
+
+.yt-enlace {
+  display: inline-block;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--negro, #0A0A0A);
+  border-bottom: 1px solid var(--rojo, #C8102E);
+  padding-bottom: 4px;
+}
+
+.yt-enlace:hover { color: var(--rojo, #C8102E); }
+
+/* Descripción del episodio en la tarjeta de la serie */
+.ep-card__desc {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .85rem;
+  line-height: 1.7;
+  color: var(--gris-txt, #5A5C60);
+  margin: .75rem 0 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yt-marco img, .yt-play { transition: none !important; }
+  .yt-marco:hover img { transform: none; }
+  .yt-marco:hover .yt-play { transform: translate(-50%, -50%); }
+}
+
+@media (max-width: 575.98px) {
+  .yt-play { width: 58px; height: 58px; font-size: 1.5rem; }
+}
+
+/* --------------------------------------------------------------------------
+   PODCASTS · imagen alusiva + reproductor de audio del episodio destacado
+   -------------------------------------------------------------------------- */
+.ep-portada {
+  position: relative;
+  display: block;
+  border-radius: 0;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: var(--negro, #0A0A0A);
+}
+
+.ep-portada img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Reproductor de audio nativo: ocupa todo el ancho de la columna */
+.ep-audio {
+  margin: 1.5rem 0 0;
+}
+
+.ep-audio audio {
+  width: 100%;
+  display: block;
+  border-radius: 0;
+  background: var(--gris-bg, #F8F9FA);
+}
+
+/* --------------------------------------------------------------------------
+   WEBINARS · título y descripción de la transmisión destacada
+   -------------------------------------------------------------------------- */
+.webinar__titulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.4rem, 2.8vw, 1.9rem);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--negro, #0A0A0A);
+  margin: 0 0 .75rem;
+  text-transform: none;
+}
+
+/* Ahora la descripción son varios párrafos: el margen inferior baja para que
+   no se abra un hueco entre ellos, y el último recupera el aire antes de los
+   puntos clave con :last-of-type. El cuerpo sube de .93rem a 1rem, en línea
+   con el aumento de tipografía pedido para el resto de las entradas. */
+.webinar__desc {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--gris-txt, #5A5C60);
+  margin: 0 0 1rem;
+}
+
+.webinar__desc:last-of-type { margin-bottom: 2rem; }
+
+/* --------------------------------------------------------------------------
+   AJUSTE · el episodio destacado ya no vive sobre un panel negro
+   Las reglas .player__* se escribieron para fondo oscuro (texto blanco).
+   Al pasar el destacado a fondo blanco hay que recuperar el contraste.
+   -------------------------------------------------------------------------- */
+.yt-destacado .player__titulo { color: var(--negro, #0A0A0A); }
+.yt-destacado .player__desc   { color: var(--gris-txt, #5A5C60); }
+
+/* --------------------------------------------------------------------------
+   NOTA DE ESTADO · pieza aún no definida
+
+   Se usa en podcasts.php mientras la coordinación editorial elige el primer
+   audio. Mismo gris que las descripciones, con regla roja a la izquierda: se
+   lee como apunte editorial y no como el contenido del episodio.
+   -------------------------------------------------------------------------- */
+.yt-nota {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--gris-txt, #5A5C60);
+  border-left: 2px solid var(--rojo, #C8102E);
+  padding-left: 1.1rem;
+  margin: 1.25rem 0 0;
+  max-width: 46ch;
+}
+
+/* --------------------------------------------------------------------------
+   PODCASTS · imagen alusiva + reproductores (MP3 propio y embed de Spotify)
+   -------------------------------------------------------------------------- */
+.ep-portada {
+  position: relative;
+  display: block;
+  border-radius: 0;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: var(--negro, #0A0A0A);
+}
+
+.ep-portada img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Reproductor MP3 personalizado ──
+   Reutiliza .player__controles, .btn-play, .player__barra y .player__avance
+   que ya existen para el hero player, así que hereda su estilo. Aquí sólo
+   añadimos el control de volumen que antes no existía. */
+.reproductor {
+  margin: 1.75rem 0 0;
+}
+
+.reproductor .player__controles {
+  gap: 1.25rem;
+}
+
+.reproductor .btn-play {
+  width: 56px;
+  height: 56px;
+  font-size: 1.25rem;
+}
+
+/* ── Control de volumen ── */
+.player__volumen {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  flex-shrink: 0;
+}
+
+.btn-vol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: transparent;
+  color: var(--negro, #0A0A0A);
+  font-size: 1.05rem;
+  padding: 0;
+  cursor: pointer;
+  transition: color .25s ease;
+}
+
+.btn-vol:hover { color: var(--rojo, #C8102E); }
+
+/* Slider de volumen personalizado (WebKit + Firefox) */
+.vol-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 80px;
+  height: 3px;
+  background: var(--linea, #E4E4E4);
+  border-radius: 0;
+  outline: none;
+  cursor: pointer;
+}
+
+.vol-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--rojo, #C8102E);
+  border: 0;
+  cursor: pointer;
+}
+
+.vol-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--rojo, #C8102E);
+  border: 0;
+  cursor: pointer;
+}
+
+.vol-slider::-moz-range-track {
+  height: 3px;
+  background: var(--linea, #E4E4E4);
+  border: 0;
+}
+
+/* ── Embed de Spotify ── */
+.ep-spotify {
+  margin: 1.75rem 0 0;
+  width: 100%;
+}
+
+.ep-spotify iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  background: var(--gris-bg, #F8F9FA);
+}
+
+/* ── Responsivo ── */
+@media (max-width: 575.98px) {
+  .reproductor .player__controles {
+    flex-wrap: wrap;
+    gap: .9rem;
+  }
+  .reproductor .btn-play { width: 48px; height: 48px; font-size: 1.1rem; }
+  .player__pista { flex: 1 1 100%; order: 3; }
+  .vol-slider { width: 60px; }
+}

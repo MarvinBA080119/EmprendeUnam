@@ -10,15 +10,88 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Consultorio (6.6). Bandeja del administrador: responder y rechazar.
- * El formulario público y la sección pública se agregan en la fase E.
+ * Consultorio (6.6): mensajes de lectores, bandeja del administrador
+ * (responder y rechazar) y sección pública de consultas contestadas.
  */
 class ConsultorioService
 {
+    /** Envíos permitidos por IP en una hora (el captcha está pendiente). */
+    public const ENVIOS_POR_HORA = 3;
+
+    public function __construct(private SitioService $sitio) {}
+
+    /**
+     * Guarda el mensaje de un lector como PENDIENTE.
+     *
+     * @param  array{nombre: string, correo: string, lugar?: ?string, asunto: string, mensaje: string}  $datos
+     *
+     * @throws ValidationException si la IP ya envió 3 mensajes en la última hora.
+     */
+    public function enviar(array $datos, string $ip): Mensaje
+    {
+        $llave = 'consultorio:'.$ip;
+
+        if (RateLimiter::tooManyAttempts($llave, self::ENVIOS_POR_HORA)) {
+            throw ValidationException::withMessages([
+                'mensaje' => 'Ya recibimos varias consultas desde tu conexión. Intenta de nuevo en '
+                    .ceil(RateLimiter::availableIn($llave) / 60).' minutos.',
+            ]);
+        }
+
+        $mensaje = Mensaje::create([
+            'usua_id_usuario' => null,
+            'men_mens_id_mensaje' => null,
+            'mens_remitente' => $datos['nombre'],
+            'mens_lugar' => $datos['lugar'] ?? null,
+            'mens_correo' => Str::lower(trim($datos['correo'])),
+            'mens_asunto' => $datos['asunto'],
+            'mens_descripcion' => $datos['mensaje'],
+            'mens_status' => EstatusMensaje::PENDIENTE,
+            'mens_fecha_envio' => now(),
+        ]);
+
+        RateLimiter::hit($llave, 3600);
+
+        return $mensaje;
+    }
+
+    /**
+     * Consultas para la sección pública: primero las contestadas desde el
+     * sistema y después el archivo del sitio anterior. Nunca incluye correos.
+     *
+     * @return list<array{asunto: string, nombre: string, ubicacion: ?string, estado: string, pregunta: string, respuesta: list<string>}>
+     */
+    public function publicadas(): array
+    {
+        $contestadas = Mensaje::originales()
+            ->where('mens_status', EstatusMensaje::CONTESTADO->value)
+            ->whereHas('respuesta')
+            ->with('respuesta')
+            ->orderByDesc('mens_fecha_envio')
+            ->orderByDesc('mens_id_mensaje')
+            ->get()
+            ->map(fn (Mensaje $m) => [
+                'asunto' => $m->mens_asunto,
+                'nombre' => $m->mens_remitente,
+                'ubicacion' => $m->mens_lugar,
+                'estado' => 'Resuelto',
+                'pregunta' => $m->mens_descripcion,
+                // La respuesta se muestra en párrafos, como en el archivo del sitio.
+                'respuesta' => array_values(array_filter(
+                    array_map('trim', preg_split('/\R+/u', $m->respuesta->mens_descripcion)),
+                    fn (string $p) => $p !== '',
+                )),
+            ])
+            ->all();
+
+        return array_merge($contestadas, $this->sitio->consultasAnteriores());
+    }
+
     /** Bandeja: solo mensajes de lectores (men_mens_id_mensaje IS NULL). */
     public function bandeja(?string $estatus, ?string $texto, int $porPagina): LengthAwarePaginator
     {

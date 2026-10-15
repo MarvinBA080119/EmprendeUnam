@@ -5,7 +5,21 @@ import vue from '@vitejs/plugin-vue';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/scss/app.scss', 'resources/js/app.js'],
+            input: [
+                // Sistema (autores y administrador)
+                'resources/scss/app.scss',
+                'resources/js/app.js',
+                // Sitio público (diseño propio del sitio)
+                'resources/js/sitio.js',
+                'resources/js/newsletter.js',
+                'resources/css/sitio/premium_sections.css',
+                'resources/css/sitio/institucional_suizo.css',
+                'resources/css/sitio/secciones_vivas.css',
+                'resources/css/sitio/formularios_media.css',
+                'resources/js/sitio/premium_ui.js',
+                'resources/js/sitio/interacciones.js',
+                'resources/js/sitio/reproductor.js',
+            ],
             refresh: true,
         }),
         vue({

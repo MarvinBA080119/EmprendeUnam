@@ -10,7 +10,13 @@ definido ahí va a `PENDIENTES.md` y se pregunta antes de implementarlo.
 - Bootstrap 5 + Sass + CSS propio (`resources/css/emprende.css`)
 - MVC con Services: controladores delgados; lógica y transacciones en `app/Services`
 
-## Paleta
+## Dos diseños
+- **Sistema** (autores y administrador, login/registro): paleta de abajo, `layouts/publico|autor|admin`.
+- **Sitio público** (inicio, histórico, consultorio, newsletter…): diseño propio del sitio original,
+  `layouts/sitio.blade.php`, CSS/JS en `resources/css/sitio` y `resources/js/sitio`, contenido en
+  `config/sitio/*.php`. No se rediseña.
+
+## Paleta (sistema)
 - `#664300` primario (café), `#001328` secundario (azul), blanco y negro. Nada más.
 - **Nunca** texto `#664300` sobre `#001328` ni al revés.
 - Estados con insignias de la paleta y con texto (sin verdes ni rojos).

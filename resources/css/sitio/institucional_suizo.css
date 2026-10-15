@@ -1,0 +1,924 @@
+/* ==========================================================================
+   REVISTA FCA UNAM · institucional_suizo.css
+   Acerca de la revista · Lineamientos · Temáticas
+   Lujo editorial suizo: asimetría, macro-tipografía, rojo estructural
+   Se carga DESPUÉS de css/styles.css y hereda sus variables
+   ========================================================================== */
+
+:root {
+  --rojo:     #C8102E;
+  --rojo-osc: #A50D26;
+  --negro:    #0A0A0A;
+  --blanco:   #FFFFFF;
+  --linea:    #E4E4E4;
+  --gris-txt: #5A5C60;
+  --marca:    #F0F0F0;
+}
+
+/* --------------------------------------------------------------------------
+   1. BASE DE LAS TRES PÁGINAS
+   -------------------------------------------------------------------------- */
+.suizo {
+  position: relative;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+/* La marca de agua vive detrás: los contenedores deben quedar transparentes
+   o la taparían. No pongas background a .suizo ni a sus .container. */
+.marca-agua {
+  position: absolute;
+  top: 4rem;
+  right: -2vw;
+  z-index: -1;
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(6rem, 18vw, 17rem);
+  font-weight: 600;
+  line-height: .85;
+  letter-spacing: -.04em;
+  color: var(--marca);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* --------------------------------------------------------------------------
+   2. TIPOGRAFÍA MAYOR
+   -------------------------------------------------------------------------- */
+/* Mismo criterio que .head-solo h1: tipografía sobria y cuerpo contenido.
+   Se conserva el nombre de la clase para no tocar el marcado de las páginas. */
+.titulo-gigante {
+  font-family: var(--serif-titulo, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -.015em;
+  color: var(--negro);
+  margin: 0;
+}
+
+.titulo-gigante em { font-style: italic; }
+
+/* Línea roja gruesa bajo el título */
+.filete-rojo {
+  width: 88px;
+  height: 6px;
+  background: var(--rojo);
+  margin-top: 2.25rem;
+}
+
+/* Cuerpo de las páginas institucionales. La coordinación editorial señaló que
+   la tipografía se percibía demasiado pequeña: sube de 1.15rem a 1.25rem. El
+   interlineado baja un punto porque a mayor cuerpo la misma proporción abre
+   demasiado los renglones. */
+.texto-fluye p {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: 1.25rem;
+  line-height: 1.8;
+  color: var(--negro);
+  margin-bottom: 1.7rem;
+}
+
+.texto-fluye p:last-child { margin-bottom: 0; }
+
+.texto-fluye em { font-style: italic; }
+.texto-fluye strong { font-weight: 600; }
+
+/* .entrada-mayor se retiró: la coordinación editorial pidió que todo el texto
+   de "Nuestra revista" comparta un mismo cuerpo. Se conserva la regla, sin
+   salto de tamaño, por si alguna otra vista todavía la referencia. */
+.entrada-mayor {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  color: var(--negro);
+}
+
+.rotulo {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--rojo);
+  margin-bottom: 1.25rem;
+}
+
+.rotulo--negro { color: var(--negro); }
+
+/* --------------------------------------------------------------------------
+   3. ACERCA DE · columna fija y bloque rojo
+   -------------------------------------------------------------------------- */
+.columna-fija { padding-top: 5rem; }
+
+.bloque-rojo {
+  background: var(--rojo);
+  color: var(--blanco);
+  padding: 4.5rem 0;
+  margin: 5rem 0;
+}
+
+.bloque-rojo__texto {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.5rem, 3.2vw, 2.4rem);
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--blanco);
+  margin: 0;
+}
+
+.bloque-rojo__pie {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .75);
+  margin-top: 2rem;
+}
+
+/* ── Métricas ──
+   La coordinación editorial pidió que estas tres cifras destaquen del texto
+   que las acompaña y que su tipografía crezca: se percibían demasiado
+   pequeñas.
+
+   La causa no era el tamaño declarado sino un choque de especificidad. El
+   rótulo es un <p> dentro de .cifra-suiza, así que la regla del párrafo
+   —.cifra-suiza p, especificidad (0,1,1)— le ganaba a .cifra-suiza__num
+   (0,1,0) y la cifra se pintaba al cuerpo del texto: 4rem declarados que en
+   pantalla eran 16px. Por eso se veían iguales que el párrafo.
+
+   Se repite la clase con el elemento (p.cifra-suiza__num) para ganar la
+   cascada sin recurrir a !important, y se excluye la cifra del selector del
+   párrafo. Con eso el tamaño declarado por fin se aplica. */
+.cifra-suiza { padding-top: 1.75rem; border-top: 6px solid var(--negro); height: 100%; }
+
+.cifra-suiza p.cifra-suiza__num {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(3.5rem, 5.5vw, 5.5rem);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--negro);
+  margin: 0 0 1.25rem;
+}
+
+.cifra-suiza p:not(.cifra-suiza__num) {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--gris-txt);
+  margin: 0;
+}
+
+/* ── Comité: el rojo entra por la izquierda ── */
+.miembro {
+  position: relative;
+  padding: 1.35rem 0 1.35rem 0;
+  border-bottom: 1px solid var(--linea);
+  transition: padding-left .4s cubic-bezier(.4, 0, .2, 1);
+}
+
+.miembro::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: var(--rojo);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform .4s cubic-bezier(.4, 0, .2, 1);
+}
+
+.miembro:hover,
+.miembro:focus-within { padding-left: 1.5rem; }
+
+.miembro:hover::before,
+.miembro:focus-within::before { transform: scaleY(1); }
+
+.miembro__nombre {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--negro);
+  margin: 0 0 .2rem;
+  transition: color .4s ease;
+}
+
+.miembro:hover .miembro__nombre { color: var(--rojo); }
+
+.miembro__cargo {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .82rem;
+  letter-spacing: .04em;
+  color: var(--gris-txt);
+  margin: 0;
+}
+
+/* ── Datos legales ── */
+.legales { margin-top: 5rem; padding-top: 2.5rem; border-top: 4px solid var(--negro); }
+
+.legales strong {
+  display: block;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--negro);
+  margin-bottom: .6rem;
+}
+
+.legales p { font-size: .98rem; line-height: 1.75; color: var(--gris-txt); margin: 0; }
+
+.legales a { color: var(--gris-txt); border-bottom: 1px solid var(--linea); }
+.legales a:hover { color: var(--rojo); border-bottom-color: var(--rojo); }
+
+/* --------------------------------------------------------------------------
+   4. LINEAMIENTOS · sub-navbar negra a todo el ancho
+   -------------------------------------------------------------------------- */
+.subnav {
+  background: var(--negro);
+  border: 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.subnav::-webkit-scrollbar { display: none; }
+
+.subnav .nav-link {
+  flex: 1 1 0;
+  white-space: nowrap;
+  text-align: center;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .65);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 1.5rem 1.75rem;
+  transition: background .35s ease, color .35s ease;
+}
+
+.subnav .nav-link:hover { color: var(--blanco); background: rgba(255, 255, 255, .06); }
+
+/* La pestaña activa es un bloque rojo sólido */
+.subnav .nav-link.active {
+  background: var(--rojo);
+  color: var(--blanco);
+  font-weight: 600;
+}
+
+.subnav .nav-link .num {
+  display: block;
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: rgba(255, 255, 255, .35);
+  margin-bottom: .4rem;
+  transition: color .35s ease;
+}
+
+.subnav .nav-link.active .num { color: rgba(255, 255, 255, .8); }
+
+/* ── Contenido en dos columnas tipo periódico ── */
+.panel { padding: 5rem 0; min-height: 34rem; }
+
+.panel h2 {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -.03em;
+  color: var(--negro);
+  margin: 0 0 3rem;
+}
+
+/* El texto fluye en dos columnas: llena el ancho sin alargar la página */
+.periodico { column-count: 2; column-gap: 4rem; }
+
+.periodico p,
+.periodico ul,
+.periodico h3 { break-inside: avoid; }
+
+.panel p {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: var(--negro);
+  margin-bottom: 1.5rem;
+}
+
+.panel__sub {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--rojo);
+  margin: 2rem 0 1rem;
+}
+
+/* Los rótulos de sección de los paneles arrastraban el mismo choque de
+   especificidad que las cifras de "Nuestra revista": .panel__sub es un <p>
+   dentro de .panel, así que .panel p (0,1,1) le ganaba a .panel__sub (0,1,0)
+   y el rótulo se pintaba negro y al cuerpo del texto —18px— en lugar de rojo
+   y en versalitas. Resultado: "Áreas temáticas", "De la autoría" o "Envío de
+   artículos" no se distinguían de los párrafos que encabezan.
+
+   Se repite la clase con el elemento para ganar la cascada. El cuerpo sube de
+   .68rem a .78rem respecto de lo declarado, en línea con el aumento de
+   tipografía pedido para el resto del sitio. */
+.panel p.panel__sub {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .24em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--rojo);
+  margin: 2.25rem 0 1rem;
+}
+
+.panel p.panel__sub:first-child,
+.panel p.panel__sub--cabeza { margin-top: 0; }
+
+.lista-suiza { list-style: none; padding: 0; margin: 0 0 1.75rem; }
+
+.lista-suiza li {
+  position: relative;
+  padding-left: 1.75rem;
+  margin-bottom: 1rem;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: 1.08rem;
+  line-height: 1.7;
+  color: var(--negro);
+}
+
+.lista-suiza li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: .7em;
+  width: 8px; height: 2px;
+  background: var(--rojo);
+}
+
+.lista-suiza strong { font-weight: 600; }
+
+/* Tabla APA: ocupa el ancho completo, fuera del sistema de columnas */
+.tabla-suiza { width: 100%; border-collapse: collapse; }
+
+.tabla-suiza th {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--negro);
+  text-align: left;
+  padding: 0 1.5rem 1.1rem 0;
+  border-bottom: 4px solid var(--negro);
+}
+
+.tabla-suiza td {
+  padding: 1.4rem 1.5rem 1.4rem 0;
+  border-bottom: 1px solid var(--linea);
+  vertical-align: top;
+  font-size: .98rem;
+  line-height: 1.7;
+}
+
+.tabla-suiza td:first-child {
+  width: 20%;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-weight: 600;
+  color: var(--negro);
+}
+
+.tabla-suiza .estructura { display: block; color: var(--negro); margin-bottom: .5rem; }
+.tabla-suiza .ejemplo { display: block; color: var(--gris-txt); }
+
+/* Nota previa de un tipo de fuente (la usa "Sitio web"): explica cuándo hace
+   falta la ficha completa. Va en cursiva y con regla roja a la izquierda para
+   que se lea como acotación del manual y no como parte de la estructura. */
+.tabla-suiza .nota-fuente {
+  display: block;
+  font-style: italic;
+  color: var(--gris-txt);
+  border-left: 2px solid var(--rojo, #C8102E);
+  padding-left: .9rem;
+  margin-bottom: .9rem;
+}
+
+/* Cierre del panel de referencias: las dos vías de consulta del manual */
+.nota-manual {
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--linea, #E0E0E0);
+  max-width: 68ch;
+}
+
+/* Sin la regla explícita los enlaces heredaban el negro de .panel p y no se
+   distinguían del texto. */
+.nota-manual a { color: var(--rojo, #C8102E); border-bottom: 1px solid currentColor; }
+.nota-manual a:hover { color: var(--negro, #0A0A0A); }
+
+/* --------------------------------------------------------------------------
+   5. TEMÁTICAS · mega-lista
+   -------------------------------------------------------------------------- */
+.mega-fila {
+  display: flex;
+  align-items: baseline;
+  gap: 2.5rem;
+  width: 100%;
+  padding: 2.25rem 3vw;
+  border-bottom: 1px solid var(--negro);
+  background: var(--blanco);
+  text-align: left;
+  transition: background .4s cubic-bezier(.4, 0, .2, 1),
+              padding-left .4s cubic-bezier(.4, 0, .2, 1);
+}
+
+.mega-fila:first-of-type { border-top: 1px solid var(--negro); }
+
+/* La revelación: fondo rojo y todo el texto en blanco */
+.mega-fila:hover,
+.mega-fila:focus-visible {
+  background: var(--rojo);
+  padding-left: 4.5vw;
+  outline: none;
+}
+
+.mega-fila__num {
+  flex: 0 0 auto;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  color: var(--gris-txt);
+  width: 3rem;
+  transition: color .4s ease;
+}
+
+.mega-fila__titulo {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.6rem, 4vw, 3.2rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -.03em;
+  color: var(--negro);
+  margin: 0;
+  transition: color .4s ease;
+}
+
+.mega-fila__desc {
+  flex: 0 0 30%;
+  max-width: 30%;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .92rem;
+  line-height: 1.6;
+  color: var(--gris-txt);
+  margin: 0;
+  transition: color .4s ease;
+}
+
+.mega-fila__flecha {
+  flex: 0 0 auto;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: transparent;
+  transition: color .4s ease, transform .4s ease;
+}
+
+/* Todo el texto se vuelve blanco al mismo tiempo */
+.mega-fila:hover .mega-fila__num,
+.mega-fila:hover .mega-fila__titulo,
+.mega-fila:hover .mega-fila__desc,
+.mega-fila:focus-visible .mega-fila__num,
+.mega-fila:focus-visible .mega-fila__titulo,
+.mega-fila:focus-visible .mega-fila__desc { color: var(--blanco); }
+
+.mega-fila:hover .mega-fila__flecha { color: var(--blanco); transform: translateX(6px); }
+
+/* ── Llamada final ── */
+.cta-negro {
+  background: var(--negro);
+  color: var(--blanco);
+  padding: 7rem 0;
+  margin-top: 6rem;
+}
+
+.cta-negro__titulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(2.2rem, 5.5vw, 4.2rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -.03em;
+  color: var(--blanco);
+  margin: 0 0 1.5rem;
+  max-width: 18ch;
+}
+
+.cta-negro__texto {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: 1.15rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, .68);
+  margin: 0 0 2.75rem;
+  max-width: 48ch;
+}
+
+.btn-suizo {
+  display: inline-block;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--blanco);
+  background: var(--rojo);
+  border: 1px solid var(--rojo);
+  border-radius: 0;
+  padding: 1.25rem 3rem;
+  transition: background .35s ease, color .35s ease;
+}
+
+.btn-suizo:hover { background: transparent; color: var(--blanco); border-color: var(--blanco); }
+
+/* --------------------------------------------------------------------------
+   6. RESPONSIVO
+   -------------------------------------------------------------------------- */
+
+/* La columna del título se mantiene fija sólo en escritorio */
+@media (min-width: 992px) {
+  .columna-fija { position: sticky; top: 110px; }
+}
+
+@media (max-width: 991.98px) {
+  .suizo { font-size: 1rem; }
+  .marca-agua { top: 2rem; font-size: clamp(4rem, 22vw, 9rem); }
+
+  .columna-fija { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+  .filete-rojo { margin-top: 1.5rem; }
+
+  /* En columna estrecha 1.25rem deja renglones de pocas palabras */
+  .texto-fluye p { font-size: 1.12rem; }
+  .cifra-suiza p:not(.cifra-suiza__num) { font-size: 1.05rem; }
+
+  .bloque-rojo { padding: 3rem 0; margin: 3rem 0; }
+
+  /* Una sola columna: dos columnas en móvil obligan a subir y bajar */
+  .periodico { column-count: 1; }
+  .panel { padding: 3rem 0; min-height: 0; }
+
+  /* ── LINEAMIENTOS EN MÓVIL · índice apilado ──────────────────────────────
+     Las cuatro pestañas en fila obligaban a un desplazamiento horizontal sin
+     pista visual: sólo se veían dos y las otras dos quedaban fuera de campo.
+     Apiladas a todo lo ancho, las cuatro secciones se ven de una vez y cada
+     una es un objetivo táctil cómodo. El ordinal pasa a la izquierda del
+     rótulo para que cada fila ocupe una sola línea.                        */
+  .subnav {
+    display: flex;
+    flex-direction: column;
+    overflow-x: visible;
+  }
+
+  .subnav .nav-link {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: baseline;
+    gap: .9rem;
+    width: 100%;
+    text-align: left;
+    white-space: normal;
+    letter-spacing: .12em;
+    font-size: .68rem;
+    padding: 1.05rem 1.5rem;
+    border-left: 3px solid transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+  }
+
+  .subnav .nav-link:last-child { border-bottom: 0; }
+
+  /* La activa se marca con filete rojo y fondo tenue, no con un bloque rojo:
+     a lo ancho de la pantalla el rojo sólido resultaba estridente. */
+  .subnav .nav-link.active {
+    background: rgba(255, 255, 255, .07);
+    border-left-color: var(--rojo);
+  }
+
+  .subnav .nav-link .num {
+    display: inline;
+    font-size: .85rem;
+    color: var(--rojo);
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .subnav .nav-link.active .num { color: var(--rojo); }
+
+  .mega-fila { gap: 1.5rem; padding: 1.75rem 5vw; }
+  .mega-fila:hover { padding-left: 6vw; }
+
+  .cta-negro { padding: 4rem 0; margin-top: 3.5rem; }
+}
+
+@media (max-width: 767.98px) {
+  /* Sólo número y título: la descripción rompería la elegancia */
+  .mega-fila__desc { display: none; }
+  .mega-fila__flecha { display: none; }
+  .mega-fila__num { width: 2.25rem; font-size: .7rem; }
+}
+
+@media (max-width: 575.98px) {
+  .marca-agua { display: none; }
+  /* Misma corrección de especificidad que arriba */
+  .cifra-suiza p.cifra-suiza__num { font-size: 3.4rem; }
+  .btn-suizo { width: 100%; text-align: center; padding: 1.1rem 1.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mega-fila, .miembro, .miembro::before, .subnav .nav-link,
+  .mega-fila__flecha, .btn-suizo { transition: none !important; }
+}
+
+/* --------------------------------------------------------------------------
+   TEMÁTICAS · índice de categorías + artículos del área
+   -------------------------------------------------------------------------- */
+.tem-indice { position: sticky; top: 6rem; }
+
+.tem-indice__lista { list-style: none; padding: 0; margin: 1.25rem 0 0; }
+
+.tem-indice__lista li { border-bottom: 1px solid var(--linea, #E0E0E0); }
+.tem-indice__lista li:first-child { border-top: 1px solid var(--linea, #E0E0E0); }
+
+.tem-indice__lista a {
+  display: flex;
+  align-items: baseline;
+  gap: .85rem;
+  padding: .8rem 0;
+  transition: padding-left .3s ease;
+}
+
+.tem-indice__lista a:hover { padding-left: .5rem; }
+
+.tem-indice__num {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .55rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  color: var(--gris-txt, #5A5C60);
+  flex-shrink: 0;
+}
+
+.tem-indice__nombre {
+  flex: 1 1 auto;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .88rem;
+  line-height: 1.5;
+  color: var(--negro, #0A0A0A);
+}
+
+.tem-indice__conteo {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .58rem;
+  font-weight: 500;
+  color: var(--gris-txt, #5A5C60);
+  flex-shrink: 0;
+}
+
+.tem-indice__lista li.activo .tem-indice__nombre { color: var(--rojo, #C8102E); font-weight: 500; }
+.tem-indice__lista li.activo .tem-indice__num,
+.tem-indice__lista li.activo .tem-indice__conteo { color: var(--rojo, #C8102E); }
+
+.tem-cabecera {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.15rem;
+  border-bottom: 2px solid var(--negro, #0A0A0A);
+  margin-bottom: 2.5rem;
+}
+
+.tem-cabecera__titulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--negro, #0A0A0A);
+  margin: 0;
+}
+
+.tem-cabecera__conteo {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .58rem;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gris-txt, #5A5C60);
+  flex-shrink: 0;
+}
+
+/* Rótulo de edición: separa el acervo por número sin dibujar cajas. La regla
+   fina superior hace de cesura; el número va en rojo porque es el dato con el
+   que se localiza y se pide el artículo. */
+.tem-edicion {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  border-top: 1px solid var(--negro, #0A0A0A);
+  padding-top: .7rem;
+  margin: 2.25rem 0 .9rem;
+}
+
+.tem-edicion:first-child { margin-top: 0; }
+
+.tem-edicion__num     { color: var(--rojo, #C8102E); }
+.tem-edicion__periodo { color: var(--gris-txt, #5A5C60); font-weight: 500; }
+
+/* Fichas más compactas: sin resumen, dos líneas por artículo no necesitan el
+   aire que pedía un párrafo descriptivo. */
+.tem-articulo {
+  padding-bottom: 1.15rem;
+  margin-bottom: 1.15rem;
+  border-bottom: 1px solid var(--linea, #E0E0E0);
+}
+
+.tem-articulo:last-child { border-bottom: 0; margin-bottom: 0; }
+
+.tem-articulo__titulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--negro, #0A0A0A);
+  margin: 0 0 .45rem;
+}
+
+.tem-articulo__meta {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .58rem;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gris-txt, #5A5C60);
+  margin: 0;
+}
+
+.tem-articulo__meta strong { color: var(--negro, #0A0A0A); font-weight: 600; }
+
+.tem-vacio {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .93rem;
+  line-height: 1.8;
+  color: var(--gris-txt, #5A5C60);
+  padding: 2rem;
+  background: var(--gris-bg, #F8F9FA);
+  border: 1px solid var(--linea, #E0E0E0);
+}
+
+.tem-vacio a { color: var(--negro, #0A0A0A); border-bottom: 1px solid var(--rojo, #C8102E); }
+.tem-vacio a:hover { color: var(--rojo, #C8102E); }
+
+@media (max-width: 991.98px) {
+  .tem-indice { position: static; }
+}
+
+/* --------------------------------------------------------------------------
+   TEMÁTICAS · índice plegable
+
+   En escritorio el <details> se comporta como una lista normal: el resumen se
+   oculta y la lista queda a la vista, sticky junto al contenido.
+   En móvil se pliega y el resumen muestra la categoría en curso.
+   -------------------------------------------------------------------------- */
+.tem-indice__resumen { display: none; }
+
+@media (max-width: 991.98px) {
+
+  .tem-indice { position: static; margin-bottom: 2rem; }
+
+  /* Barra de selección: un solo objetivo táctil, ancho completo */
+  .tem-indice__resumen {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    list-style: none;
+    cursor: pointer;
+    padding: 1rem 1.25rem;
+    background: var(--gris-bg, #F8F9FA);
+    border: 1px solid var(--linea, #E0E0E0);
+    border-left: 2px solid var(--rojo, #C8102E);
+    transition: background .3s ease;
+  }
+
+  .tem-indice__resumen::-webkit-details-marker { display: none; }
+
+  .tem-indice__resumen:hover { background: #EFEFEF; }
+
+  .tem-indice__resumen-eti {
+    font-family: var(--sans, 'Barlow', sans-serif);
+    font-size: .55rem;
+    font-weight: 600;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--gris-txt, #5A5C60);
+    flex-shrink: 0;
+  }
+
+  .tem-indice__resumen-val {
+    flex: 1 1 auto;
+    text-align: right;
+    font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+    font-size: 1.05rem;
+    line-height: 1.25;
+    color: var(--negro, #0A0A0A);
+  }
+
+  /* Signo + que pasa a − al desplegar */
+  .tem-indice__resumen::after {
+    content: '+';
+    font-family: var(--sans, 'Barlow', sans-serif);
+    font-size: 1.15rem;
+    line-height: 1;
+    color: var(--rojo, #C8102E);
+    flex-shrink: 0;
+  }
+
+  .tem-indice[open] .tem-indice__resumen { background: var(--negro, #0A0A0A); }
+  .tem-indice[open] .tem-indice__resumen-eti { color: rgba(255, 255, 255, .6); }
+  .tem-indice[open] .tem-indice__resumen-val { color: #FFFFFF; }
+  .tem-indice[open] .tem-indice__resumen::after { content: '\2212'; }
+
+  /* El rótulo "Categorías" sobra cuando ya hay una barra que lo dice */
+  .tem-indice > .rotulo { display: none; }
+
+  .tem-indice__lista { margin-top: 0; }
+
+  .tem-indice__lista li:first-child { border-top: 0; }
+
+  /* Filas más altas: son objetivos táctiles, no una lista de lectura */
+  .tem-indice__lista a { padding: .95rem 1.25rem; }
+
+  .tem-indice__lista li.activo { background: var(--gris-bg, #F8F9FA); }
+}
+
+/* --------------------------------------------------------------------------
+   AVISO DE SECCIÓN EN PREPARACIÓN
+
+   Se usa en historia.php mientras la coordinación editorial termina de
+   revisar el texto. Mismo cuerpo que el resto de la columna, en gris: se lee
+   como una nota del editor y no como el contenido de la página.
+   -------------------------------------------------------------------------- */
+.texto-pendiente { color: var(--gris-txt, #5A5C60); }
+.texto-pendiente a { color: var(--rojo, #C8102E); }
+.texto-pendiente a:hover { color: var(--negro, #0A0A0A); }
+
+/* --------------------------------------------------------------------------
+   NUESTRA HISTORIA · subtítulos, antetítulo y firma
+   El texto es largo (unas 1 300 palabras): los subtítulos del documento
+   original se conservan como h2 para que la lectura tenga pausas y se pueda
+   recorrer de un vistazo.
+   -------------------------------------------------------------------------- */
+.historia__antetitulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif) !important;
+  font-size: 1.6rem !important;
+  font-weight: 600;
+  line-height: 1.2 !important;
+  color: var(--rojo) !important;
+  margin-bottom: 2rem !important;
+}
+
+.texto-fluye .historia__sub {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1.1;
+  color: var(--negro);
+  margin: 3.25rem 0 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--linea, #E2E2DF);
+}
+
+.texto-fluye .historia__firma {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 3px solid var(--rojo);
+  display: inline-block;
+  line-height: 1.4;
+}
+.historia__firma strong { display: block; font-weight: 600; }
+.historia__firma span { font-size: .95rem; color: var(--gris-txt, #5A5C60); }
