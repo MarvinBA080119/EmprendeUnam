@@ -74,15 +74,28 @@ class NewsletterTest extends TestCase
             ->assertJsonValidationErrors(['correo', 'acepta']);
     }
 
-    public function test_exige_aviso_de_privacidad_y_uno_de_los_13_temas(): void
+    public function test_exige_aviso_de_privacidad_y_tema(): void
     {
-        $this->post('/newsletter/suscribir', $this->datos(['acepta' => '', 'tema' => 'Cocina']))
+        $this->post('/newsletter/suscribir', $this->datos(['acepta' => '', 'tema' => '   ']))
             ->assertSessionHasErrors([
                 'acepta' => 'Para suscribirte es necesario aceptar el aviso de privacidad.',
-                'tema' => 'Elige uno de los temas de la lista.',
+                'tema' => 'Cuéntanos qué tema te interesa.',
             ]);
 
+        $this->post('/newsletter/suscribir', $this->datos(['tema' => str_repeat('a', 121)]))->assertSessionHasErrors('tema');
+
         $this->assertFalse(Comunicacion::correos()->conValor('valeria.torres@example.com')->exists());
+    }
+
+    public function test_el_tema_es_texto_libre_y_se_limpia(): void
+    {
+        $this->post('/newsletter/suscribir', $this->datos(['tema' => "  <b>Exportación</b>   de\tartesanías  "]))
+            ->assertSessionHas('exito');
+
+        $this->assertSame(
+            ['Exportación de artesanías'],
+            $this->personaDe('valeria.torres@example.com')->temasNews->pluck('tene_tema_interes')->all(),
+        );
     }
 
     public function test_un_correo_ya_suscrito_y_confirmado_no_se_duplica(): void

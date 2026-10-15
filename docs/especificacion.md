@@ -3,6 +3,8 @@
 > Versión del 14 de octubre de 2026. Este documento es la especificación completa. Síguelo al pie de la letra; si algo no está aquí, **no lo inventes**: anótalo en `PENDIENTES.md` y pregúntame.
 >
 > Nota (15/10/2026): el tamaño máximo del PDF quedó confirmado en **7 MB**. Las decisiones posteriores están en `PENDIENTES.md`.
+>
+> Cambios aprobados después (15/10/2026): el artículo lleva un **resumen** de máximo 50 palabras (`arti_resumen varchar(500)`, deja sin efecto RN-06); se admite **máximo 1 coautor**; el **tema del newsletter es texto libre**. Detalle en `PENDIENTES.md`.
 
 ---
 

@@ -55,6 +55,7 @@ class EnviarArticuloTest extends TestCase
         $articulo = Articulo::with(['palabras', 'autores'])->latest('arti_id_autor')->firstOrFail();
 
         $this->assertSame(EstatusArticulo::EN_REVISION, $articulo->arti_status);
+        $this->assertStringStartsWith('Cómo las pequeñas empresas', $articulo->arti_resumen);
         $this->assertSame(today()->toDateString(), $articulo->arti_fecha_registro->toDateString());
         $this->assertSame("articulos/{$articulo->arti_id_autor}.pdf", $articulo->arti_url_pdf);
         Storage::disk('local')->assertExists($articulo->arti_url_pdf);
@@ -140,7 +141,30 @@ class EnviarArticuloTest extends TestCase
             ->assertSessionHasErrors(['pdf' => 'El PDF no debe pesar más de 7 MB.']);
     }
 
-    public function test_registra_coautores_nuevos_sin_cuenta_de_usuario(): void
+    public function test_el_resumen_es_obligatorio_y_de_maximo_50_palabras(): void
+    {
+        $autor = $this->crearAutor();
+
+        $this->actingAs($autor)->enviar(['resumen' => ''])->assertSessionHasErrors('resumen');
+        $this->actingAs($autor)->enviar(['resumen' => trim(str_repeat('palabra ', 51))])
+            ->assertSessionHasErrors(['resumen' => 'El resumen no debe tener más de 50 palabras.']);
+        $this->actingAs($autor)->enviar(['resumen' => str_repeat('a', 501)])->assertSessionHasErrors('resumen');
+
+        $this->actingAs($autor)->enviar(['resumen' => trim(str_repeat('palabra ', 50))])->assertRedirect('/autor');
+    }
+
+    public function test_admite_como_maximo_un_coautor(): void
+    {
+        $this->actingAs($this->crearAutor())->enviar([
+            'tiene_coautores' => '1',
+            'coautores' => [
+                ['nombre' => 'Carla', 'primer_apellido' => 'Núñez', 'correo' => 'carla2@example.com', 'institucion' => 'IPN'],
+                ['nombre' => 'Raúl', 'primer_apellido' => 'Soto', 'correo' => 'raul2@example.com', 'institucion' => 'UAM'],
+            ],
+        ])->assertSessionHasErrors(['coautores' => 'Solo se admite un coautor por artículo (hasta dos personas autoras).']);
+    }
+
+    public function test_registra_un_coautor_nuevo_sin_cuenta_de_usuario(): void
     {
         $usuarios = DB::table('usuario')->count();
 
@@ -148,14 +172,13 @@ class EnviarArticuloTest extends TestCase
             'tiene_coautores' => '1',
             'coautores' => [
                 ['nombre' => 'Carla', 'primer_apellido' => 'Núñez', 'segundo_apellido' => '', 'correo' => 'Carla@Example.com', 'institucion' => 'IPN'],
-                ['nombre' => 'Raúl', 'primer_apellido' => 'Soto', 'segundo_apellido' => 'Gil', 'correo' => 'raul@example.com', 'institucion' => 'UAM'],
             ],
         ])->assertRedirect('/autor');
 
         $articulo = Articulo::with('autores.persona.correo')->latest('arti_id_autor')->firstOrFail();
         $coautores = $articulo->autores->where('pivot.auar_principal', false);
 
-        $this->assertCount(2, $coautores);
+        $this->assertCount(1, $coautores);
         $carla = $coautores->first(fn ($a) => $a->persona->pers_nombre === 'Carla');
         $this->assertSame('carla@example.com', $carla->persona->correo->comu_valor_comunicacion);
         $this->assertSame('Coautor', $carla->persona->correo->comu_etiqueta);

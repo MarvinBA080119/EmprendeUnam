@@ -24,6 +24,7 @@ class Articulo extends Model
     protected $fillable = [
         'tema_id_tema',
         'arti_titulo',
+        'arti_resumen',
         'arti_url_pdf',
         'arti_status',
         'arti_fecha_registro',

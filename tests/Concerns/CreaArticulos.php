@@ -23,6 +23,7 @@ trait CreaArticulos
     {
         return array_merge([
             'titulo' => 'Innovación social en las pymes mexicanas',
+            'resumen' => 'Cómo las pequeñas empresas mexicanas generan impacto social con modelos de negocio sostenibles.',
             'tema_id_tema' => Tema::where('tema_nombre', 'Emprendimiento social')->value('tema_id_tema'),
             'palabras' => ['Innovación', 'pymes', 'emprendimiento social', 'México', 'redes'],
             'tiene_coautores' => false,

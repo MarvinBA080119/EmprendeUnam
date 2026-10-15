@@ -2,15 +2,25 @@
 
 namespace App\Http\Requests\Publico;
 
-use App\Models\Tema;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class SuscribirNewsletterRequest extends FormRequest
 {
     public function authorize(): bool
     {
         return true;
+    }
+
+    /**
+     * El tema es texto libre: se quitan etiquetas y caracteres de control y se
+     * compactan los espacios (como hacía el newsletter del sitio original).
+     */
+    protected function prepareForValidation(): void
+    {
+        if (is_string($this->input('tema'))) {
+            $tema = preg_replace('/\s+/u', ' ', strip_tags($this->input('tema')));
+            $this->merge(['tema' => trim((string) preg_replace('/[\x00-\x1F\x7F]/u', '', (string) $tema))]);
+        }
     }
 
     /** @return array<string, mixed> */
@@ -20,8 +30,8 @@ class SuscribirNewsletterRequest extends FormRequest
             'nombre' => ['required', 'string', 'max:100'],
             'apellido' => ['required', 'string', 'max:100'],
             'correo' => ['required', 'string', 'email:rfc', 'max:254'],
-            // Uno de los 13 temas; se guarda el nombre en tene_tema_interes.
-            'tema' => ['required', 'string', Rule::in(Tema::pluck('tema_nombre')->all())],
+            // Texto libre de la persona lectora (tene_tema_interes, varchar 256).
+            'tema' => ['required', 'string', 'min:2', 'max:120'],
             'acepta' => ['accepted'],
             'sitio_web' => ['nullable', 'string', 'max:200'],
         ];
@@ -32,7 +42,8 @@ class SuscribirNewsletterRequest extends FormRequest
     {
         return [
             'acepta.accepted' => 'Para suscribirte es necesario aceptar el aviso de privacidad.',
-            'tema.in' => 'Elige uno de los temas de la lista.',
+            'tema.required' => 'Cuéntanos qué tema te interesa.',
+            'tema.min' => 'Escribe un poco más sobre el tema que te interesa.',
         ];
     }
 

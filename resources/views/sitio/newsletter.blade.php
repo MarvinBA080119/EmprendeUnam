@@ -813,15 +813,15 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .campos { display: grid; grid-template-columns: 1fr 1fr; gap: 1.35rem 1.5rem; }
 .campo--ancho { grid-column: 1 / -1; }
 .campo label { display: block; font-size: .82rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--negro); margin-bottom: .35rem; }
-.campo input, .campo select {
+.campo input {
   width: 100%; font: 500 1.15rem var(--sans); color: var(--negro); background: transparent;
   border: 0; border-bottom: 2px solid var(--linea); border-radius: 0; padding: .55rem 0; outline: 0;
   transition: border-color var(--media);
 }
-.campo input:hover, .campo select:hover { border-bottom-color: #BDBDB8; }
-.campo input:focus, .campo select:focus { border-bottom-color: var(--negro); }
+.campo input:hover { border-bottom-color: #BDBDB8; }
+.campo input:focus { border-bottom-color: var(--negro); }
 .campo input::placeholder { color: #9A9A95; }
-.campo.error input, .campo.error select { border-bottom-color: var(--rojo); }
+.campo.error input { border-bottom-color: var(--rojo); }
 .campo__error { display: block; min-height: 0; font-size: .9rem; font-weight: 500; color: var(--rojo); margin-top: .35rem; }
 .campo__error:empty { display: none; }
 .campo__ayuda { display: block; font-size: .88rem; color: var(--tenue); margin-top: .35rem; }
@@ -1287,14 +1287,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
           </div>
           <div class="campo campo--ancho">
             <label for="sTema">Tema de interés</label>
-@endverbatim
-            <select id="sTema" name="tema" required>
-              <option value="" selected disabled>Elige un tema</option>
-              @foreach ($temas as $tema)
-                <option value="{{ $tema }}">{{ $tema }}</option>
-              @endforeach
-            </select>
-@verbatim
+            <input type="text" id="sTema" name="tema" maxlength="120" placeholder="Por ejemplo: finanzas, exportación, marketing digital" required>
             <span class="campo__error" data-error="tema"></span>
           </div>
         </div>
@@ -1633,7 +1626,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
     if (!nombre) { errores.nombre = 'Escribe tu nombre.'; } else if (!soloLetras.test(nombre)) { errores.nombre = 'Usa sólo letras.'; }
     if (!apellido) { errores.apellido = 'Escribe tu apellido.'; } else if (!soloLetras.test(apellido)) { errores.apellido = 'Usa sólo letras.'; }
     if (!correo) { errores.correo = 'Escribe tu correo.'; } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(correo)) { errores.correo = 'Revisa tu correo; parece incompleto.'; }
-    if (!tema) { errores.tema = 'Elige un tema de interés.'; }
+    if (!tema) { errores.tema = 'Cuéntanos qué tema te interesa.'; } else if (tema.length < 2) { errores.tema = 'Escribe un poco más.'; }
     if (!form.acepta.checked) { errores.acepta = 'Es necesario aceptar el aviso de privacidad.'; }
     ['nombre', 'apellido', 'correo', 'tema', 'acepta'].forEach(function (c) { marcar(c, errores[c]); });
     return errores;

@@ -5,12 +5,11 @@
 
     El formulario del sitio anterior solo confirmaba en pantalla. El envío real
     lo hace el sistema: el autor se registra, el administrador activa su cuenta
-    y desde su panel envía el PDF con sus 5 palabras clave y coautores. Esta
+    y desde su panel envía el PDF con su resumen, 5 palabras clave y coautor. Esta
     página conserva los lineamientos y lleva a ese flujo.
 
-    Dos lineamientos se ajustaron a las reglas del sistema (ver PENDIENTES.md):
-    «Formato» (PDF de hasta 7 MB, no Word) y «Revisión por pares» (el dictamen
-    lo emite el comité editorial; no hay revisores externos, RN-07).
+    «Formato» se ajustó al sistema (PDF de hasta 7 MB, no Word). «Revisión por
+    pares» y «Compromiso UNAM» conservan el texto original del sitio.
 --}}
 @php
     $tituloPagina = 'Envío de artículos';
@@ -44,8 +43,8 @@
                 </div>
 
                 <div class="lineamiento">
-                    <h2>Dictamen editorial</h2>
-                    <p>Todo trabajo será sometido a un riguroso proceso de evaluación por el comité editorial.</p>
+                    <h2>Revisión por pares</h2>
+                    <p>Todo trabajo será sometido a un riguroso proceso de evaluación.</p>
                 </div>
 
                 <div class="lineamiento">
@@ -56,9 +55,9 @@
                 <div class="lineamiento lineamiento--compromiso">
                     <h2>Compromiso UNAM</h2>
                     <p>
-                        Todos los manuscritos son revisados por el comité editorial. Te notificaremos
-                        por correo el dictamen de tu artículo; si es aprobado, podrás descargar tu
-                        constancia desde tu panel de autor.
+                        Todos los manuscritos son revisados inicialmente por el comité editorial.
+                        Nos comprometemos a notificar si el artículo pasa a la fase de revisión por
+                        pares en un plazo no mayor a 15 días hábiles.
                     </p>
                 </div>
 
@@ -86,7 +85,8 @@
                         </li>
                         <li>
                             <strong>Envíe su artículo desde su panel:</strong>
-                            título, tema, cinco palabras clave, coautores (si los tiene) y el archivo PDF.
+                            título, resumen (máximo 50 palabras), tema, cinco palabras clave, un coautor
+                            (si lo tiene) y el archivo PDF.
                         </li>
                         <li>
                             <strong>Dé seguimiento.</strong>

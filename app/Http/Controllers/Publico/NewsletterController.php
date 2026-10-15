@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Publico;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Publico\SuscribirNewsletterRequest;
-use App\Models\Tema;
 use App\Services\NewsletterService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -17,12 +16,12 @@ class NewsletterController extends Controller
     /** Edición del newsletter (diseño propio, con su ventana de suscripción). */
     public function newsletter(): View
     {
-        return view('sitio.newsletter', ['temas' => $this->temas()]);
+        return view('sitio.newsletter');
     }
 
     public function suscripcion(): View
     {
-        return view('sitio.suscripcion', ['temas' => $this->temas()]);
+        return view('sitio.suscripcion');
     }
 
     /** Responde JSON a la ventana del newsletter y redirige al formulario de suscripción. */
@@ -92,11 +91,5 @@ class NewsletterController extends Controller
         $this->newsletter->darDeBaja($persona);
 
         return view('sitio.newsletter_estado', ['estado' => 'baja', 'persona' => $persona]);
-    }
-
-    /** @return list<string> */
-    private function temas(): array
-    {
-        return Tema::orderBy('tema_nombre')->pluck('tema_nombre')->all();
     }
 }

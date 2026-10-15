@@ -391,6 +391,7 @@ create table ARTICULO (
    ARTI_ID_AUTOR            SERIAL               not null,
    TEMA_ID_TEMA             INT4                 not null,
    ARTI_TITULO              VARCHAR(200)         not null,
+   ARTI_RESUMEN             VARCHAR(500)         not null,
    ARTI_URL_PDF             VARCHAR(256)         not null,
    ARTI_STATUS              VARCHAR(50)          not null,
    ARTI_FECHA_REGISTRO      DATE                 not null,

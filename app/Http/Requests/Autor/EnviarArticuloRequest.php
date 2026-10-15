@@ -13,7 +13,11 @@ class EnviarArticuloRequest extends FormRequest
 {
     public const PALABRAS = 5;
 
-    public const MAX_COAUTORES = 10;
+    /** Lineamientos: hasta dos personas autoras (el autor principal y 1 coautor). */
+    public const MAX_COAUTORES = 1;
+
+    /** Lineamientos: resumen de máximo 50 palabras (columna arti_resumen, varchar 500). */
+    public const MAX_PALABRAS_RESUMEN = 50;
 
     public function authorize(): bool
     {
@@ -34,6 +38,14 @@ class EnviarArticuloRequest extends FormRequest
     {
         return [
             'titulo' => ['required', 'string', 'max:200'],
+            'resumen' => [
+                'required', 'string', 'max:500',
+                function (string $atributo, mixed $valor, Closure $falla) {
+                    if (is_string($valor) && self::contarPalabras($valor) > self::MAX_PALABRAS_RESUMEN) {
+                        $falla('El resumen no debe tener más de '.self::MAX_PALABRAS_RESUMEN.' palabras.');
+                    }
+                },
+            ],
             'tema_id_tema' => ['required', 'integer', 'exists:tema,tema_id_tema'],
             'palabras' => ['required', 'array', 'size:'.self::PALABRAS],
             'palabras.*' => ['required', 'string', 'max:100'],
@@ -88,6 +100,7 @@ class EnviarArticuloRequest extends FormRequest
             'palabras.*.required' => 'Escribe las 5 palabras clave.',
             'coautores.required' => 'Agrega al menos un coautor o desmarca la casilla «¿Tiene coautores?».',
             'coautores.*.correo.distinct' => 'Este correo está repetido entre los coautores.',
+            'coautores.max' => 'Solo se admite un coautor por artículo (hasta dos personas autoras).',
             'pdf.mimetypes' => 'El archivo debe ser un PDF.',
             'pdf.max' => 'El PDF no debe pesar más de '.round(config('emprende.pdf_max_kb') / 1024).' MB.',
         ];
@@ -98,6 +111,7 @@ class EnviarArticuloRequest extends FormRequest
     {
         return [
             'titulo' => 'título',
+            'resumen' => 'resumen',
             'tema_id_tema' => 'tema',
             'palabras.*' => 'palabra clave',
             'coautores.*.nombre' => 'nombre del coautor',
@@ -107,6 +121,13 @@ class EnviarArticuloRequest extends FormRequest
             'coautores.*.institucion' => 'institución del coautor',
             'pdf' => 'archivo PDF',
         ];
+    }
+
+    public static function contarPalabras(string $texto): int
+    {
+        $texto = trim($texto);
+
+        return $texto === '' ? 0 : count(preg_split('/\s+/u', $texto));
     }
 
     private function empiezaConPdf(UploadedFile $archivo): bool

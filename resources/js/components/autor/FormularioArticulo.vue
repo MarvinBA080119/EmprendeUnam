@@ -8,7 +8,8 @@ const props = defineProps({
     anterior: { type: Object, default: () => ({}) },
     errores: { type: Object, default: () => ({}) },
     pdfMaxKb: { type: Number, required: true },
-    maxCoautores: { type: Number, default: 10 },
+    maxCoautores: { type: Number, default: 1 },
+    maxPalabrasResumen: { type: Number, default: 50 },
 });
 
 const TOTAL_PALABRAS = 5;
@@ -20,6 +21,7 @@ const coautoresPrevios = Array.isArray(props.anterior.coautores) ? props.anterio
 
 const form = reactive({
     titulo: props.anterior.titulo ?? '',
+    resumen: props.anterior.resumen ?? '',
     tema_id_tema: props.anterior.tema_id_tema ?? '',
     palabras: Array.from({ length: TOTAL_PALABRAS }, (_, i) => palabrasPrevias[i] ?? ''),
     tiene_coautores: Boolean(Number(props.anterior.tiene_coautores ?? 0)) || props.anterior.tiene_coautores === true,
@@ -51,6 +53,11 @@ const palabrasRepetidas = computed(() => {
         }
     });
     return repetidas;
+});
+
+const palabrasResumen = computed(() => {
+    const texto = form.resumen.trim();
+    return texto === '' ? 0 : texto.split(/\s+/).length;
 });
 
 const pdfMaxMb = computed(() => Math.round(props.pdfMaxKb / 1024));
@@ -87,6 +94,8 @@ async function alElegirPdf(evento) {
 function validar() {
     const e = {};
     if (form.titulo.trim() === '') e.titulo = 'Escribe el título del artículo.';
+    if (form.resumen.trim() === '') e.resumen = 'Escribe el resumen del artículo.';
+    else if (palabrasResumen.value > props.maxPalabrasResumen) e.resumen = `El resumen no debe tener más de ${props.maxPalabrasResumen} palabras.`;
     if (form.tema_id_tema === '') e.tema_id_tema = 'Elige un tema.';
     form.palabras.forEach((p, i) => {
         if (p.trim() === '') e[`palabras.${i}`] = 'Escribe esta palabra clave.';
@@ -144,6 +153,17 @@ async function enviar(evento) {
             </div>
 
             <div class="mb-3">
+                <label for="resumen" class="form-label">Resumen <span aria-hidden="true">*</span></label>
+                <textarea id="resumen" v-model="form.resumen" name="resumen" rows="4" maxlength="500" required
+                          class="form-control" :class="{ 'is-invalid': error('resumen') || palabrasResumen > maxPalabrasResumen }"
+                          aria-describedby="resumen-ayuda resumen-error"></textarea>
+                <div id="resumen-ayuda" class="form-text" aria-live="polite">
+                    {{ palabrasResumen }} de {{ maxPalabrasResumen }} palabras como máximo.
+                </div>
+                <div v-if="error('resumen')" id="resumen-error" class="invalid-feedback">{{ error('resumen') }}</div>
+            </div>
+
+            <div class="mb-3">
                 <label for="tema" class="form-label">Tema <span aria-hidden="true">*</span></label>
                 <select id="tema" v-model="form.tema_id_tema" name="tema_id_tema" required class="form-select"
                         :class="{ 'is-invalid': error('tema_id_tema') }" aria-describedby="tema-error">
@@ -172,11 +192,12 @@ async function enviar(evento) {
         </fieldset>
 
         <fieldset class="mb-4">
-            <legend class="h5">Coautores</legend>
+            <legend class="h5">Coautor</legend>
+            <p class="form-text mt-0">Hasta dos personas autoras por artículo: usted y, si lo hay, un coautor.</p>
             <div class="form-check mb-3">
                 <input id="tiene-coautores" v-model="form.tiene_coautores" class="form-check-input" type="checkbox"
                        name="tiene_coautores" value="1" />
-                <label for="tiene-coautores" class="form-check-label">¿Tiene coautores?</label>
+                <label for="tiene-coautores" class="form-check-label">¿Tiene coautor?</label>
             </div>
 
             <template v-if="form.tiene_coautores">
@@ -184,8 +205,8 @@ async function enviar(evento) {
                 <div v-for="(coautor, i) in form.coautores" :key="i" class="card emp-tarjeta mb-3">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h3 class="h6 mb-0">Coautor {{ i + 1 }}</h3>
-                            <button type="button" class="btn btn-outline-primary btn-sm" @click="quitarCoautor(i)">
+                            <h3 class="h6 mb-0">Coautor<template v-if="maxCoautores > 1"> {{ i + 1 }}</template></h3>
+                            <button v-if="maxCoautores > 1" type="button" class="btn btn-outline-primary btn-sm" @click="quitarCoautor(i)">
                                 Quitar<span class="visually-hidden"> al coautor {{ i + 1 }}</span>
                             </button>
                         </div>
@@ -211,8 +232,8 @@ async function enviar(evento) {
                         </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-outline-primary" :disabled="form.coautores.length >= maxCoautores"
-                        @click="agregarCoautor">
+                <button v-if="maxCoautores > 1" type="button" class="btn btn-outline-primary"
+                        :disabled="form.coautores.length >= maxCoautores" @click="agregarCoautor">
                     Agregar otro coautor
                 </button>
             </template>

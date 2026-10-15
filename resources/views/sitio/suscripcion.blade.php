@@ -4,7 +4,7 @@
     Suscripción al newsletter (suscripcion.php del sitio original).
     Se conservan la portada de la sección y los beneficios con sus textos.
     El formulario usa los campos de la especificación (6.8): nombre, apellido,
-    correo, tema de interés (los 13 temas de la revista) y aceptación del aviso.
+    correo, tema de interés (texto libre) y aceptación del aviso.
 --}}
 @php
     $tituloPagina = 'Suscripción';
@@ -85,20 +85,8 @@
 
                     <x-sitio.campo nombre="correo" etiqueta="Correo electrónico" tipo="email" maxlength="254" requerido autocomplete="email" />
 
-                    <div class="form-floating">
-                        <select id="campo-tema" name="tema" required
-                                @error('tema') aria-invalid="true" aria-describedby="campo-tema-error" @enderror
-                                @class(['form-select', 'is-invalid' => $errors->has('tema')])>
-                            <option value="" disabled @selected(old('tema') === null)>Selecciona una opción</option>
-                            @foreach ($temas as $tema)
-                                <option value="{{ $tema }}" @selected(old('tema') === $tema)>{{ $tema }}</option>
-                            @endforeach
-                        </select>
-                        <label for="campo-tema">Tema de interés</label>
-                        @error('tema')
-                            <div id="campo-tema-error" class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+                    <x-sitio.campo nombre="tema" etiqueta="Tema de interés (por ejemplo: finanzas, exportación, marketing digital)"
+                                   maxlength="120" requerido />
 
                     <div class="campo-check">
                         <input id="campo-acepta" name="acepta" type="checkbox" value="1" required

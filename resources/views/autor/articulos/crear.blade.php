@@ -20,6 +20,7 @@
                 'temas' => $temas->map(fn ($t) => ['id' => $t->tema_id_tema, 'nombre' => $t->tema_nombre])->values(),
                 'anterior' => [
                     'titulo' => old('titulo'),
+                    'resumen' => old('resumen'),
                     'tema_id_tema' => old('tema_id_tema'),
                     'palabras' => old('palabras', []),
                     'tiene_coautores' => old('tiene_coautores', false),
@@ -28,6 +29,7 @@
                 'errores' => $errors->getMessages(),
                 'pdfMaxKb' => (int) config('emprende.pdf_max_kb'),
                 'maxCoautores' => \App\Http\Requests\Autor\EnviarArticuloRequest::MAX_COAUTORES,
+                'maxPalabrasResumen' => \App\Http\Requests\Autor\EnviarArticuloRequest::MAX_PALABRAS_RESUMEN,
             ])
             <div id="formulario-articulo" data-props='@json($props)'>
                 <noscript>

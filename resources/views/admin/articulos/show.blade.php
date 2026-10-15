@@ -29,6 +29,8 @@
                         <dd class="col-sm-8">{{ $articulo->arti_fecha_registro->format('d/m/Y') }}</dd>
                         <dt class="col-sm-4">Última modificación</dt>
                         <dd class="col-sm-8">{{ $articulo->arti_fecha_modificacion->format('d/m/Y') }}</dd>
+                        <dt class="col-sm-4">Resumen</dt>
+                        <dd class="col-sm-8">{{ $articulo->arti_resumen }}</dd>
                         <dt class="col-sm-4">Palabras clave</dt>
                         <dd class="col-sm-8">{{ $articulo->palabras->pluck('pala_descripcion')->join(' · ') }}</dd>
                         @if ($articulo->constancia)

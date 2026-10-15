@@ -34,7 +34,7 @@ class ArticuloService
      * Guarda el artículo, su PDF, autores y palabras clave en UNA transacción.
      * Si algo falla se borra el PDF guardado.
      *
-     * @param  array{titulo: string, tema_id_tema: int|string, palabras: list<string>,
+     * @param  array{titulo: string, resumen: string, tema_id_tema: int|string, palabras: list<string>,
      *               tiene_coautores?: bool, coautores?: list<array<string, ?string>>}  $datos
      */
     public function enviar(Usuario $remitente, array $datos, UploadedFile $pdf): Articulo
@@ -54,6 +54,7 @@ class ArticuloService
                     'arti_id_autor' => $id,
                     'tema_id_tema' => (int) $datos['tema_id_tema'],
                     'arti_titulo' => $datos['titulo'],
+                    'arti_resumen' => $datos['resumen'],
                     'arti_url_pdf' => $ruta,
                     'arti_status' => EstatusArticulo::EN_REVISION,
                     'arti_fecha_registro' => today(),
