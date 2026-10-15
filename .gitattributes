@@ -9,3 +9,6 @@
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+
+# Los scripts SQL del modelo se guardan tal cual (sin convertir fin de línea).
+database/*.sql -text
