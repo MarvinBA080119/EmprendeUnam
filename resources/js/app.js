@@ -15,6 +15,7 @@ import '@fontsource/playfair-display/latin-700.css';
  */
 const islas = {
     'lista-temas': () => import('./components/publico/ListaTemas.vue'),
+    'formulario-articulo': () => import('./components/autor/FormularioArticulo.vue'),
 };
 
 for (const [id, cargar] of Object.entries(islas)) {

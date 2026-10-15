@@ -13,6 +13,7 @@
 - [ ] Respaldo diario de la base y de los PDF (RNF-06; tarea de infraestructura).
 - [ ] "Ver detalle" del artículo para el autor (RF-AUT-04): por ahora lo cubre el historial, que muestra el motivo de rechazo.
 - [ ] Meta de rendimiento del buscador (RNF-07, por confirmar).
+- [ ] ¿Un autor registrado que aparece como **coautor** en el artículo de otra persona debe verlo en su historial y descargar su constancia? Por ahora solo el autor principal (quien lo envió) lo ve y descarga.
 - [ ] Texto oficial y enlace del aviso de privacidad (RNF-04). Por ahora el registro muestra un texto breve provisional.
 
 ## Decisiones tomadas
@@ -29,3 +30,6 @@
 | 2026-10-15 | Tipografía del PDF de la constancia: DejaVu Serif/Sans (incluidas en dompdf). |
 | 2026-10-15 | El panel `/admin` exige cualquiera de los 6 privilegios exclusivos del administrador (`privilegio:A,B,…` = basta uno). |
 | 2026-10-15 | La recuperación de contraseña responde lo mismo exista o no el correo, para no revelar cuentas. |
+| 2026-10-15 | Si quien envía un artículo no tiene registro en `autor` (p. ej. el administrador, que tiene el privilegio `ENVIAR_ARTICULO`), se le crea uno ligado a su persona. |
+| 2026-10-15 | Folio de constancia: consecutivo anual calculado dentro de la transacción con `pg_advisory_xact_lock` (no modifica el esquema). |
+| 2026-10-15 | El correo de aprobación enlaza a la pantalla de agradecimiento del autor (requiere iniciar sesión), desde donde descarga la constancia. |

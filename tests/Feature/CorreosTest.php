@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Mail\ArticuloAprobado;
+use App\Mail\ArticuloRechazado;
+use App\Mail\ArticuloRecibido;
 use App\Mail\CuentaActivada;
 use App\Mail\CuentaRecibida;
 use App\Mail\RecuperarClave;
@@ -40,5 +43,31 @@ class CorreosTest extends TestCase
     {
         (new CuentaRecibida('<script>alert(1)</script>'))
             ->assertDontSeeInHtml('<script>alert(1)</script>', false);
+    }
+
+    public function test_articulo_recibido(): void
+    {
+        $correo = new ArticuloRecibido('Ana', 'Mi artículo');
+
+        $correo->assertHasSubject('Recibimos tu artículo');
+        $correo->assertSeeInHtml('Mi artículo');
+        $correo->assertSeeInHtml('En revisión');
+    }
+
+    public function test_articulo_aprobado_lleva_folio_y_enlace(): void
+    {
+        $correo = new ArticuloAprobado('Ana', 'Mi artículo', 'EMP-2026-0007', 'https://revista.test/autor/articulos/7/aprobado');
+
+        $correo->assertHasSubject('Tu artículo fue aprobado');
+        $correo->assertSeeInHtml('EMP-2026-0007');
+        $correo->assertSeeInHtml('https://revista.test/autor/articulos/7/aprobado');
+    }
+
+    public function test_articulo_rechazado_lleva_el_motivo(): void
+    {
+        $correo = new ArticuloRechazado('Ana', 'Mi artículo', 'No cumple con las normas editoriales.');
+
+        $correo->assertHasSubject('Dictamen de tu artículo');
+        $correo->assertSeeInHtml('No cumple con las normas editoriales.');
     }
 }
