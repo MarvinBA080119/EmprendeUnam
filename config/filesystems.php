@@ -33,7 +33,8 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            // Los PDF privados solo se entregan por controlador tras la policy.
+            'serve' => false,
             'throw' => false,
             'report' => false,
         ],

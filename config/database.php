@@ -17,7 +17,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', 'pgsql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -97,6 +97,9 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => env('DB_SSLMODE', 'prefer'),
+            // Las columnas timestamp del esquema no guardan zona horaria:
+            // la sesión de PostgreSQL usa la misma zona que la aplicación.
+            'timezone' => env('DB_TIMEZONE', env('APP_TIMEZONE', 'America/Mexico_City')),
         ],
 
         'sqlsrv' => [
