@@ -48,7 +48,7 @@ class PanelTest extends TestCase
         $this->actingAs($yo)->get("/autor/articulos/{$ajeno->arti_id_autor}/pdf")->assertForbidden();
     }
 
-    public function test_un_coautor_registrado_no_ve_el_articulo_en_su_historial(): void
+    public function test_un_coautor_registrado_ve_el_articulo_y_descarga_pdf_y_constancia(): void
     {
         $coautor = $this->crearAutor(datos: ['correo' => 'coautora@example.com']);
         $articulo = $this->enviarArticulo($this->crearAutor(), [
@@ -57,8 +57,19 @@ class PanelTest extends TestCase
             'coautores' => [['nombre' => 'X', 'primer_apellido' => 'Y', 'correo' => 'coautora@example.com', 'institucion' => 'Z']],
         ]);
 
-        $this->actingAs($coautor)->get('/autor')->assertDontSee('Escrito a cuatro manos');
-        $this->actingAs($coautor)->get("/autor/articulos/{$articulo->arti_id_autor}/pdf")->assertForbidden();
+        $this->actingAs($coautor)->get('/autor')
+            ->assertSee('Escrito a cuatro manos')
+            ->assertSee('Coautor');
+        $this->actingAs($coautor)->get("/autor/articulos/{$articulo->arti_id_autor}/pdf")->assertOk();
+
+        Mail::fake();
+        app(ConstanciaService::class)->aprobar($articulo, $this->administrador());
+
+        $this->actingAs($coautor)->get("/autor/articulos/{$articulo->arti_id_autor}/aprobado")->assertOk();
+        $this->actingAs($coautor)->get("/autor/articulos/{$articulo->arti_id_autor}/constancia")->assertOk();
+
+        // Una tercera persona sigue sin acceso.
+        $this->actingAs($this->crearAutor())->get("/autor/articulos/{$articulo->arti_id_autor}/pdf")->assertForbidden();
     }
 
     public function test_muestra_el_motivo_de_un_articulo_rechazado(): void

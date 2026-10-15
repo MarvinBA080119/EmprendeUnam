@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\FiltroArticulosRequest;
 use App\Http\Requests\Admin\RechazarArticuloRequest;
 use App\Models\Articulo;
+use App\Models\Tema;
 use App\Services\ArticuloService;
 use App\Services\ConstanciaService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -21,13 +23,27 @@ class ArticuloController extends Controller
         private ConstanciaService $constancias,
     ) {}
 
+    /** Página con la tabla Vue (los datos llegan por datos()). */
     public function index(FiltroArticulosRequest $request): View
     {
-        $estatus = $request->validated('estatus');
-
         return view('admin.articulos.index', [
-            'articulos' => $this->articulos->listarTodos($estatus, config('emprende.por_pagina')),
-            'estatus' => $estatus,
+            'filtros' => $request->safe()->except('page'),
+            'temas' => Tema::orderBy('tema_nombre')->get(['tema_id_tema', 'tema_nombre']),
+        ]);
+    }
+
+    public function datos(FiltroArticulosRequest $request): JsonResponse
+    {
+        $articulos = $this->articulos->listarTodos($request->validated(), config('emprende.por_pagina'));
+
+        return $this->jsonPaginado($articulos, fn (Articulo $a) => [
+            'id' => $a->arti_id_autor,
+            'titulo' => $a->arti_titulo,
+            'autor' => $a->autores->first()?->persona?->nombre_completo,
+            'tema' => $a->tema->tema_nombre,
+            'fecha' => $a->arti_fecha_registro->format('d/m/Y'),
+            'estatus' => ['etiqueta' => $a->arti_status->etiqueta(), 'clase' => $a->arti_status->claseInsignia()],
+            'url' => route('admin.articulos.show', $a),
         ]);
     }
 

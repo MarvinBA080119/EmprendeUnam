@@ -16,6 +16,10 @@ import '@fontsource/playfair-display/latin-700.css';
 const islas = {
     'lista-temas': () => import('./components/publico/ListaTemas.vue'),
     'formulario-articulo': () => import('./components/autor/FormularioArticulo.vue'),
+    'tabla-articulos': () => import('./components/admin/TablaArticulos.vue'),
+    'tabla-autores': () => import('./components/admin/TablaAutores.vue'),
+    'tabla-mensajes': () => import('./components/admin/TablaMensajes.vue'),
+    'tabla-suscriptores': () => import('./components/admin/TablaSuscriptores.vue'),
 };
 
 for (const [id, cargar] of Object.entries(islas)) {

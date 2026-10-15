@@ -22,6 +22,7 @@
                     <tr>
                         <th scope="col">Título</th>
                         <th scope="col">Tema</th>
+                        <th scope="col">Tu papel</th>
                         <th scope="col">Enviado</th>
                         <th scope="col">Estatus</th>
                         <th scope="col">Acciones</th>
@@ -37,6 +38,7 @@
                                 @endif
                             </td>
                             <td>{{ $articulo->tema->tema_nombre }}</td>
+                            <td>{{ $articulo->autores->first()?->pivot->auar_principal ? 'Autor principal' : 'Coautor' }}</td>
                             <td class="text-nowrap">{{ $articulo->arti_fecha_registro->format('d/m/Y') }}</td>
                             <td><x-insignia :estatus="$articulo->arti_status" /></td>
                             <td>

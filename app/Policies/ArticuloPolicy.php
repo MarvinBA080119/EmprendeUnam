@@ -8,7 +8,8 @@ use App\Models\Usuario;
 use App\Services\ArticuloService;
 
 /**
- * RN-01: un autor solo ve y descarga sus propios artículos.
+ * RN-01: un autor solo ve y descarga sus propios artículos (como autor
+ * principal o como coautor).
  * El administrador puede todo.
  */
 class ArticuloPolicy
@@ -22,7 +23,7 @@ class ArticuloPolicy
 
     public function ver(Usuario $usuario, Articulo $articulo): bool
     {
-        return $this->articulos->esPrincipal($usuario, $articulo);
+        return $this->articulos->esAutor($usuario, $articulo);
     }
 
     public function descargar(Usuario $usuario, Articulo $articulo): bool

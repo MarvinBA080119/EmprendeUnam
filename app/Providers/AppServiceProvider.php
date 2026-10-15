@@ -39,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
         // Las llaves de las rutas son enteros (evita errores de PostgreSQL con texto).
         Route::pattern('articulo', '[0-9]+');
         Route::pattern('usuario', '[0-9]+');
+        Route::pattern('curso', '[0-9]+');
+        Route::pattern('mensaje', '[0-9]+');
 
         Gate::policy(Articulo::class, ArticuloPolicy::class);
         Gate::policy(Constancia::class, ConstanciaPolicy::class);

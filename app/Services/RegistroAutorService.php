@@ -132,11 +132,11 @@ class RegistroAutorService
             ->when($estatus === 'pendiente', fn (Builder $q) => $q->where('usua_activo', false))
             ->when($estatus === 'activa', fn (Builder $q) => $q->where('usua_activo', true))
             ->when(filled($texto), function (Builder $q) use ($texto) {
-                $patron = '%'.addcslashes(Str::lower(trim($texto)), '%_\\').'%';
+                $patron = BuscadorService::patronLike($texto);
                 $q->where(fn (Builder $w) => $w
-                    ->whereRaw('lower(usua_nombre_usuario) like ?', [$patron])
+                    ->whereRaw(BuscadorService::sinAcentos('usua_nombre_usuario').' like ?', [$patron])
                     ->orWhereHas('persona', fn (Builder $p) => $p->whereRaw(
-                        "lower(concat_ws(' ', pers_nombre, pers_primer_apellido, pers_segundo_apellido)) like ?",
+                        BuscadorService::sinAcentos("concat_ws(' ', pers_nombre, pers_primer_apellido, pers_segundo_apellido)").' like ?',
                         [$patron],
                     ))
                     ->orWhereHas('persona.comunicaciones', fn (Builder $c) => $c

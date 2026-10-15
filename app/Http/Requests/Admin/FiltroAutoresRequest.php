@@ -16,7 +16,14 @@ class FiltroAutoresRequest extends FormRequest
     {
         return [
             'estatus' => ['nullable', 'in:pendiente,activa'],
-            'texto' => ['nullable', 'string', 'max:100'],
+            'q' => ['nullable', 'string', 'max:100'],
+            'page' => ['nullable', 'integer', 'min:1'],
         ];
+    }
+
+    /** @return array<string, string> */
+    public function attributes(): array
+    {
+        return ['q' => 'búsqueda'];
     }
 }

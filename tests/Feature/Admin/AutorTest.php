@@ -11,18 +11,26 @@ class AutorTest extends TestCase
 {
     use CreaCuentas;
 
-    public function test_lista_autores_con_su_estatus(): void
+    public function test_la_pagina_monta_la_tabla_vue(): void
     {
-        $pendiente = $this->crearAutor(activo: false, datos: ['nombre' => 'Pendencio']);
-        $activo = $this->crearAutor(datos: ['nombre' => 'Activia']);
-
         $this->actingAs($this->administrador())
-            ->get('/admin/autores')
+            ->get('/admin/autores?estatus=pendiente')
             ->assertOk()
-            ->assertSee('Pendencio')
-            ->assertSee('Activia')
-            ->assertSee('Pendiente')
-            ->assertSee('Activa');
+            ->assertSee('id="tabla-autores"', false)
+            ->assertSee('admin\/autores\/datos', false);
+    }
+
+    public function test_lista_autores_con_su_estatus_en_json(): void
+    {
+        $this->crearAutor(activo: false, datos: ['nombre' => 'Pendencio']);
+        $this->crearAutor(datos: ['nombre' => 'Activia']);
+
+        $respuesta = $this->actingAs($this->administrador())->getJson('/admin/autores/datos?q=')->assertOk();
+
+        $nombres = collect($respuesta->json('datos'))->pluck('activo', 'nombre');
+        $this->assertFalse($nombres['Pendencio López Ruiz']);
+        $this->assertTrue($nombres['Activia López Ruiz']);
+        $respuesta->assertJsonStructure(['datos' => [['id', 'nombre', 'usuario', 'correo', 'institucion', 'registro', 'activo', 'urlActivar']], 'meta' => ['pagina', 'ultima', 'total']]);
     }
 
     public function test_filtra_por_estatus_pendiente(): void
@@ -30,18 +38,45 @@ class AutorTest extends TestCase
         $this->crearAutor(activo: false, datos: ['nombre' => 'Pendencio']);
         $this->crearAutor(datos: ['nombre' => 'Activia']);
 
-        $this->actingAs($this->administrador())
-            ->get('/admin/autores?estatus=pendiente')
-            ->assertOk()
-            ->assertSee('Pendencio')
-            ->assertDontSee('Activia');
+        $nombres = collect($this->actingAs($this->administrador())
+            ->getJson('/admin/autores/datos?estatus=pendiente')
+            ->json('datos'))->pluck('nombre');
+
+        $this->assertContains('Pendencio López Ruiz', $nombres);
+        $this->assertNotContains('Activia López Ruiz', $nombres);
+    }
+
+    public function test_busca_sin_importar_mayusculas_ni_acentos(): void
+    {
+        $this->crearAutor(datos: ['nombre' => 'Begoña', 'primer_apellido' => 'Martínez']);
+
+        $nombres = collect($this->actingAs($this->administrador())
+            ->getJson('/admin/autores/datos?q=MARTINEZ')
+            ->json('datos'))->pluck('nombre');
+
+        $this->assertContains('Begoña Martínez Ruiz', $nombres);
     }
 
     public function test_el_administrador_no_aparece_en_la_lista(): void
     {
+        $correos = collect($this->actingAs($this->administrador())
+            ->getJson('/admin/autores/datos')
+            ->json('datos'))->pluck('correo');
+
+        $this->assertNotContains('admin@emprendeunam.invalid', $correos);
+    }
+
+    public function test_activar_desde_la_tabla_vue_responde_json(): void
+    {
+        $autor = $this->crearAutor(activo: false);
+        Mail::fake();
+
         $this->actingAs($this->administrador())
-            ->get('/admin/autores')
-            ->assertDontSee('admin@emprendeunam.invalid');
+            ->postJson("/admin/autores/{$autor->usua_id_usuario}/activar")
+            ->assertOk()
+            ->assertJson(['activo' => true]);
+
+        $this->assertTrue($autor->fresh()->usua_activo);
     }
 
     public function test_activar_una_cuenta_avisa_por_correo_y_permite_entrar(): void

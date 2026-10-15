@@ -29,9 +29,9 @@ class DictamenTest extends TestCase
             'coautores' => [['nombre' => 'Hugo', 'primer_apellido' => 'Paz', 'correo' => 'hugo@example.com', 'institucion' => 'UAM']],
         ]);
 
-        $this->actingAs($this->administrador())->get('/admin/articulos')
+        $this->actingAs($this->administrador())->getJson('/admin/articulos/datos')
             ->assertOk()
-            ->assertSee($articulo->arti_titulo);
+            ->assertJsonFragment(['titulo' => $articulo->arti_titulo]);
 
         $this->actingAs($this->administrador())->get("/admin/articulos/{$articulo->arti_id_autor}")
             ->assertOk()

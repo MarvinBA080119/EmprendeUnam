@@ -8,7 +8,8 @@ use App\Models\Usuario;
 use App\Services\ArticuloService;
 
 /**
- * RN-01: un autor solo descarga la constancia de sus artículos.
+ * RN-01: un autor solo descarga la constancia de sus artículos (como autor
+ * principal o como coautor).
  * El administrador puede todo.
  */
 class ConstanciaPolicy
@@ -22,6 +23,6 @@ class ConstanciaPolicy
 
     public function descargar(Usuario $usuario, Constancia $constancia): bool
     {
-        return $this->articulos->esPrincipal($usuario, $constancia->articulo);
+        return $this->articulos->esAutor($usuario, $constancia->articulo);
     }
 }

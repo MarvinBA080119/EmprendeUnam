@@ -13,7 +13,6 @@
 - [ ] Respaldo diario de la base y de los PDF (RNF-06; tarea de infraestructura).
 - [ ] "Ver detalle" del artículo para el autor (RF-AUT-04): por ahora lo cubre el historial, que muestra el motivo de rechazo.
 - [ ] Meta de rendimiento del buscador (RNF-07, por confirmar).
-- [ ] ¿Un autor registrado que aparece como **coautor** en el artículo de otra persona debe verlo en su historial y descargar su constancia? Por ahora solo el autor principal (quien lo envió) lo ve y descarga.
 - [ ] Texto oficial y enlace del aviso de privacidad (RNF-04). Por ahora el registro muestra un texto breve provisional.
 
 ## Decisiones tomadas
@@ -33,3 +32,9 @@
 | 2026-10-15 | Si quien envía un artículo no tiene registro en `autor` (p. ej. el administrador, que tiene el privilegio `ENVIAR_ARTICULO`), se le crea uno ligado a su persona. |
 | 2026-10-15 | Folio de constancia: consecutivo anual calculado dentro de la transacción con `pg_advisory_xact_lock` (no modifica el esquema). |
 | 2026-10-15 | El correo de aprobación enlaza a la pantalla de agradecimiento del autor (requiere iniciar sesión), desde donde descarga la constancia. |
+| 2026-10-15 | Un autor registrado que aparece como **coautor** ve el artículo en su historial (columna «Tu papel») y descarga su PDF y su constancia. Los correos de dictamen siguen yendo solo al autor principal. |
+| 2026-10-15 | Confirmado: si el administrador envía un artículo, se le crea un registro de autor ligado a su persona. |
+| 2026-10-15 | Tablas Vue con filtros y JSON para artículos, autores, consultorio y suscriptores; la lista de cursos queda en Blade (CRUD con formularios). |
+| 2026-10-15 | La lista de suscriptores distingue un tercer estado, «Sin confirmar» (se suscribió pero no confirmó), además de activo y baja. El CSV neutraliza celdas que empiezan con = + - @. |
+| 2026-10-15 | Cursos: de 1 a 5 palabras clave (la sección 6.7 dice «hasta 5» y el anexo las marca como obligatorias). |
+| 2026-10-15 | Los filtros del administrador ignoran mayúsculas y acentos con `translate()` (ver `BuscadorService::sinAcentos`). |

@@ -101,7 +101,8 @@ class ArticuloService
     }
 
     /**
-     * Artículos de los que el usuario es autor principal.
+     * Artículos del usuario, como autor principal o como coautor.
+     * Cada artículo trae en "papel" la fila de autor_articulo del usuario.
      */
     public function historialDe(Usuario $usuario, int $porPagina): LengthAwarePaginator
     {
@@ -109,22 +110,43 @@ class ArticuloService
         $idAutor = $usuario->persona?->autor?->auto_id_autor;
 
         return Articulo::query()
-            ->whereHas('autores', fn ($q) => $q
-                ->where('autor.auto_id_autor', $idAutor)
-                ->where('autor_articulo.auar_principal', true))
-            ->with(['tema', 'constancia'])
+            ->whereHas('autores', fn ($q) => $q->where('autor.auto_id_autor', $idAutor))
+            ->with([
+                'tema',
+                'constancia',
+                'autores' => fn ($q) => $q->where('autor.auto_id_autor', $idAutor),
+            ])
             ->orderByDesc('arti_fecha_registro')
             ->orderByDesc('arti_id_autor')
             ->paginate($porPagina);
     }
 
     /**
-     * Todos los artículos, para el administrador (filtros completos en la fase D).
+     * Todos los artículos, para el administrador (RF-ADM-01): filtros por
+     * estatus, tema y fecha de envío, y búsqueda por título, autor (principal
+     * o coautor) o palabra clave, sin importar mayúsculas ni acentos.
+     *
+     * @param  array{estatus?: ?string, tema?: int|string|null, desde?: ?string, hasta?: ?string, q?: ?string}  $filtros
      */
-    public function listarTodos(?string $estatus, int $porPagina): LengthAwarePaginator
+    public function listarTodos(array $filtros, int $porPagina): LengthAwarePaginator
     {
+        $texto = trim((string) ($filtros['q'] ?? ''));
+
         return Articulo::query()
-            ->when($estatus, fn ($q) => $q->where('arti_status', $estatus))
+            ->when($filtros['estatus'] ?? null, fn ($q, $estatus) => $q->where('arti_status', $estatus))
+            ->when($filtros['tema'] ?? null, fn ($q, $tema) => $q->where('tema_id_tema', (int) $tema))
+            ->when($filtros['desde'] ?? null, fn ($q, $desde) => $q->whereDate('arti_fecha_registro', '>=', $desde))
+            ->when($filtros['hasta'] ?? null, fn ($q, $hasta) => $q->whereDate('arti_fecha_registro', '<=', $hasta))
+            ->when($texto !== '', function ($q) use ($texto) {
+                $patron = BuscadorService::patronLike($texto);
+                $q->where(fn ($w) => $w
+                    ->whereRaw(BuscadorService::sinAcentos('arti_titulo').' like ?', [$patron])
+                    ->orWhereHas('palabras', fn ($p) => $p->whereRaw(BuscadorService::sinAcentos('pala_descripcion').' like ?', [$patron]))
+                    ->orWhereHas('autores.persona', fn ($p) => $p->whereRaw(
+                        BuscadorService::sinAcentos("concat_ws(' ', pers_nombre, pers_primer_apellido, pers_segundo_apellido)").' like ?',
+                        [$patron],
+                    )));
+            })
             ->with(['tema', 'autores' => fn ($q) => $q->wherePivot('auar_principal', true)->with('persona')])
             ->orderByRaw("case when arti_status = 'EN_REVISION' then 0 else 1 end")
             ->orderByDesc('arti_fecha_registro')
@@ -204,15 +226,14 @@ class ArticuloService
             ->first();
     }
 
-    /** ¿El usuario es el autor principal del artículo? */
-    public function esPrincipal(Usuario $usuario, Articulo $articulo): bool
+    /** ¿El usuario es autor (principal o coautor) del artículo? */
+    public function esAutor(Usuario $usuario, Articulo $articulo): bool
     {
         $usuario->loadMissing('persona.autor');
         $idAutor = $usuario->persona?->autor?->auto_id_autor;
 
         return $idAutor !== null && AutorArticulo::where('arti_id_autor', $articulo->arti_id_autor)
             ->where('auar_id_autor', $idAutor)
-            ->where('auar_principal', true)
             ->exists();
     }
 
