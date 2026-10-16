@@ -3,119 +3,134 @@
 @section('titulo', $articulo->arti_titulo)
 
 @section('contenido')
-    <nav aria-label="Ruta de navegación">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('admin.articulos.index') }}">Artículos</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Detalle</li>
-        </ol>
-    </nav>
+    @php($enRevision = $articulo->arti_status === \App\Enums\EstatusArticulo::EN_REVISION)
 
-    <h1 class="emp-titulo-seccion">{{ $articulo->arti_titulo }}</h1>
+    <x-encabezado :titulo="$articulo->arti_titulo" :volver="route('admin.articulos.index')" volver-texto="Artículos">
+        <p class="emp-encabezado__meta">
+            <x-insignia :estatus="$articulo->arti_status" />
+            <span>{{ $articulo->tema->tema_nombre }}</span>
+            <span>Enviado el <span class="emp-num">{{ $articulo->arti_fecha_registro->format('d/m/Y') }}</span></span>
+        </p>
+        <x-slot:acciones>
+            <a href="{{ route('admin.articulos.pdf', $articulo) }}" class="btn btn-secondary">
+                <x-icono nombre="descargar" :tamano="14" /> Descargar PDF
+            </a>
+        </x-slot:acciones>
+    </x-encabezado>
 
     @error('articulo')
-        <div class="alert alert-danger" role="alert">{{ $message }}</div>
+        <div class="alert alert-danger" role="alert"><span class="alert-texto">{{ $message }}</span></div>
     @enderror
 
-    <div class="row g-4">
-        <div class="col-12 col-xl-7">
-            <div class="card emp-tarjeta mb-4">
-                <div class="card-body">
-                    <dl class="row mb-0">
-                        <dt class="col-sm-4">Estatus</dt>
-                        <dd class="col-sm-8"><x-insignia :estatus="$articulo->arti_status" /></dd>
-                        <dt class="col-sm-4">Tema</dt>
-                        <dd class="col-sm-8">{{ $articulo->tema->tema_nombre }}</dd>
-                        <dt class="col-sm-4">Enviado</dt>
-                        <dd class="col-sm-8">{{ $articulo->arti_fecha_registro->format('d/m/Y') }}</dd>
-                        <dt class="col-sm-4">Última modificación</dt>
-                        <dd class="col-sm-8">{{ $articulo->arti_fecha_modificacion->format('d/m/Y') }}</dd>
-                        <dt class="col-sm-4">Resumen</dt>
-                        <dd class="col-sm-8">{{ $articulo->arti_resumen }}</dd>
-                        <dt class="col-sm-4">Palabras clave</dt>
-                        <dd class="col-sm-8">{{ $articulo->palabras->pluck('pala_descripcion')->join(' · ') }}</dd>
-                        @if ($articulo->constancia)
-                            <dt class="col-sm-4">Constancia</dt>
-                            <dd class="col-sm-8">
-                                Folio {{ $articulo->constancia->cons_folio }}
-                                ({{ $articulo->constancia->cons_fecha_emision->format('d/m/Y') }}) ·
-                                <a href="{{ route('autor.articulos.constancia', $articulo) }}">Descargar</a>
+    <div @class(['emp-detalle', 'emp-detalle--con-lateral' => $enRevision])>
+        <div class="emp-detalle__principal">
+            <section class="emp-seccion" aria-labelledby="sec-resumen">
+                <h2 id="sec-resumen" class="emp-seccion__titulo">Resumen</h2>
+                <p class="emp-lectura">{{ $articulo->arti_resumen }}</p>
+            </section>
+
+            <section class="emp-seccion" aria-labelledby="sec-datos">
+                <h2 id="sec-datos" class="emp-seccion__titulo">Datos del artículo</h2>
+                <dl class="emp-datos">
+                    <div>
+                        <dt>Palabras clave</dt>
+                        <dd>
+                            <ul class="emp-etiquetas">
+                                @foreach ($articulo->palabras as $palabra)
+                                    <li class="emp-etiqueta">{{ $palabra->pala_descripcion }}</li>
+                                @endforeach
+                            </ul>
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>Última modificación</dt>
+                        <dd class="emp-num">{{ $articulo->arti_fecha_modificacion->format('d/m/Y') }}</dd>
+                    </div>
+                    @if ($articulo->constancia)
+                        <div>
+                            <dt>Constancia</dt>
+                            <dd>
+                                Folio <strong>{{ $articulo->constancia->cons_folio }}</strong>,
+                                emitida el <span class="emp-num">{{ $articulo->constancia->cons_fecha_emision->format('d/m/Y') }}</span>
+                                · <a href="{{ route('autor.articulos.constancia', $articulo) }}">Descargar</a>
                             </dd>
-                        @endif
-                        @if ($articulo->arti_comentario_rechazo)
-                            <dt class="col-sm-4">Motivo del rechazo</dt>
-                            <dd class="col-sm-8" style="white-space: pre-line">{{ $articulo->arti_comentario_rechazo }}</dd>
-                        @endif
-                    </dl>
+                        </div>
+                    @endif
+                    @if ($articulo->arti_comentario_rechazo)
+                        <div>
+                            <dt>Motivo del rechazo</dt>
+                            <dd class="emp-texto-libre">{{ $articulo->arti_comentario_rechazo }}</dd>
+                        </div>
+                    @endif
+                </dl>
+            </section>
+
+            <section class="emp-seccion" aria-labelledby="sec-autores">
+                <h2 id="sec-autores" class="emp-seccion__titulo">Autores</h2>
+                <div class="emp-marco-tabla">
+                    <div class="table-responsive">
+                        <table class="table emp-tabla align-middle">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Correo</th>
+                                    <th scope="col">Institución</th>
+                                    <th scope="col">Papel</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($articulo->autores as $autor)
+                                    <tr>
+                                        <td>{{ $autor->persona?->nombre_completo }}</td>
+                                        <td class="text-break">{{ $autor->persona?->correo?->comu_valor_comunicacion }}</td>
+                                        <td>
+                                            {{ $autor->auto_institucion }}
+                                            @if ($autor->auto_grado_academico)
+                                                <div class="small text-body-secondary">{{ $autor->auto_grado_academico }}</div>
+                                            @endif
+                                        </td>
+                                        <td class="text-nowrap">{{ $autor->pivot->auar_principal ? 'Autor principal' : 'Coautor' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-
-            <h2 class="h4">Autores</h2>
-            <div class="table-responsive">
-                <table class="table emp-tabla align-middle">
-                    <thead>
-                        <tr>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Correo</th>
-                            <th scope="col">Institución</th>
-                            <th scope="col">Papel</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($articulo->autores as $autor)
-                            <tr>
-                                <td>{{ $autor->persona?->nombre_completo }}</td>
-                                <td class="text-break">{{ $autor->persona?->correo?->comu_valor_comunicacion }}</td>
-                                <td>
-                                    {{ $autor->auto_institucion }}
-                                    @if ($autor->auto_grado_academico)
-                                        <div class="small text-body-secondary">{{ $autor->auto_grado_academico }}</div>
-                                    @endif
-                                </td>
-                                <td>{{ $autor->pivot->auar_principal ? 'Autor principal' : 'Coautor' }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            <a href="{{ route('admin.articulos.pdf', $articulo) }}" class="btn btn-outline-primary">Descargar PDF del artículo</a>
+            </section>
         </div>
 
-        @if ($articulo->arti_status === \App\Enums\EstatusArticulo::EN_REVISION)
-            <div class="col-12 col-xl-5">
-                <div class="card emp-tarjeta mb-4">
-                    <div class="card-body">
-                        <h2 class="h5">Aprobar</h2>
-                        <p>Se generará la constancia con folio único y se avisará al autor. El dictamen es definitivo.</p>
-                        <form method="POST" action="{{ route('admin.articulos.aprobar', $articulo) }}"
-                              onsubmit="return confirm('¿Aprobar el artículo y generar su constancia? Esta acción no se puede deshacer.');">
-                            @csrf
-                            <button type="submit" class="btn btn-secondary">Aprobar y generar constancia</button>
-                        </form>
-                    </div>
-                </div>
+        @if ($enRevision)
+            <aside class="emp-detalle__lateral" aria-labelledby="titulo-dictamen">
+                <div class="emp-accion">
+                    <h2 id="titulo-dictamen" class="emp-accion__titulo">Dictamen</h2>
+                    <p class="emp-accion__texto">El dictamen es definitivo y se avisa al autor por correo.</p>
 
-                <div class="card emp-tarjeta">
-                    <div class="card-body">
-                        <h2 class="h5">Rechazar</h2>
-                        <form method="POST" action="{{ route('admin.articulos.rechazar', $articulo) }}"
-                              onsubmit="return confirm('¿Rechazar el artículo? El rechazo es definitivo.');">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="comentario" class="form-label">Motivo del rechazo <span aria-hidden="true">*</span></label>
-                                <textarea id="comentario" name="comentario" rows="5" minlength="20" maxlength="350" required
-                                          aria-describedby="comentario-ayuda @error('comentario') comentario-error @enderror"
-                                          @class(['form-control', 'is-invalid' => $errors->has('comentario')])>{{ old('comentario') }}</textarea>
-                                <div id="comentario-ayuda" class="form-text">Entre 20 y 350 caracteres. El autor lo recibirá por correo.</div>
-                                @error('comentario')
-                                    <div id="comentario-error" class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <button type="submit" class="btn btn-dark">Rechazar artículo</button>
-                        </form>
-                    </div>
+                    <form method="POST" action="{{ route('admin.articulos.aprobar', $articulo) }}"
+                          data-confirmar="¿Aprobar el artículo y generar su constancia? Esta acción no se puede deshacer.">
+                        @csrf
+                        <button type="submit" class="btn btn-primary w-100">Aprobar y generar constancia</button>
+                        <p class="form-text mb-0">Se genera la constancia con folio único.</p>
+                    </form>
+
+                    <div class="emp-accion__separador"><span>o</span></div>
+
+                    <form method="POST" action="{{ route('admin.articulos.rechazar', $articulo) }}"
+                          data-confirmar="¿Rechazar el artículo? El rechazo es definitivo.">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="comentario" class="form-label">Motivo del rechazo</label>
+                            <textarea id="comentario" name="comentario" rows="5" minlength="20" maxlength="350" required
+                                      aria-describedby="comentario-ayuda @error('comentario') comentario-error @enderror"
+                                      @class(['form-control', 'is-invalid' => $errors->has('comentario')])>{{ old('comentario') }}</textarea>
+                            <div id="comentario-ayuda" class="form-text">Entre 20 y 350 caracteres. El autor lo recibirá por correo.</div>
+                            @error('comentario')
+                                <div id="comentario-error" class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-secondary w-100">Rechazar artículo</button>
+                    </form>
                 </div>
-            </div>
+            </aside>
         @endif
     </div>
 @endsection

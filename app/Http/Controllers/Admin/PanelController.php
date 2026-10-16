@@ -12,6 +12,10 @@ class PanelController extends Controller
 
     public function index(): View
     {
-        return view('admin.panel', ['contadores' => $this->panel->contadores()]);
+        return view('admin.panel', [
+            'contadores' => $this->panel->contadores(),
+            'bandeja' => $this->panel->bandeja(),
+            'cursosVigentes' => $this->panel->cursosVigentes(),
+        ]);
     }
 }

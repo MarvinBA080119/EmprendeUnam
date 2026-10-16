@@ -3,7 +3,7 @@
 @section('titulo', 'Artículos')
 
 @section('contenido')
-    <h1 class="emp-titulo-seccion">Artículos</h1>
+    <x-encabezado titulo="Artículos" descripcion="Todos los artículos recibidos. Los que esperan dictamen aparecen primero." />
 
     @php($props = [
         'urlDatos' => route('admin.articulos.datos'),

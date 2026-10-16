@@ -3,7 +3,7 @@
 @section('titulo', 'Consultorio')
 
 @section('contenido')
-    <h1 class="emp-titulo-seccion">Consultorio</h1>
+    <x-encabezado titulo="Consultorio" descripcion="Preguntas de los lectores. Al responder, la respuesta se envía por correo y se publica en el sitio." />
 
     @php($props = [
         'urlDatos' => route('admin.consultorio.datos'),

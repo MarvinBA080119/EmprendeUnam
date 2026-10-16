@@ -5,17 +5,12 @@
 @section('titulo', $editando ? 'Editar curso' : 'Publicar curso')
 
 @section('contenido')
-    <nav aria-label="Ruta de navegación">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('admin.cursos.index') }}">Cursos</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ $editando ? 'Editar' : 'Publicar' }}</li>
-        </ol>
-    </nav>
+    <x-encabezado :titulo="$editando ? 'Editar curso' : 'Publicar curso'"
+                  descripcion="Se muestra en el sitio público y en el buscador hasta su fecha de inicio."
+                  :volver="route('admin.cursos.index')" volver-texto="Cursos" />
 
-    <h1 class="emp-titulo-seccion">{{ $editando ? 'Editar curso' : 'Publicar curso' }}</h1>
-
-    <div class="row">
-        <div class="col-12 col-xl-9">
+    <div class="emp-formulario">
+        <div>
             <form method="POST" action="{{ $editando ? route('admin.cursos.update', $curso) : route('admin.cursos.store') }}" novalidate>
                 @csrf
                 @if ($editando)
@@ -37,7 +32,7 @@
 
                 @php($palabras = old('palabras', $curso->palabras?->pluck('pala_descripcion')->all() ?? []))
                 <fieldset class="mb-3" aria-describedby="palabras-ayuda">
-                    <legend class="form-label fs-6 mb-1">Palabras clave <span aria-hidden="true">*</span></legend>
+                    <legend class="form-label fs-6 mb-1">Palabras clave</legend>
                     <p id="palabras-ayuda" class="form-text mt-0">De 1 a 5 palabras clave distintas. Clasifican el curso en el buscador.</p>
                     <div class="row g-2">
                         @for ($i = 0; $i < \App\Http\Requests\Admin\CursoRequest::MAX_PALABRAS; $i++)
@@ -53,13 +48,13 @@
                         @endfor
                     </div>
                     @error('palabras')
-                        <div class="text-danger small mt-2" role="alert">{{ $message }}</div>
+                        <div class="invalid-feedback d-block" role="alert">{{ $message }}</div>
                     @enderror
                 </fieldset>
 
-                <div class="d-flex gap-3 align-items-center">
+                <div class="emp-formulario__acciones">
+                    <a href="{{ route('admin.cursos.index') }}" class="btn btn-secondary">Cancelar</a>
                     <button type="submit" class="btn btn-primary">{{ $editando ? 'Guardar cambios' : 'Publicar curso' }}</button>
-                    <a href="{{ route('admin.cursos.index') }}">Cancelar</a>
                 </div>
             </form>
         </div>

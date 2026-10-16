@@ -44,6 +44,33 @@ class PanelTest extends TestCase
             ->assertSee('Suscriptores activos del newsletter');
     }
 
+    public function test_la_bandeja_muestra_lo_pendiente_y_escapa_los_nombres(): void
+    {
+        Storage::fake('local');
+        $this->crearAutor(activo: false, datos: ['nombre' => "Ana'); alert(1); ('", 'primer_apellido' => 'O<b>Neil']);
+        $this->enviarArticulo($this->crearAutor(), ['titulo' => 'Redes de mentoría en incubadoras']);
+        $this->crearMensaje(['mens_asunto' => '¿Cómo valúo mi empresa?']);
+
+        $respuesta = $this->actingAs($this->administrador())->get('/admin')->assertOk();
+
+        $respuesta->assertSee('Redes de mentoría en incubadoras')
+            ->assertSee('¿Cómo valúo mi empresa?')
+            ->assertSee('data-confirmar=', false)
+            ->assertDontSee("Ana'); alert(1)", false)
+            ->assertDontSee('O<b>Neil', false)
+            ->assertSee('Ana&#039;); alert(1); (&#039; O&lt;b&gt;Neil', false);
+    }
+
+    public function test_la_barra_lateral_muestra_los_pendientes(): void
+    {
+        $this->crearAutor(activo: false);
+        $pendientes = app(PanelAdminService::class)->contadores()['autores_pendientes'];
+
+        $this->actingAs($this->administrador())->get('/admin/cursos')
+            ->assertOk()
+            ->assertSee('<span class="emp-cuenta">'.$pendientes.'<span class="visually-hidden"> por activar</span></span>', false);
+    }
+
     public function test_todas_las_secciones_del_panel_responden(): void
     {
         $admin = $this->administrador();

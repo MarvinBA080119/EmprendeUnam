@@ -27,7 +27,7 @@ const enlaceCsv = computed(() => {
 
 <template>
     <div>
-        <form class="row g-2 align-items-end mb-3" role="search" @submit.prevent>
+        <form class="row g-2 align-items-end emp-filtros" role="search" @submit.prevent>
             <div class="col-12 col-md-5">
                 <label for="sus-q" class="form-label">Buscar</label>
                 <input id="sus-q" v-model="filtros.q" type="search" maxlength="100" class="form-control"
@@ -47,33 +47,37 @@ const enlaceCsv = computed(() => {
 
         <div v-if="error" class="alert alert-danger" role="alert">{{ error }}</div>
 
-        <div class="table-responsive" :aria-busy="cargando">
-            <table class="table emp-tabla align-middle">
-                <caption class="visually-hidden">Suscriptores del newsletter</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Correo</th>
-                        <th scope="col">Tema de interés</th>
-                        <th scope="col">Alta</th>
-                        <th scope="col">Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-if="!cargando && filas.length === 0">
-                        <td colspan="5">No hay suscriptores con esos criterios.</td>
-                    </tr>
-                    <tr v-for="s in filas" :key="s.id">
-                        <td>{{ s.nombre }}</td>
-                        <td class="text-break">{{ s.correo }}</td>
-                        <td>{{ s.temas }}</td>
-                        <td class="text-nowrap">{{ s.alta }}</td>
-                        <td><span class="emp-insignia" :class="s.estadoClase">{{ s.estadoEtiqueta }}</span></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="emp-marco-tabla">
+            <div class="table-responsive" :aria-busy="cargando">
+                <table class="table emp-tabla align-middle">
+                    <caption class="visually-hidden">Suscriptores del newsletter</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Correo</th>
+                            <th scope="col">Tema de interés</th>
+                            <th scope="col">Alta</th>
+                            <th scope="col">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="!cargando && filas.length === 0">
+                            <td colspan="5" class="emp-vacio">No hay suscriptores con esos criterios.</td>
+                        </tr>
+                        <tr v-for="s in filas" :key="s.id">
+                            <td>{{ s.nombre }}</td>
+                            <td class="text-break">{{ s.correo }}</td>
+                            <td>{{ s.temas }}</td>
+                            <td class="text-nowrap">{{ s.alta }}</td>
+                            <td><span class="emp-insignia" :class="s.estadoClase">{{ s.estadoEtiqueta }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="emp-marco-tabla__pie">
+                <p v-if="cargando" class="emp-cargando" role="status">Cargando…</p>
+                <Paginacion :meta="meta" @ir="irAPagina" />
+            </div>
         </div>
-        <p v-if="cargando" class="small" role="status">Cargando…</p>
-        <Paginacion :meta="meta" @ir="irAPagina" />
     </div>
 </template>

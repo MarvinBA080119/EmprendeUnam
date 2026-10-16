@@ -3,72 +3,78 @@
 @section('titulo', 'Cursos')
 
 @section('contenido')
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-        <h1 class="emp-titulo-seccion mb-0 flex-grow-1">Cursos</h1>
-        <a href="{{ route('admin.cursos.create') }}" class="btn btn-primary">Publicar curso</a>
-    </div>
+    <x-encabezado titulo="Cursos" descripcion="Cursos que se muestran en el sitio público hasta su fecha de inicio.">
+        <x-slot:acciones>
+            <a href="{{ route('admin.cursos.create') }}" class="btn btn-primary"><x-icono nombre="mas" :tamano="14" /> Publicar curso</a>
+        </x-slot:acciones>
+    </x-encabezado>
 
-    <form method="GET" action="{{ route('admin.cursos.index') }}" class="row g-2 align-items-end mb-3">
-        <div class="col-8 col-md-4">
+    <form method="GET" action="{{ route('admin.cursos.index') }}" class="row g-2 align-items-end emp-filtros">
+        <div class="col-8 col-md-4 col-xl-3">
             <label for="filtro-vigencia" class="form-label">Mostrar</label>
             <select id="filtro-vigencia" name="vigencia" class="form-select" onchange="this.form.submit()">
                 <option value="">Todos</option>
-                <option value="vigentes" @selected($vigencia === 'vigentes')>Vigentes (visibles al público)</option>
+                <option value="vigentes" @selected($vigencia === 'vigentes')>Visibles al público</option>
                 <option value="pasados" @selected($vigencia === 'pasados')>Con fecha pasada</option>
             </select>
         </div>
-        <div class="col-4 col-md-2">
-            <button type="submit" class="btn btn-secondary w-100">Filtrar</button>
+        <div class="col-4 col-md-auto">
+            <noscript><button type="submit" class="btn btn-secondary w-100">Filtrar</button></noscript>
         </div>
     </form>
 
-    @if ($cursos->isEmpty())
-        <p>No hay cursos con esos criterios.</p>
-    @else
-        <div class="table-responsive">
-            <table class="table emp-tabla align-middle">
-                <caption class="visually-hidden">Cursos publicados</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Curso</th>
-                        <th scope="col">Institución</th>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Palabras clave</th>
-                        <th scope="col"><span class="visually-hidden">Acciones</span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($cursos as $curso)
+    <div class="emp-marco-tabla">
+        @if ($cursos->isEmpty())
+            <p class="emp-vacio">No hay cursos con esos criterios.</p>
+        @else
+            <div class="table-responsive">
+                <table class="table emp-tabla align-middle">
+                    <caption class="visually-hidden">Cursos publicados</caption>
+                    <thead>
                         <tr>
-                            <td>
-                                <a href="{{ $curso->curs_url }}" target="_blank" rel="noopener noreferrer">{{ $curso->curs_nombre_curso }}</a>
-                                @if ($curso->curs_fecha?->lt(today()))
-                                    <div class="small">No visible al público (fecha pasada)</div>
-                                @endif
-                            </td>
-                            <td>{{ $curso->curs_institucion }}</td>
-                            <td class="text-nowrap">{{ $curso->curs_fecha?->format('d/m/Y') }}</td>
-                            <td>{{ $curso->palabras->pluck('pala_descripcion')->join(' · ') }}</td>
-                            <td class="text-end">
-                                <div class="d-flex justify-content-end gap-2">
-                                    <a href="{{ route('admin.cursos.edit', $curso) }}" class="btn btn-outline-primary btn-sm">
-                                        Editar<span class="visually-hidden"> «{{ $curso->curs_nombre_curso }}»</span>
-                                    </a>
-                                    <form method="POST" action="{{ route('admin.cursos.destroy', $curso) }}"
-                                          onsubmit="return confirm('¿Eliminar este curso? Esta acción no se puede deshacer.');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-dark btn-sm">
-                                            Eliminar<span class="visually-hidden"> «{{ $curso->curs_nombre_curso }}»</span>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
+                            <th scope="col">Curso</th>
+                            <th scope="col">Institución</th>
+                            <th scope="col">Inicio</th>
+                            <th scope="col">Palabras clave</th>
+                            <th scope="col"><span class="visually-hidden">Acciones</span></th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        {{ $cursos->links() }}
-    @endif
+                    </thead>
+                    <tbody>
+                        @foreach ($cursos as $curso)
+                            @php($pasado = $curso->curs_fecha?->lt(today()))
+                            <tr>
+                                <td>
+                                    <a href="{{ $curso->curs_url }}" target="_blank" rel="noopener noreferrer">{{ $curso->curs_nombre_curso }}</a>
+                                    @if ($pasado)
+                                        <div class="small text-body-secondary">No visible al público (fecha pasada)</div>
+                                    @endif
+                                </td>
+                                <td>{{ $curso->curs_institucion }}</td>
+                                <td class="text-nowrap emp-num">{{ $curso->curs_fecha?->format('d/m/Y') }}</td>
+                                <td class="text-body-secondary">{{ $curso->palabras->pluck('pala_descripcion')->join(' · ') }}</td>
+                                <td class="text-end">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a href="{{ route('admin.cursos.edit', $curso) }}" class="btn btn-secondary btn-sm">
+                                            Editar<span class="visually-hidden"> «{{ $curso->curs_nombre_curso }}»</span>
+                                        </a>
+                                        <form method="POST" action="{{ route('admin.cursos.destroy', $curso) }}"
+                                              data-confirmar="¿Eliminar el curso «{{ $curso->curs_nombre_curso }}»? Esta acción no se puede deshacer.">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-quieto btn-sm">
+                                                Eliminar<span class="visually-hidden"> «{{ $curso->curs_nombre_curso }}»</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @if ($cursos->hasPages())
+                <div class="emp-marco-tabla__pie">{{ $cursos->links() }}</div>
+            @endif
+        @endif
+    </div>
 @endsection

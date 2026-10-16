@@ -3,85 +3,80 @@
 @section('titulo', $mensaje->mens_asunto)
 
 @section('contenido')
-    <nav aria-label="Ruta de navegación">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('admin.consultorio.index') }}">Consultorio</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Mensaje</li>
-        </ol>
-    </nav>
-
-    <h1 class="emp-titulo-seccion">{{ $mensaje->mens_asunto }}</h1>
+    <x-encabezado :titulo="$mensaje->mens_asunto" :volver="route('admin.consultorio.index')" volver-texto="Consultorio">
+        <p class="emp-encabezado__meta">
+            <x-insignia :estatus="$mensaje->mens_status" />
+            <span>Recibido el <span class="emp-num">{{ $mensaje->mens_fecha_envio->format('d/m/Y H:i') }}</span></span>
+        </p>
+    </x-encabezado>
 
     @error('mensaje')
-        <div class="alert alert-danger" role="alert">{{ $message }}</div>
+        <div class="alert alert-danger" role="alert"><span class="alert-texto">{{ $message }}</span></div>
     @enderror
 
-    <div class="row g-4">
-        <div class="col-12 col-xl-7">
-            <div class="card emp-tarjeta mb-4">
-                <div class="card-body">
-                    <dl class="row mb-3">
-                        <dt class="col-sm-3">Estatus</dt>
-                        <dd class="col-sm-9"><x-insignia :estatus="$mensaje->mens_status" /></dd>
-                        <dt class="col-sm-3">De</dt>
-                        <dd class="col-sm-9">{{ $mensaje->mens_remitente }} &lt;{{ $mensaje->mens_correo }}&gt;</dd>
-                        @if ($mensaje->mens_lugar)
-                            <dt class="col-sm-3">Lugar</dt>
-                            <dd class="col-sm-9">{{ $mensaje->mens_lugar }}</dd>
-                        @endif
-                        <dt class="col-sm-3">Recibido</dt>
-                        <dd class="col-sm-9">{{ $mensaje->mens_fecha_envio->format('d/m/Y H:i') }}</dd>
-                    </dl>
-                    <p class="mb-0" style="white-space: pre-line">{{ $mensaje->mens_descripcion }}</p>
-                </div>
-            </div>
+    <div @class(['emp-detalle', 'emp-detalle--con-lateral' => $pendiente])>
+        <div class="emp-detalle__principal">
+            <section class="emp-seccion" aria-labelledby="sec-mensaje">
+                <h2 id="sec-mensaje" class="emp-seccion__titulo">Mensaje</h2>
+                <dl class="emp-datos emp-datos--compactos">
+                    <div>
+                        <dt>De</dt>
+                        <dd>{{ $mensaje->mens_remitente }} <span class="text-body-secondary text-break">&lt;{{ $mensaje->mens_correo }}&gt;</span></dd>
+                    </div>
+                    @if ($mensaje->mens_lugar)
+                        <div>
+                            <dt>Lugar</dt>
+                            <dd>{{ $mensaje->mens_lugar }}</dd>
+                        </div>
+                    @endif
+                </dl>
+                <p class="emp-lectura emp-texto-libre">{{ $mensaje->mens_descripcion }}</p>
+            </section>
 
             @if ($mensaje->respuesta)
-                <h2 class="h4">Respuesta</h2>
-                <div class="card emp-tarjeta">
-                    <div class="card-body">
-                        <p class="small mb-2">{{ $mensaje->respuesta->mens_remitente }} · {{ $mensaje->respuesta->mens_fecha_envio->format('d/m/Y H:i') }}</p>
-                        <p class="mb-0" style="white-space: pre-line">{{ $mensaje->respuesta->mens_descripcion }}</p>
+                <section class="emp-seccion" aria-labelledby="sec-respuesta">
+                    <h2 id="sec-respuesta" class="emp-seccion__titulo">Respuesta</h2>
+                    <div class="emp-respuesta">
+                        <p class="emp-respuesta__meta">
+                            {{ $mensaje->respuesta->mens_remitente }} ·
+                            <span class="emp-num">{{ $mensaje->respuesta->mens_fecha_envio->format('d/m/Y H:i') }}</span>
+                        </p>
+                        <p class="emp-lectura emp-texto-libre mb-0">{{ $mensaje->respuesta->mens_descripcion }}</p>
                     </div>
-                </div>
+                </section>
             @endif
         </div>
 
         @if ($pendiente)
-            <div class="col-12 col-xl-5">
-                <div class="card emp-tarjeta mb-4">
-                    <div class="card-body">
-                        <h2 class="h5">Responder</h2>
-                        <p class="small">La respuesta se envía al correo del lector y el mensaje se publica en el consultorio (sin su correo).</p>
-                        <form method="POST" action="{{ route('admin.consultorio.responder', $mensaje) }}">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="respuesta" class="form-label">Respuesta <span aria-hidden="true">*</span></label>
-                                <textarea id="respuesta" name="respuesta" rows="8" maxlength="700" required
-                                          aria-describedby="respuesta-ayuda @error('respuesta') respuesta-error @enderror"
-                                          @class(['form-control', 'is-invalid' => $errors->has('respuesta')])>{{ old('respuesta') }}</textarea>
-                                <div id="respuesta-ayuda" class="form-text">Máximo 700 caracteres.</div>
-                                @error('respuesta')
-                                    <div id="respuesta-error" class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <button type="submit" class="btn btn-primary">Enviar respuesta</button>
-                        </form>
-                    </div>
-                </div>
+            <aside class="emp-detalle__lateral" aria-labelledby="titulo-responder">
+                <div class="emp-accion">
+                    <h2 id="titulo-responder" class="emp-accion__titulo">Responder</h2>
+                    <p class="emp-accion__texto">La respuesta se envía al correo del lector y el mensaje se publica en el consultorio, sin su correo.</p>
+                    <form method="POST" action="{{ route('admin.consultorio.responder', $mensaje) }}">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="respuesta" class="form-label">Respuesta</label>
+                            <textarea id="respuesta" name="respuesta" rows="8" maxlength="700" required
+                                      aria-describedby="respuesta-ayuda @error('respuesta') respuesta-error @enderror"
+                                      @class(['form-control', 'is-invalid' => $errors->has('respuesta')])>{{ old('respuesta') }}</textarea>
+                            <div id="respuesta-ayuda" class="form-text">Máximo 700 caracteres.</div>
+                            @error('respuesta')
+                                <div id="respuesta-error" class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Enviar respuesta</button>
+                    </form>
 
-                <div class="card emp-tarjeta">
-                    <div class="card-body">
-                        <h2 class="h5">Rechazar</h2>
-                        <p class="small">Un mensaje rechazado no se responde ni se publica.</p>
-                        <form method="POST" action="{{ route('admin.consultorio.rechazar', $mensaje) }}"
-                              onsubmit="return confirm('¿Rechazar este mensaje? No se responderá ni se publicará.');">
-                            @csrf
-                            <button type="submit" class="btn btn-dark">Rechazar mensaje</button>
-                        </form>
-                    </div>
+                    <div class="emp-accion__separador"><span>o</span></div>
+
+                    <form method="POST" action="{{ route('admin.consultorio.rechazar', $mensaje) }}"
+                          data-confirmar="¿Rechazar este mensaje? No se responderá ni se publicará.">
+                        @csrf
+                        <button type="submit" class="btn btn-secondary w-100">Rechazar mensaje</button>
+                        <p class="form-text mb-0">Un mensaje rechazado no se responde ni se publica.</p>
+                    </form>
                 </div>
-            </div>
+            </aside>
         @endif
     </div>
 @endsection

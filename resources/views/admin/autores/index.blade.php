@@ -3,7 +3,7 @@
 @section('titulo', 'Autores')
 
 @section('contenido')
-    <h1 class="emp-titulo-seccion">Autores</h1>
+    <x-encabezado titulo="Autores" descripcion="Cuentas de autor registradas. Las pendientes no pueden entrar hasta que las actives." />
 
     {{-- Un solo argumento en @json: con dos, Blade toma el segundo como opciones
          y se pierde el escape de comillas y < > (XSS). --}}

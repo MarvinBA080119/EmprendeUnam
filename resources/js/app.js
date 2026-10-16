@@ -22,6 +22,14 @@ document.addEventListener('click', (evento) => {
     boton.setAttribute('aria-pressed', String(visible));
 });
 
+// Formularios que piden confirmación (el texto viene escapado en data-confirmar).
+document.addEventListener('submit', (evento) => {
+    const formulario = evento.target.closest('form[data-confirmar]');
+    if (formulario && !window.confirm(formulario.dataset.confirmar)) {
+        evento.preventDefault();
+    }
+});
+
 // Tras un error de validación, el foco va al primer campo marcado.
 const primerInvalido = document.querySelector('.form-control.is-invalid, .form-select.is-invalid');
 if (primerInvalido) {

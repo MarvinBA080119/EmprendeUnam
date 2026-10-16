@@ -7,6 +7,7 @@ use App\Models\Articulo;
 use App\Models\Constancia;
 use App\Policies\ArticuloPolicy;
 use App\Policies\ConstanciaPolicy;
+use App\Services\PanelAdminService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -64,6 +66,11 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Paginator::useBootstrapFive();
+
+        // Contadores de pendientes en la barra lateral del administrador.
+        View::composer('layouts.admin', function ($vista) {
+            $vista->with('pendientes', app(PanelAdminService::class)->contadores());
+        });
 
         // Componentes Blade anónimos en resources/views/componentes (<x-nombre />).
         Blade::anonymousComponentPath(resource_path('views/componentes'));

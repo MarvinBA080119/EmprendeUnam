@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue';
 import Paginacion from '../comun/Paginacion.vue';
 import { useListado } from '../comun/useListado';
 
@@ -16,11 +17,13 @@ const { filtros, filas, meta, cargando, error, irAPagina, limpiar } = useListado
     desde: props.filtros.desde ?? '',
     hasta: props.filtros.hasta ?? '',
 });
+
+const hayFiltros = computed(() => Object.values(filtros).some((v) => String(v).trim() !== ''));
 </script>
 
 <template>
     <div>
-        <form class="row g-2 align-items-end mb-3" role="search" @submit.prevent>
+        <form class="row g-2 align-items-end emp-filtros" role="search" @submit.prevent>
             <div class="col-12 col-lg-4">
                 <label for="art-q" class="form-label">Buscar</label>
                 <input id="art-q" v-model="filtros.q" type="search" maxlength="200" class="form-control"
@@ -48,40 +51,44 @@ const { filtros, filas, meta, cargando, error, irAPagina, limpiar } = useListado
                 <label for="art-hasta" class="form-label">Hasta</label>
                 <input id="art-hasta" v-model="filtros.hasta" type="date" class="form-control" />
             </div>
-            <div class="col-12">
-                <button type="button" class="btn btn-link px-0" @click="limpiar">Limpiar filtros</button>
+            <div v-if="hayFiltros" class="col-12">
+                <button type="button" class="btn btn-link btn-sm px-0" @click="limpiar">Limpiar filtros</button>
             </div>
         </form>
 
         <div v-if="error" class="alert alert-danger" role="alert">{{ error }}</div>
 
-        <div class="table-responsive" :aria-busy="cargando">
-            <table class="table emp-tabla align-middle">
-                <caption class="visually-hidden">Artículos de todos los autores</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Título</th>
-                        <th scope="col">Autor principal</th>
-                        <th scope="col">Tema</th>
-                        <th scope="col">Enviado</th>
-                        <th scope="col">Estatus</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-if="!cargando && filas.length === 0">
-                        <td colspan="5">No hay artículos con esos criterios.</td>
-                    </tr>
-                    <tr v-for="a in filas" :key="a.id">
-                        <td><a :href="a.url">{{ a.titulo }}</a></td>
-                        <td>{{ a.autor }}</td>
-                        <td>{{ a.tema }}</td>
-                        <td class="text-nowrap">{{ a.fecha }}</td>
-                        <td><span class="emp-insignia" :class="a.estatus.clase">{{ a.estatus.etiqueta }}</span></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="emp-marco-tabla">
+            <div class="table-responsive" :aria-busy="cargando">
+                <table class="table emp-tabla align-middle">
+                    <caption class="visually-hidden">Artículos de todos los autores</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Título</th>
+                            <th scope="col">Autor principal</th>
+                            <th scope="col">Tema</th>
+                            <th scope="col">Enviado</th>
+                            <th scope="col">Estatus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="!cargando && filas.length === 0">
+                            <td colspan="5" class="emp-vacio">No hay artículos con esos criterios.</td>
+                        </tr>
+                        <tr v-for="a in filas" :key="a.id">
+                            <td><a :href="a.url">{{ a.titulo }}</a></td>
+                            <td>{{ a.autor }}</td>
+                            <td>{{ a.tema }}</td>
+                            <td class="text-nowrap">{{ a.fecha }}</td>
+                            <td><span class="emp-insignia" :class="a.estatus.clase">{{ a.estatus.etiqueta }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="emp-marco-tabla__pie">
+                <p v-if="cargando" class="emp-cargando" role="status">Cargando…</p>
+                <Paginacion :meta="meta" @ir="irAPagina" />
+            </div>
         </div>
-        <p v-if="cargando" class="small" role="status">Cargando…</p>
-        <Paginacion :meta="meta" @ir="irAPagina" />
     </div>
 </template>
