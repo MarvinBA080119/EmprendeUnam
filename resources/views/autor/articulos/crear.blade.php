@@ -3,17 +3,11 @@
 @section('titulo', 'Enviar artículo')
 
 @section('contenido')
-    <nav aria-label="Ruta de navegación">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('autor.panel') }}">Mis artículos</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Enviar artículo</li>
-        </ol>
-    </nav>
+    <x-encabezado titulo="Enviar artículo" :volver="route('autor.panel')" volver-texto="Mis artículos"
+                  descripcion="El equipo editorial lo revisará y te avisará por correo el dictamen." />
 
-    <h1 class="emp-titulo-seccion">Enviar artículo</h1>
-
-    <div class="row">
-        <div class="col-12 col-xl-10">
+    <div>
+        <div>
             @php($props = [
                 'accion' => route('autor.articulos.store'),
                 'csrf' => csrf_token(),
@@ -30,6 +24,7 @@
                 'pdfMaxKb' => (int) config('emprende.pdf_max_kb'),
                 'maxCoautores' => \App\Http\Requests\Autor\EnviarArticuloRequest::MAX_COAUTORES,
                 'maxPalabrasResumen' => \App\Http\Requests\Autor\EnviarArticuloRequest::MAX_PALABRAS_RESUMEN,
+                'urlCancelar' => route('autor.panel'),
             ])
             <div id="formulario-articulo" data-props='@json($props)'>
                 <noscript>
