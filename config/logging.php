@@ -58,7 +58,7 @@ return [
             'ignore_exceptions' => false,
         ],
 
-        // Acciones del administrador (activar, aprobar, rechazar, responder).
+        // Acciones del administrador (activar, aprobar, rechazar, responder, cursos, avisos).
         'admin' => [
             'driver' => 'daily',
             'path' => storage_path('logs/admin.log'),

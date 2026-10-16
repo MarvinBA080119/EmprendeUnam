@@ -20,6 +20,15 @@
 - [ ] Índice GIN para el buscador (requiere cambio en la BD; por ahora el texto completo se calcula en cada consulta, suficiente para el volumen esperado).
 - [ ] Contador de visitas del sitio original (`includes/contador.php`): no se usaba en ninguna página y no se migró.
 
+### De la revisión de seguridad (fase F) — requieren decisión
+
+- [ ] **Verificar el correo al registrarse.** Hoy cualquiera puede registrarse con un correo ajeno (la columna `usua_correo_verificado` no se usa); la única barrera es que el administrador revise la cuenta antes de activarla. Si después alguien agrega ese correo como coautor, la cuenta queda ligada al artículo. Propuesta: enlace firmado de verificación antes de la activación, y mostrar al administrador si el correo ya se verificó.
+- [ ] **Correos «apartados» por el newsletter.** `uq_comunicacion_valor` impide repetir un correo en toda la tabla: si alguien suscribe un correo ajeno al newsletter, su dueño ya no puede registrarse como autor («Este correo ya está registrado»). Además, la suscripción reactiva un correo marcado como inactivo. Propuesta: que el registro reutilice la persona que solo es suscriptora (tras verificar el correo) y que el formulario público no reactive correos inactivos.
+- [ ] **Token del newsletter.** Un solo token sirve para confirmar y para dar de baja, se guarda en texto plano y no vence; si alguien vuelve a enviar la suscripción de una persona, el token cambia y los enlaces de baja de correos anteriores dejan de servir. Riesgo bajo (256 bits aleatorios; la baja pide confirmar con un botón).
+- [ ] **Contraseña del administrador.** Su hash bcrypt está en `database/datos_iniciales.sql` dentro del repositorio. Recomendación: cambiarla al instalar en producción (por recuperación de contraseña, que requiere su correo real, ya pendiente arriba).
+- [ ] **Política de contenido (CSP) completa.** Por ahora solo se envía `frame-ancestors 'self'`; una CSP estricta requiere quitar los scripts en línea del sitio público.
+- [ ] Enumeración de cuentas: el registro dice «Este correo ya está registrado» (lo pide la especificación, 4.5) y el newsletter distingue «ya suscrito». El inicio de sesión y la recuperación de contraseña no revelan si la cuenta existe.
+
 ## Decisiones tomadas
 
 | Fecha | Decisión |
@@ -51,3 +60,10 @@
 | 2026-10-15 | **Resumen del artículo** (lineamientos): nueva columna `arti_resumen varchar(500) not null` en `articulo` (en `EMP_FINAL_corregido.sql`; para bases existentes, `database/cambios/2026-10-15_arti_resumen.sql`). El formulario lo exige con máximo 50 palabras. Sustituye a RN-06 («los artículos no llevan abstract»). |
 | 2026-10-15 | **Máximo 1 coautor** por artículo (lineamientos: hasta dos personas autoras). |
 | 2026-10-15 | El sistema sigue aceptando solo PDF aunque los lineamientos mencionen Word (indicación: ignorar Word). |
+| 2026-10-16 | **Errores de la base** centralizados (`App\Support\ErrorBaseDatos`, registrado en `bootstrap/app.php`): 23505, 23514, 23001 y 23503 se traducen a mensajes claros según la restricción o el trigger; en formularios regresan con el mensaje, en JSON responden 422 y en páginas GET muestran la página 409. Se registran como aviso, sin traza. |
+| 2026-10-16 | Páginas de error propias en español (403, 404, 405, 409, 413, 419, 429, 500, 503), autónomas: no dependen de la base, la sesión ni Vite. |
+| 2026-10-16 | Las contraseñas (`clave`, `clave_confirmation`) nunca regresan a la sesión como datos anteriores del formulario. |
+| 2026-10-16 | Seguridad: corregido un XSS en la lista de autores del administrador (`@json` con dos argumentos pierde el escape). Encabezados `X-Frame-Options`, `frame-ancestors`, `nosniff`, `Referrer-Policy` y `Permissions-Policy` en todas las páginas. Solo se aceptan peticiones al dominio de `APP_URL` (`trustHosts`) y en producción las URL de los correos se arman con `APP_URL`. |
+| 2026-10-16 | Inicio de sesión: además de 5 intentos por minuto por usuario + IP, máximo 20 intentos fallidos cada 15 minutos por cuenta desde cualquier IP (un atacante podría bloquear una cuenta hasta 15 minutos). Un usuario inexistente tarda lo mismo que una contraseña equivocada. Restablecer la contraseña cierra las demás sesiones de la cuenta. |
+| 2026-10-16 | Registro de acciones del administrador (`storage/logs/admin-*.log`): también altas, cambios y bajas de cursos. |
+| 2026-10-16 | Cola de correos: `queue:work --tries=3 --backoff=60` (servicio systemd); tarea programada diaria `auth:clear-resets`. Instalación en AlmaLinux 9.6/10 documentada en `README.md` (usuario de sistema `emprende`, Nginx + PHP-FPM, SELinux, PostgreSQL 18 de PGDG). |

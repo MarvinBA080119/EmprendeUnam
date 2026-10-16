@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+// Tareas programadas: requieren `php artisan schedule:run` cada minuto (ver README).
+
+// Borra los enlaces de recuperación de contraseña ya vencidos.
+Schedule::command('auth:clear-resets')->daily();

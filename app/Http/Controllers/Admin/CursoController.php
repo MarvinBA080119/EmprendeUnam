@@ -31,7 +31,7 @@ class CursoController extends Controller
 
     public function store(CursoRequest $request): RedirectResponse
     {
-        $curso = $this->cursos->crear($request->validated());
+        $curso = $this->cursos->crear($request->validated(), $request->user());
 
         return redirect()->route('admin.cursos.index')->with('exito', "Se publicó el curso «{$curso->curs_nombre_curso}».");
     }
@@ -43,15 +43,15 @@ class CursoController extends Controller
 
     public function update(CursoRequest $request, Curso $curso): RedirectResponse
     {
-        $this->cursos->actualizar($curso, $request->validated());
+        $this->cursos->actualizar($curso, $request->validated(), $request->user());
 
         return redirect()->route('admin.cursos.index')->with('exito', "Se guardaron los cambios del curso «{$curso->curs_nombre_curso}».");
     }
 
-    public function destroy(Curso $curso): RedirectResponse
+    public function destroy(Request $request, Curso $curso): RedirectResponse
     {
         $nombre = $curso->curs_nombre_curso;
-        $this->cursos->eliminar($curso);
+        $this->cursos->eliminar($curso, $request->user());
 
         return redirect()->route('admin.cursos.index')->with('exito', "Se eliminó el curso «{$nombre}».");
     }

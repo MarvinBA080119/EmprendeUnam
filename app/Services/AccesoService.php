@@ -8,6 +8,7 @@ use App\Models\Rol;
 use App\Models\Usuario;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
@@ -22,6 +23,9 @@ class AccesoService
 {
     public const INTENTOS_POR_MINUTO = 5;
 
+    /** Intentos fallidos por cuenta desde cualquier IP, en 15 minutos (frena ataques distribuidos). */
+    public const INTENTOS_POR_CUENTA = 20;
+
     /**
      * Valida las credenciales y abre la sesión.
      *
@@ -31,19 +35,29 @@ class AccesoService
     public function iniciarSesion(string $acceso, string $clave, string $ip): Usuario
     {
         $llave = $this->llaveLimite($acceso, $ip);
+        $llaveCuenta = $this->llaveLimite($acceso);
 
-        if (RateLimiter::tooManyAttempts($llave, self::INTENTOS_POR_MINUTO)) {
-            throw ValidationException::withMessages([
-                'acceso' => __('auth.throttle', ['seconds' => RateLimiter::availableIn($llave)]),
-            ]);
+        foreach ([[$llave, self::INTENTOS_POR_MINUTO], [$llaveCuenta, self::INTENTOS_POR_CUENTA]] as [$llaveLimite, $maximo]) {
+            if (RateLimiter::tooManyAttempts($llaveLimite, $maximo)) {
+                throw ValidationException::withMessages([
+                    'acceso' => __('auth.throttle', ['seconds' => RateLimiter::availableIn($llaveLimite)]),
+                ]);
+            }
         }
 
         $proveedor = Auth::getProvider();
         $credenciales = ['acceso' => $acceso, 'password' => $clave];
         $usuario = $proveedor->retrieveByCredentials($credenciales);
 
+        if (! $usuario instanceof Usuario) {
+            // Mismo costo que una contraseña equivocada: el tiempo de respuesta
+            // no revela qué cuentas existen.
+            Hash::check($clave, self::hashFicticio());
+        }
+
         if (! $usuario instanceof Usuario || ! $proveedor->validateCredentials($usuario, $credenciales)) {
             RateLimiter::hit($llave, 60);
+            RateLimiter::hit($llaveCuenta, 15 * 60);
 
             throw ValidationException::withMessages(['acceso' => __('auth.failed')]);
         }
@@ -55,6 +69,7 @@ class AccesoService
         }
 
         RateLimiter::clear($llave);
+        RateLimiter::clear($llaveCuenta);
 
         if (config('hashing.rehash_on_login', true)) {
             $proveedor->rehashPasswordIfRequired($usuario, $credenciales);
@@ -118,13 +133,26 @@ class AccesoService
             function (Usuario $usuario, string $clave) {
                 $usuario->forceFill(['usua_clave_acceso' => Hash::make($clave)])->save();
 
+                // Cierra las sesiones abiertas con la contraseña anterior.
+                DB::table('sessions')->where('user_id', $usuario->getAuthIdentifier())->delete();
+
                 event(new PasswordReset($usuario));
             },
         );
     }
 
-    private function llaveLimite(string $acceso, string $ip): string
+    private function llaveLimite(string $acceso, ?string $ip = null): string
     {
-        return 'login:'.Str::transliterate(Str::lower(trim($acceso))).'|'.$ip;
+        $cuenta = Str::transliterate(Str::lower(trim($acceso)));
+
+        return $ip === null ? 'login-cuenta:'.$cuenta : 'login:'.$cuenta.'|'.$ip;
+    }
+
+    /** Hash bcrypt de una cadena aleatoria, con el mismo costo que los reales. */
+    private static function hashFicticio(): string
+    {
+        static $hash = null;
+
+        return $hash ??= Hash::make(Str::random(32));
     }
 }

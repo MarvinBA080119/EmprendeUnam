@@ -1,12 +1,16 @@
 <?php
 
+use App\Http\Middleware\EncabezadosSeguridad;
 use App\Http\Middleware\TienePrivilegio;
 use App\Models\Usuario;
 use App\Services\AccesoService;
+use App\Support\ErrorBaseDatos;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -31,6 +35,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'privilegio' => TienePrivilegio::class,
         ]);
 
+        $middleware->web(append: [EncabezadosSeguridad::class]);
+
+        // Solo se aceptan peticiones dirigidas al dominio de APP_URL: los enlaces
+        // de los correos (recuperar contraseña, newsletter) no dependen del
+        // encabezado Host que mande el cliente. No aplica en local ni en pruebas.
+        $middleware->trustHosts();
+
         $middleware->redirectGuestsTo(fn () => route('login'));
 
         // Quien ya inició sesión y abre /iniciar-sesion o /registro va a su panel.
@@ -42,4 +53,43 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        // Las contraseñas nunca regresan a la sesión como «old input».
+        $exceptions->dontFlash(['clave', 'clave_confirmation', 'clave_actual']);
+
+        // Reglas de la base (duplicado, regla de negocio, registro en uso): se
+        // registran como aviso, sin la traza, y se muestran como mensaje claro.
+        $exceptions->report(function (QueryException $e) {
+            if (ErrorBaseDatos::mensaje($e) === null) {
+                return null;
+            }
+
+            Log::warning('Regla de la base de datos', [
+                'sqlstate' => ErrorBaseDatos::codigo($e),
+                'error' => strtok($e->getPrevious()?->getMessage() ?? $e->getMessage(), "\n"),
+            ]);
+
+            return false;
+        });
+
+        $exceptions->render(function (QueryException $e, Request $request) {
+            $mensaje = ErrorBaseDatos::mensaje($e);
+
+            if ($mensaje === null) {
+                return null;
+            }
+
+            if ($request->expectsJson()) {
+                return response()->json(['message' => $mensaje, 'errors' => ['general' => [$mensaje]]], 422);
+            }
+
+            if ($request->isMethod('GET') || $request->isMethod('HEAD')) {
+                return response()->view('errors.409', ['mensaje' => $mensaje], 409);
+            }
+
+            return back()
+                ->withInput($request->except(['clave', 'clave_confirmation', 'clave_actual']))
+                ->withErrors(['general' => $mensaje])
+                ->with('error', $mensaje);
+        });
     })->create();

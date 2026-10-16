@@ -70,6 +70,8 @@
 
                     @if (session('exito') || session('aviso'))
                         <p class="form-aviso visible" role="status">{{ session('exito') ?? session('aviso') }}</p>
+                    @elseif ($errors->has('general'))
+                        <p class="form-aviso visible form-aviso--error" role="alert">{{ $errors->first('general') }}</p>
                     @elseif ($errors->any())
                         <p class="form-aviso visible form-aviso--error" role="alert">Revise los campos marcados antes de enviar.</p>
                     @endif
