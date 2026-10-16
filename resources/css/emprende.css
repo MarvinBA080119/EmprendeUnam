@@ -239,12 +239,20 @@ table {
 .form-control.is-invalid,
 .form-select.is-invalid {
     border-color: var(--emp-cafe);
+    background-color: var(--emp-cafe-50);
     background-image: none;
     padding-right: 0.75rem;
+    box-shadow: inset 0 0 0 1px var(--emp-cafe);
 }
 
-.form-control.is-invalid:focus {
-    box-shadow: var(--emp-anillo);
+.form-control.is-invalid:focus,
+.form-select.is-invalid:focus {
+    background-color: var(--emp-blanco);
+    box-shadow: inset 0 0 0 1px var(--emp-cafe), var(--emp-anillo);
+}
+
+.emp-clave .form-control.is-invalid {
+    padding-right: 5rem;
 }
 
 .invalid-feedback {
@@ -623,6 +631,7 @@ table {
 
 .emp-acceso__barra {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
@@ -677,6 +686,20 @@ table {
 
 .emp-acceso__contenido--ancho {
     max-width: 38rem;
+}
+
+/* En móvil el formulario arranca arriba en lugar de flotar en el centro */
+@media (max-width: 991.98px) {
+    .emp-acceso__contenido {
+        justify-content: flex-start;
+        padding-top: 2.5rem;
+    }
+}
+
+@media (max-width: 419.98px) {
+    .emp-marca__sub {
+        display: none;
+    }
 }
 
 .emp-acceso__encabezado {
@@ -833,7 +856,6 @@ table {
     border-radius: 0.75rem;
     background-color: var(--emp-blanco);
     color: var(--emp-azul);
-    box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.55);
 }
 
 .emp-constancia-muestra__tipo {
@@ -853,11 +875,6 @@ table {
     align-self: center;
 }
 
-.emp-panel__pie {
-    font-size: 0.8125rem;
-    color: var(--emp-sobre-azul-3);
-    margin: 0.75rem 0 0;
-}
 
 @media (prefers-reduced-motion: reduce) {
     *,

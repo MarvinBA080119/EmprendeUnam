@@ -5,7 +5,6 @@ import { montarIslas } from './islas';
 import '@fontsource/inter/latin-400.css';
 import '@fontsource/inter/latin-500.css';
 import '@fontsource/inter/latin-600.css';
-import '@fontsource/inter/latin-700.css';
 
 // Botón Mostrar/Ocultar de los campos de contraseña.
 document.addEventListener('click', (evento) => {
@@ -22,6 +21,13 @@ document.addEventListener('click', (evento) => {
     boton.textContent = visible ? 'Ocultar' : 'Mostrar';
     boton.setAttribute('aria-pressed', String(visible));
 });
+
+// Tras un error de validación, el foco va al primer campo marcado.
+const primerInvalido = document.querySelector('.form-control.is-invalid, .form-select.is-invalid');
+if (primerInvalido) {
+    primerInvalido.focus({ preventScroll: true });
+    primerInvalido.scrollIntoView({ block: 'center' });
+}
 
 // Sistema (autores y administrador).
 montarIslas({

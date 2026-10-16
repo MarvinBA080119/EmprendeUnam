@@ -8,6 +8,9 @@
     <meta name="robots" content="noindex">
     <title>@yield('titulo') · {{ config('app.name') }}</title>
     <style>
+        @font-face { font-family: Inter; font-weight: 400; font-display: swap; src: url('{{ asset('fonts/inter/inter-latin-400-normal.woff2') }}') format('woff2'); }
+        @font-face { font-family: Inter; font-weight: 500; font-display: swap; src: url('{{ asset('fonts/inter/inter-latin-500-normal.woff2') }}') format('woff2'); }
+        @font-face { font-family: Inter; font-weight: 600; font-display: swap; src: url('{{ asset('fonts/inter/inter-latin-600-normal.woff2') }}') format('woff2'); }
         *, *::before, *::after { box-sizing: border-box; }
         body { margin: 0; min-height: 100vh; display: flex; flex-direction: column;
                font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
@@ -18,11 +21,9 @@
         header span { font-size: 12px; color: #616d7a; }
         main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 3rem 1.25rem; }
         .caja { max-width: 30rem; text-align: center; }
-        .codigo { display: inline-block; font-size: 12px; font-weight: 500; color: #664300; background: #f6f4f0;
-                  border: 1px solid #e7e1d6; border-radius: 999px; padding: 0.15rem 0.6rem; margin: 0 0 1rem;
-                  font-variant-numeric: tabular-nums; }
         h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.025em; margin: 0 0 0.5rem; }
         p { margin: 0 0 1.75rem; color: #616d7a; }
+        .codigo { font-variant-numeric: tabular-nums; }
         a.boton { display: inline-block; background: #664300; color: #ffffff; text-decoration: none;
                   padding: 0.5rem 0.875rem; border-radius: 6px; font-weight: 500;
                   box-shadow: 0 1px 2px rgba(0, 19, 40, 0.12); transition: background-color 160ms ease; }
@@ -38,12 +39,11 @@
     </header>
     <main>
         <div class="caja">
-            <p class="codigo">Error @yield('codigo')</p>
             <h1>@yield('titulo')</h1>
-            <p>@yield('mensaje')</p>
+            <p><span class="codigo">Error @yield('codigo')</span> · @yield('mensaje')</p>
             <a class="boton" href="{{ url('/') }}">Ir al inicio</a>
         </div>
     </main>
-    <footer>Revista EmprendeUNAM</footer>
+    <footer>&copy; {{ now()->year }} Universidad Nacional Autónoma de México</footer>
 </body>
 </html>

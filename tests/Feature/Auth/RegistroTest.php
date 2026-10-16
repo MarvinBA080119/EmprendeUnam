@@ -120,7 +120,7 @@ class RegistroTest extends TestCase
     public function test_los_mensajes_de_validacion_estan_en_espanol(): void
     {
         $this->post('/registro', $this->datos(['nombre' => '']))
-            ->assertSessionHasErrors(['nombre' => 'El campo nombre es obligatorio.']);
+            ->assertSessionHasErrors(['nombre' => 'Escribe tu nombre.']);
     }
 
     public function test_un_autor_recien_registrado_no_puede_entrar_hasta_ser_activado(): void

@@ -49,6 +49,14 @@ class RegistroAutorRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'nombre.required' => 'Escribe tu nombre.',
+            'primer_apellido.required' => 'Escribe tu primer apellido.',
+            'institucion.required' => 'Escribe la institución donde trabajas o estudias.',
+            'correo.required' => 'Escribe tu correo electrónico.',
+            'correo.email' => 'Escribe un correo válido, por ejemplo nombre@unam.mx.',
+            'clave.required' => 'Escribe una contraseña.',
+            'clave.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'clave.confirmed' => 'Las contraseñas no coinciden.',
             'nombre_usuario.regex' => 'El nombre de usuario solo puede tener letras sin acento, números, punto, guion y guion bajo.',
         ];
     }

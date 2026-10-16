@@ -21,7 +21,7 @@ OWN-WORLD: Fondo blanco; neutros mezclados del azul #001328 (bordes 1px, fondos 
 
 STORY: El editor entra y ve de inmediato cuántas cuentas, artículos y mensajes esperan, y los resuelve en pocos clics; el autor sabe en qué estado está su artículo y qué sigue.
 
-FIRST VIEWPORT: Login: columna centrada de 360px con el nombre de la revista, título, dos campos, botón café a todo lo ancho y enlaces discretos. Panel: barra lateral de 248px con navegación y contadores de pendientes; encabezado de página con título y acciones a la derecha; contenido con la bandeja de pendientes arriba.
+FIRST VIEWPORT: Acceso: a la izquierda, columna de 376px con el nombre de la revista, título, campos, botón café a todo lo ancho y enlaces discretos; a la derecha (escritorio), panel azul fijo con los cuatro pasos para publicar y una constancia de ejemplo, porque el usuario pidió que no se vea vacío y la constancia verificable es el posicionamiento (PRODUCT.md, principio 3). En móvil, solo la columna, arrancando arriba. Panel: barra lateral de 248px con navegación y contadores de pendientes; encabezado de página con título y acciones a la derecha; contenido con la bandeja de pendientes arriba.
 
 FORM: canon (salida estándar), elegido por el usuario sobre la dirección asignada; seed:403bb47850e80751. Firma: contadores de pendientes en la navegación y estados como píldora con punto y texto; movimiento de 150–200ms con ease-out y presión de botón a escala 0.98.
 

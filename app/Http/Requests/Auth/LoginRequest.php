@@ -21,6 +21,15 @@ class LoginRequest extends FormRequest
     }
 
     /** @return array<string, string> */
+    public function messages(): array
+    {
+        return [
+            'acceso.required' => 'Escribe tu correo o tu nombre de usuario.',
+            'clave.required' => 'Escribe tu contraseña.',
+        ];
+    }
+
+    /** @return array<string, string> */
     public function attributes(): array
     {
         return [

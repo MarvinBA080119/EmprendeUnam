@@ -18,4 +18,6 @@
                  minlength="8" maxlength="72" autocomplete="new-password" />
         <button type="submit" class="btn btn-primary btn-lg w-100 mt-2">Guardar contraseña</button>
     </form>
+
+    <p class="emp-acceso__alterno"><a href="{{ route('login') }}">Volver a iniciar sesión</a></p>
 @endsection

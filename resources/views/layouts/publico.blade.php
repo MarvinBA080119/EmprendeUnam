@@ -29,6 +29,11 @@
 
             <main id="contenido" @class(['emp-acceso__contenido', 'emp-acceso__contenido--ancho' => View::hasSection('ancho')])>
                 <x-alertas />
+                @if ($errors->count() > 1)
+                    <div class="alert alert-danger" role="alert">
+                        <span class="alert-texto">Revisa los {{ $errors->count() }} campos marcados.</span>
+                    </div>
+                @endif
                 @yield('contenido')
             </main>
 
@@ -58,7 +63,6 @@
                         <span class="emp-constancia-muestra__folio">EMP-2026-0042</span>
                         <span class="emp-insignia emp-insignia-aprobado emp-constancia-muestra__estado">Verificable</span>
                     </div>
-                    <p class="emp-panel__pie">UNAM · Facultad de Contaduría y Administración</p>
                 </div>
             </div>
         </aside>
