@@ -448,7 +448,7 @@ table {
     border-color: var(--emp-cafe-200);
 }
 
-/* Aprobado / Contestado: azul sólido */
+/* Aprobado / Contestado: azul (fondo tintado, punto sólido) */
 .emp-insignia-aprobado {
     color: var(--emp-azul);
     background-color: var(--emp-n-100);
