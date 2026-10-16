@@ -1,169 +1,102 @@
 /* ==========================================================================
-   Estilos propios de la Revista EmprendeUNAM
-   Paleta: --emp-cafe (primario), --emp-azul (secundario), blanco y negro.
+   Sistema visual de la Revista EmprendeUNAM (autores y administrador)
+   Paleta cerrada: café #664300, azul #001328, blanco, negro y sus mezclas.
    Nunca texto café sobre azul ni azul sobre café.
+   Nivel de acabado de referencia: Linear, Stripe Dashboard y Vercel.
    ========================================================================== */
 
 :root {
     --emp-cafe: #664300;
+    --emp-cafe-hover: #573900;
+    --emp-cafe-50: #f6f4f0;
+    --emp-cafe-100: #f0ece6;
+    --emp-cafe-200: #e7e1d6;
     --emp-azul: #001328;
     --emp-blanco: #ffffff;
     --emp-negro: #000000;
 
-    --emp-cafe-10: rgba(102, 67, 0, 0.1);
-    --emp-cafe-25: rgba(102, 67, 0, 0.25);
-    --emp-azul-10: rgba(0, 19, 40, 0.1);
-    --emp-azul-75: rgba(0, 19, 40, 0.75);
-    --emp-blanco-75: rgba(255, 255, 255, 0.75);
+    /* Neutros: azul mezclado con blanco */
+    --emp-n-25: #fafafb;
+    --emp-n-50: #f6f7f7;
+    --emp-n-100: #edeef0;
+    --emp-n-150: #e6e7ea;
+    --emp-n-200: #dbdee1;
+    --emp-n-300: #ccd0d4;
+    --emp-n-500: #8c959e;
+    --emp-n-600: #616d7a;
+    --emp-n-700: #4c5a68;
+
+    /* Blanco sobre azul (texto secundario en superficies azules) */
+    --emp-sobre-azul-2: #b8bdc3;
+    --emp-sobre-azul-3: #99a1a9;
+    --emp-linea-sobre-azul: rgba(255, 255, 255, 0.14);
+
+    --emp-sombra-menu: 0 1px 2px rgba(0, 19, 40, 0.06), 0 12px 32px -12px rgba(0, 19, 40, 0.22);
+    --emp-anillo: 0 0 0 3px rgba(102, 67, 0, 0.22);
+
+    --emp-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --emp-rapido: 160ms;
+}
+
+/* --- Base ---------------------------------------------------------------- */
+html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-color: var(--emp-n-300) transparent;
 }
 
 body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    color: var(--emp-negro);
+    color: var(--emp-azul);
     background-color: var(--emp-blanco);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 main {
     flex: 1 0 auto;
 }
 
-/* --- Títulos ------------------------------------------------------------ */
-.emp-titulo-seccion {
-    color: var(--emp-cafe);
-    border-bottom: 2px solid var(--emp-cafe);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
+::selection {
+    background-color: var(--emp-cafe-200);
+    color: var(--emp-azul);
 }
 
-/* --- Barra de navegación (fondo azul, texto blanco) --------------------- */
-.emp-navbar {
-    background-color: var(--emp-azul);
+h1, h2, h3, h4, .h1, .h2, .h3, .h4 {
+    letter-spacing: -0.02em;
+    text-wrap: balance;
 }
 
-.emp-navbar .navbar-brand,
-.emp-navbar .nav-link {
-    color: var(--emp-blanco);
+p {
+    text-wrap: pretty;
 }
 
-.emp-navbar .nav-link:hover,
-.emp-navbar .nav-link:focus {
-    color: var(--emp-blanco);
-    text-decoration: underline;
-    text-underline-offset: 0.35em;
+a {
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
 }
 
-/* Activo: subrayado blanco grueso (el café no contrasta sobre el azul) */
-.emp-navbar .nav-link.active {
-    color: var(--emp-blanco);
-    font-weight: 600;
-    box-shadow: inset 0 -3px 0 var(--emp-blanco);
+input, textarea, select {
+    caret-color: var(--emp-cafe);
 }
 
-.emp-navbar .navbar-toggler {
-    border-color: var(--emp-blanco-75);
+.emp-num,
+table {
+    font-variant-numeric: tabular-nums;
 }
 
-.emp-navbar .navbar-toggler-icon {
-    filter: invert(1);
-}
-
-.emp-marca-sub {
-    display: block;
-    font-family: var(--bs-body-font-family);
-    font-size: 0.75rem;
-    color: var(--emp-blanco-75);
-}
-
-/* --- Pie de página ------------------------------------------------------ */
-.emp-footer {
-    background-color: var(--emp-azul);
-    color: var(--emp-blanco);
-    flex-shrink: 0;
-}
-
-.emp-footer a {
-    color: var(--emp-blanco);
-}
-
-/* --- Tablas: encabezado azul con texto blanco --------------------------- */
-.emp-tabla thead th {
-    background-color: var(--emp-azul);
-    color: var(--emp-blanco);
-    font-weight: 600;
-    border-color: var(--emp-azul);
-}
-
-/* --- Insignias de estatus (siempre con texto, no solo color) ------------ */
-.emp-insignia {
-    display: inline-block;
-    padding: 0.3em 0.7em;
-    font-size: 0.8rem;
-    font-weight: 600;
-    border-radius: 999px;
-    border: 2px solid transparent;
-    line-height: 1.2;
-}
-
-.emp-insignia-revision {
-    background-color: var(--emp-blanco);
-    color: var(--emp-cafe);
-    border-color: var(--emp-cafe);
-}
-
-.emp-insignia-aprobado {
-    background-color: var(--emp-azul);
-    color: var(--emp-blanco);
-    border-color: var(--emp-azul);
-}
-
-.emp-insignia-rechazado {
-    background-color: var(--emp-negro);
-    color: var(--emp-blanco);
-    border-color: var(--emp-negro);
-}
-
-/* --- Tarjetas ----------------------------------------------------------- */
-.emp-tarjeta {
-    border: 1px solid var(--emp-azul-10);
-    border-top: 4px solid var(--emp-cafe);
-}
-
-/* --- Panel lateral del administrador (fondo azul) ----------------------- */
-.emp-lateral {
-    background-color: var(--emp-azul);
-    color: var(--emp-blanco);
-}
-
-.emp-lateral .nav-link {
-    color: var(--emp-blanco);
-    border-left: 4px solid transparent;
-}
-
-.emp-lateral .nav-link:hover,
-.emp-lateral .nav-link:focus {
-    background-color: rgba(255, 255, 255, 0.08);
-    color: var(--emp-blanco);
-}
-
-.emp-lateral .nav-link.active {
-    background-color: var(--emp-blanco);
-    color: var(--emp-cafe);
-    border-left-color: var(--emp-cafe);
-    font-weight: 600;
-}
-
-/* --- Accesibilidad ------------------------------------------------------ */
+/* --- Accesibilidad ------------------------------------------------------- */
 :focus-visible {
-    outline: 3px solid var(--emp-cafe);
+    outline: 2px solid var(--emp-cafe);
     outline-offset: 2px;
 }
 
-.emp-navbar :focus-visible,
-.emp-footer :focus-visible,
-.emp-lateral :focus-visible {
-    outline-color: var(--emp-blanco);
+.form-control:focus-visible,
+.form-select:focus-visible,
+.btn:focus-visible {
+    outline: none;
 }
 
 .emp-saltar {
@@ -178,36 +111,759 @@ main {
     background: var(--emp-blanco);
     color: var(--emp-cafe);
     padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    box-shadow: var(--emp-sombra-menu);
 }
 
-/* --- Alertas con la paleta: fondo claro, borde lateral y texto negro ---- */
+/* --- Títulos de página --------------------------------------------------- */
+.emp-titulo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    margin: 0;
+}
+
+.emp-subtitulo {
+    color: var(--emp-n-600);
+    margin: 0.375rem 0 0;
+}
+
+/* Encabezado de página heredado (paneles): título sin subrayado decorativo */
+.emp-titulo-seccion {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--emp-azul);
+    margin-bottom: 1.5rem;
+}
+
+/* --- Botones ------------------------------------------------------------- */
+.btn {
+    --bs-btn-font-weight: 500;
+    letter-spacing: -0.005em;
+    transition:
+        color var(--emp-rapido) ease,
+        background-color var(--emp-rapido) ease,
+        border-color var(--emp-rapido) ease,
+        box-shadow var(--emp-rapido) ease,
+        transform var(--emp-rapido) var(--emp-ease-out);
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--emp-cafe);
+    --bs-btn-border-color: var(--emp-cafe);
+    --bs-btn-hover-bg: var(--emp-cafe-hover);
+    --bs-btn-hover-border-color: var(--emp-cafe-hover);
+    --bs-btn-active-bg: var(--emp-cafe-hover);
+    --bs-btn-active-border-color: var(--emp-cafe-hover);
+    box-shadow: 0 1px 2px rgba(0, 19, 40, 0.12);
+}
+
+/* Secundario: blanco con borde neutro y tinta azul */
+.btn-secondary,
+.btn-outline-dark,
+.btn-outline-secondary {
+    --bs-btn-color: var(--emp-azul);
+    --bs-btn-bg: var(--emp-blanco);
+    --bs-btn-border-color: var(--emp-n-300);
+    --bs-btn-hover-color: var(--emp-azul);
+    --bs-btn-hover-bg: var(--emp-n-50);
+    --bs-btn-hover-border-color: var(--emp-n-300);
+    --bs-btn-active-color: var(--emp-azul);
+    --bs-btn-active-bg: var(--emp-n-100);
+    --bs-btn-active-border-color: var(--emp-n-300);
+    --bs-btn-disabled-color: var(--emp-n-500);
+    --bs-btn-disabled-bg: var(--emp-blanco);
+    --bs-btn-disabled-border-color: var(--emp-n-200);
+    box-shadow: 0 1px 2px rgba(0, 19, 40, 0.06);
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--emp-cafe);
+    --bs-btn-bg: var(--emp-blanco);
+    --bs-btn-border-color: var(--emp-cafe-200);
+    --bs-btn-hover-color: var(--emp-cafe-hover);
+    --bs-btn-hover-bg: var(--emp-cafe-50);
+    --bs-btn-hover-border-color: var(--emp-cafe);
+    --bs-btn-active-color: var(--emp-cafe-hover);
+    --bs-btn-active-bg: var(--emp-cafe-100);
+    --bs-btn-active-border-color: var(--emp-cafe);
+}
+
+.btn-dark {
+    --bs-btn-bg: var(--emp-azul);
+    --bs-btn-border-color: var(--emp-azul);
+    --bs-btn-hover-bg: #1a2b3e;
+    --bs-btn-hover-border-color: #1a2b3e;
+}
+
+.btn-link {
+    --bs-btn-color: var(--emp-cafe);
+    --bs-btn-hover-color: var(--emp-cafe-hover);
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+.btn-lg {
+    --bs-btn-padding-y: 0.625rem;
+    --bs-btn-font-size: 0.9375rem;
+}
+
+/* --- Campos -------------------------------------------------------------- */
+.form-control,
+.form-select {
+    min-height: 2.375rem;
+    box-shadow: 0 1px 2px rgba(0, 19, 40, 0.04);
+    transition: border-color var(--emp-rapido) ease, box-shadow var(--emp-rapido) ease;
+}
+
+.form-control:hover:not(:focus):not(:disabled),
+.form-select:hover:not(:focus):not(:disabled) {
+    border-color: var(--emp-n-500);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--emp-cafe);
+    box-shadow: var(--emp-anillo);
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: var(--emp-cafe);
+    background-image: none;
+    padding-right: 0.75rem;
+}
+
+.form-control.is-invalid:focus {
+    box-shadow: var(--emp-anillo);
+}
+
+.invalid-feedback {
+    font-weight: 500;
+}
+
+.invalid-feedback::before {
+    content: '';
+    display: inline-block;
+    width: 0.875em;
+    height: 0.875em;
+    margin-right: 0.375em;
+    vertical-align: -0.1em;
+    background-color: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm0 3.25a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0V5A.75.75 0 0 1 8 4.25Zm0 7.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm0 3.25a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0V5A.75.75 0 0 1 8 4.25Zm0 7.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.form-label {
+    color: var(--emp-azul);
+}
+
+.emp-etiqueta-fila {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.emp-etiqueta-fila a {
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.emp-opcional {
+    color: var(--emp-n-600);
+    font-weight: 400;
+}
+
+/* Contraseña con botón Mostrar/Ocultar dentro del campo */
+.emp-clave {
+    position: relative;
+}
+
+.emp-clave .form-control {
+    padding-right: 5rem;
+}
+
+.emp-clave__ver {
+    position: absolute;
+    top: 50%;
+    right: 0.375rem;
+    transform: translateY(-50%);
+    border: 0;
+    background: transparent;
+    color: var(--emp-n-600);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.emp-clave__ver:hover {
+    color: var(--emp-azul);
+    background-color: var(--emp-n-50);
+}
+
+.emp-clave__ver:active {
+    transform: translateY(-50%) scale(0.96);
+}
+
+/* Grupo de campos con título (formularios largos) */
+.emp-grupo {
+    border: 0;
+    padding: 0;
+    margin: 0 0 1.75rem;
+    min-width: 0;
+}
+
+.emp-grupo > legend {
+    float: none;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+    padding-bottom: 0.625rem;
+    border-bottom: 1px solid var(--emp-n-150);
+    width: 100%;
+}
+
+/* --- Avisos -------------------------------------------------------------- */
 .alert {
-    color: var(--emp-negro);
-    background-color: var(--emp-blanco);
-    border: 1px solid var(--emp-azul-10);
-    border-left-width: 5px;
+    --bs-alert-padding-y: 0.75rem;
+    --bs-alert-padding-x: 0.875rem;
+    display: flex;
+    gap: 0.625rem;
+    align-items: flex-start;
+    color: var(--emp-azul);
+    background-color: var(--emp-n-25);
+    border: 1px solid var(--emp-n-150);
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: opacity 240ms ease, transform 240ms var(--emp-ease-out);
+}
+
+@starting-style {
+    .alert {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+}
+
+.alert::before {
+    content: '';
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.125rem;
+    background-color: currentColor;
+    -webkit-mask: var(--emp-icono-aviso) center / contain no-repeat;
+    mask: var(--emp-icono-aviso) center / contain no-repeat;
 }
 
 .alert-success,
 .alert-info {
-    border-left-color: var(--emp-azul);
-    background-color: var(--emp-azul-10);
+    --emp-icono-aviso: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm3.03 5.28-3.5 3.5a.75.75 0 0 1-1.06 0l-1.5-1.5a.75.75 0 1 1 1.06-1.06l.97.97 2.97-2.97a.75.75 0 0 1 1.06 1.06Z'/%3E%3C/svg%3E");
+    background-color: var(--emp-n-50);
+    border-color: var(--emp-n-200);
 }
 
-.alert-warning {
-    border-left-color: var(--emp-cafe);
-    background-color: var(--emp-cafe-10);
-}
-
+.alert-warning,
 .alert-danger {
-    border-left-color: var(--emp-negro);
+    --emp-icono-aviso: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm0 3.25a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0V5A.75.75 0 0 1 8 4.25Zm0 7.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E");
+    color: var(--emp-cafe);
+    background-color: var(--emp-cafe-50);
+    border-color: var(--emp-cafe-200);
 }
 
-/* --- Cifras del panel del administrador -------------------------------- */
-.emp-cifra {
-    font-family: var(--bs-font-sans-serif);
-    font-size: 2.5rem;
-    font-weight: 700;
-    line-height: 1;
+.alert-warning > *,
+.alert-danger > * {
+    color: var(--emp-azul);
+}
+
+.alert .alert-texto {
+    flex: 1;
+    color: var(--emp-azul);
+}
+
+.alert-dismissible {
+    padding-right: 2.75rem;
+}
+
+.alert-dismissible .btn-close {
+    padding: 0.875rem;
+    background-size: 0.625rem;
+}
+
+/* --- Insignias de estado: punto + texto, nunca solo color ---------------- */
+.emp-insignia {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.1875rem 0.5rem 0.1875rem 0.4375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.25;
+    white-space: nowrap;
+    border-radius: 999px;
+    border: 1px solid transparent;
+}
+
+.emp-insignia::before {
+    content: '';
+    width: 0.4375rem;
+    height: 0.4375rem;
+    border-radius: 50%;
+    background-color: currentColor;
+    flex: none;
+}
+
+/* En revisión / Pendiente: café */
+.emp-insignia-revision {
     color: var(--emp-cafe);
+    background-color: var(--emp-cafe-50);
+    border-color: var(--emp-cafe-200);
+}
+
+/* Aprobado / Contestado: azul sólido */
+.emp-insignia-aprobado {
+    color: var(--emp-azul);
+    background-color: var(--emp-n-100);
+    border-color: var(--emp-n-200);
+}
+
+/* Rechazado: punto hueco */
+.emp-insignia-rechazado {
+    color: var(--emp-n-700);
+    background-color: var(--emp-blanco);
+    border-color: var(--emp-n-300);
+}
+
+.emp-insignia-rechazado::before {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1.5px currentColor;
+}
+
+/* --- Tablas -------------------------------------------------------------- */
+.emp-tabla {
+    --bs-table-bg: transparent;
+    --bs-table-hover-bg: var(--emp-n-25);
+    margin-bottom: 0;
+}
+
+.emp-tabla thead th {
+    background: transparent;
+    color: var(--emp-n-600);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    border-bottom: 1px solid var(--emp-n-200);
+    white-space: nowrap;
+}
+
+.emp-tabla tbody tr {
+    transition: background-color var(--emp-rapido) ease;
+}
+
+.emp-tabla tbody tr:hover {
+    background-color: var(--emp-n-25);
+}
+
+.emp-tabla tbody td {
+    vertical-align: middle;
+}
+
+.emp-tabla tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.emp-tabla a {
+    color: var(--emp-azul);
+    font-weight: 500;
+}
+
+.emp-tabla a:hover {
+    color: var(--emp-cafe);
+}
+
+/* --- Contenedores -------------------------------------------------------- */
+.emp-tarjeta {
+    border: 1px solid var(--emp-n-150);
+    border-radius: 0.75rem;
+    background-color: var(--emp-blanco);
+}
+
+.emp-cifra {
+    font-size: 1.875rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--emp-azul);
+    font-variant-numeric: tabular-nums;
+}
+
+/* --- Barra superior y lateral heredadas (paneles, se rehacen en pasos 2 y 3) */
+.emp-navbar {
+    background-color: var(--emp-blanco);
+    border-bottom: 1px solid var(--emp-n-150);
+    min-height: 3.5rem;
+}
+
+.emp-navbar .navbar-brand {
+    color: var(--emp-azul);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    letter-spacing: -0.015em;
+}
+
+.emp-navbar .nav-link {
+    color: var(--emp-n-700);
+    font-weight: 500;
+}
+
+.emp-navbar .nav-link:hover,
+.emp-navbar .nav-link:focus,
+.emp-navbar .nav-link.active {
+    color: var(--emp-azul);
+}
+
+.emp-navbar .nav-link.active {
+    box-shadow: inset 0 -2px 0 var(--emp-cafe);
+}
+
+.emp-navbar .nav-link.disabled {
+    color: var(--emp-n-600) !important;
+}
+
+.emp-marca-sub {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: var(--emp-n-600);
+}
+
+.emp-footer {
+    background-color: var(--emp-blanco);
+    color: var(--emp-n-600);
+    border-top: 1px solid var(--emp-n-150);
+    flex-shrink: 0;
+    font-size: 0.8125rem;
+}
+
+.emp-footer a {
+    color: var(--emp-n-700);
+}
+
+.emp-lateral {
+    background-color: var(--emp-n-25);
+    border-right: 1px solid var(--emp-n-150);
+    color: var(--emp-azul);
+}
+
+.emp-lateral .nav-link {
+    color: var(--emp-n-700);
+    font-weight: 500;
+    border-radius: 0.375rem;
+    padding: 0.4375rem 0.75rem;
+    margin-bottom: 0.125rem;
+}
+
+.emp-lateral .nav-link:hover,
+.emp-lateral .nav-link:focus {
+    background-color: var(--emp-n-100);
+    color: var(--emp-azul);
+}
+
+.emp-lateral .nav-link.active {
+    background-color: var(--emp-blanco);
+    color: var(--emp-azul);
+    box-shadow: 0 0 0 1px var(--emp-n-150), 0 1px 2px rgba(0, 19, 40, 0.06);
+}
+
+/* --- Plantilla de acceso (iniciar sesión, registro, contraseña) ---------- */
+.emp-acceso {
+    background-color: var(--emp-blanco);
+}
+
+.emp-acceso__marco {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 100vh;
+}
+
+@media (min-width: 992px) {
+    .emp-acceso__marco {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+    }
+}
+
+.emp-acceso__principal {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 1.25rem 1.25rem 1.5rem;
+}
+
+@media (min-width: 576px) {
+    .emp-acceso__principal {
+        padding: 1.5rem 2.5rem 2rem;
+    }
+}
+
+.emp-acceso__barra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.emp-marca {
+    display: inline-flex;
+    flex-direction: column;
+    color: var(--emp-azul);
+    text-decoration: none;
+    line-height: 1.2;
+}
+
+.emp-marca:hover {
+    color: var(--emp-azul);
+    text-decoration: none;
+}
+
+.emp-marca__nombre {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+}
+
+.emp-marca__sub {
+    font-size: 0.75rem;
+    color: var(--emp-n-600);
+}
+
+.emp-acceso__volver {
+    flex: none;
+    white-space: nowrap;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--emp-n-700);
+}
+
+.emp-acceso__volver:hover {
+    color: var(--emp-azul);
+}
+
+.emp-acceso__contenido {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    max-width: 23.5rem;
+    margin: 0 auto;
+    padding: 3rem 0;
+}
+
+.emp-acceso__contenido--ancho {
+    max-width: 38rem;
+}
+
+.emp-acceso__encabezado {
+    margin-bottom: 1.75rem;
+}
+
+.emp-acceso__contenido > .alert {
+    margin-bottom: 1.5rem;
+}
+
+.emp-acceso__alterno {
+    margin: 1.75rem 0 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--emp-n-150);
+    color: var(--emp-n-600);
+}
+
+.emp-acceso__alterno a {
+    font-weight: 500;
+}
+
+.emp-acceso__pie {
+    font-size: 0.75rem;
+    color: var(--emp-n-600);
+}
+
+/* Panel azul con el proceso de publicación: la columna azul se estira con la
+   página y su contenido queda fijo mientras se desplaza el formulario */
+.emp-acceso__panel {
+    display: none;
+    background-color: var(--emp-azul);
+    color: var(--emp-blanco);
+}
+
+@media (min-width: 992px) {
+    .emp-acceso__panel {
+        display: block;
+    }
+}
+
+.emp-panel__fijo {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    min-height: 40rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2.5rem;
+    padding: 3.5rem;
+    overflow: hidden;
+}
+
+@media (min-width: 1400px) {
+    .emp-panel__fijo {
+        padding: 4.5rem 5rem;
+    }
+}
+
+.emp-panel__titulo {
+    color: var(--emp-blanco);
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    max-width: 22ch;
+    margin: 0 0 0.875rem;
+}
+
+.emp-panel__texto {
+    color: var(--emp-sobre-azul-2);
+    font-size: 0.9375rem;
+    max-width: 44ch;
+    margin: 0;
+}
+
+.emp-pasos {
+    list-style: none;
+    counter-reset: paso;
+    margin: 0;
+    padding: 0;
+    max-width: 30rem;
+}
+
+.emp-pasos li {
+    counter-increment: paso;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.75rem minmax(0, 1fr);
+    column-gap: 1rem;
+    padding-bottom: 1.5rem;
+}
+
+.emp-pasos li::before {
+    content: counter(paso);
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--emp-blanco);
+    background-color: var(--emp-azul);
+    position: relative;
+    z-index: 1;
+    grid-row: 1 / span 2;
+}
+
+/* Línea que une los pasos */
+.emp-pasos li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: calc(0.875rem - 0.5px);
+    top: 1.75rem;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--emp-linea-sobre-azul);
+}
+
+.emp-pasos li:last-child {
+    padding-bottom: 0;
+}
+
+.emp-pasos strong,
+.emp-pasos span {
+    grid-column: 2;
+}
+
+.emp-pasos strong {
+    display: block;
+    font-weight: 600;
+    color: var(--emp-blanco);
+    padding-top: 0.25rem;
+}
+
+.emp-pasos span {
+    display: block;
+    color: var(--emp-sobre-azul-2);
+    font-size: 0.875rem;
+    margin-top: 0.125rem;
+}
+
+/* Muestra de constancia (dato de ejemplo, etiquetado) */
+.emp-constancia-muestra {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.25rem 1.5rem;
+    align-items: end;
+    max-width: 26rem;
+    padding: 1.125rem 1.25rem;
+    border-radius: 0.75rem;
+    background-color: var(--emp-blanco);
+    color: var(--emp-azul);
+    box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.55);
+}
+
+.emp-constancia-muestra__tipo {
+    font-size: 0.75rem;
+    color: var(--emp-n-600);
+}
+
+.emp-constancia-muestra__folio {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.emp-constancia-muestra__estado {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    align-self: center;
+}
+
+.emp-panel__pie {
+    font-size: 0.8125rem;
+    color: var(--emp-sobre-azul-3);
+    margin: 0.75rem 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
 }
