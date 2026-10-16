@@ -30,6 +30,8 @@ const form = reactive({
 });
 
 const erroresLocales = ref({});
+const palabrasFaltantes = ref(new Set());
+const totalErroresLocales = ref(0);
 const enviando = ref(false);
 const pdfSeleccionado = ref(null);
 const formulario = ref(null);
@@ -114,10 +116,16 @@ function validar() {
     if (form.resumen.trim() === '') e.resumen = 'Escribe el resumen del artículo.';
     else if (palabrasResumen.value > props.maxPalabrasResumen) e.resumen = `El resumen no debe tener más de ${props.maxPalabrasResumen} palabras.`;
     if (form.tema_id_tema === '') e.tema_id_tema = 'Elige un tema.';
-    form.palabras.forEach((p, i) => {
-        if (p.trim() === '') e[`palabras.${i}`] = 'Escribe esta palabra clave.';
-    });
-    if (palabrasRepetidas.value.size > 0) e.palabras = 'Las 5 palabras clave deben ser distintas.';
+    // Un solo mensaje para el grupo; cada campo vacío solo se marca.
+    const faltantes = new Set(form.palabras.map((p, i) => (p.trim() === '' ? i : null)).filter((i) => i !== null));
+    palabrasFaltantes.value = faltantes;
+    if (faltantes.size > 0) {
+        e.palabras = faltantes.size === 1
+            ? 'Falta 1 palabra clave; escribe cinco distintas.'
+            : `Faltan ${faltantes.size} palabras clave; escribe cinco distintas.`;
+    } else if (palabrasRepetidas.value.size > 0) {
+        e.palabras = 'Las 5 palabras clave deben ser distintas.';
+    }
     if (form.tiene_coautores) {
         form.coautores.forEach((c, i) => {
             for (const campo of ['nombre', 'primer_apellido', 'correo', 'institucion']) {
@@ -131,6 +139,8 @@ function validar() {
     if (!pdfSeleccionado.value) e.pdf = 'Selecciona el archivo PDF del artículo.';
     else if (erroresLocales.value.pdf) e.pdf = erroresLocales.value.pdf;
     erroresLocales.value = e;
+    totalErroresLocales.value = Object.keys(e).length - (e.palabras ? 1 : 0) + palabrasFaltantes.value.size
+        + (e.palabras && palabrasFaltantes.value.size === 0 ? 1 : 0);
     return Object.keys(e).length === 0;
 }
 
@@ -153,7 +163,12 @@ async function enviar(evento) {
     <form ref="formulario" :action="accion" method="POST" enctype="multipart/form-data" novalidate @submit="enviar">
         <input type="hidden" name="_token" :value="csrf" />
 
-        <div v-if="hayErroresServidor" class="alert alert-danger" role="alert">
+        <div v-if="totalErroresLocales > 0" class="alert alert-danger" role="alert">
+            <span class="alert-texto">
+                {{ totalErroresLocales === 1 ? 'Revisa el campo marcado.' : `Revisa los ${totalErroresLocales} campos marcados.` }}
+            </span>
+        </div>
+        <div v-else-if="hayErroresServidor" class="alert alert-danger" role="alert">
             <span class="alert-texto">Revisa los datos marcados. Por seguridad, vuelve a seleccionar el archivo PDF.</span>
         </div>
 
@@ -206,12 +221,12 @@ async function enviar(evento) {
                         <label :for="`palabra-${i}`" class="visually-hidden">Palabra clave {{ i + 1 }}</label>
                         <input :id="`palabra-${i}`" v-model="form.palabras[i]" name="palabras[]" type="text" maxlength="100"
                                required class="form-control" :placeholder="`Palabra ${i + 1}`"
-                               :class="{ 'is-invalid': error(`palabras.${i}`) || palabrasRepetidas.has(i) }" />
+                               :class="{ 'is-invalid': error(`palabras.${i}`) || palabrasRepetidas.has(i) || (palabrasFaltantes.has(i) && form.palabras[i].trim() === '') }" />
                         <div v-if="error(`palabras.${i}`)" class="invalid-feedback">{{ error(`palabras.${i}`) }}</div>
                     </div>
                 </div>
                 <div v-if="error('palabras') || palabrasRepetidas.size" class="invalid-feedback d-block" role="alert">
-                    {{ palabrasRepetidas.size ? 'Las 5 palabras clave deben ser distintas.' : error('palabras') }}
+                    {{ erroresLocales.palabras ?? (palabrasRepetidas.size ? 'Las 5 palabras clave deben ser distintas.' : error('palabras')) }}
                 </div>
             </div>
         </section>

@@ -52,8 +52,10 @@
     </main>
 
     <footer class="emp-autor__pie">
-        <span>&copy; {{ now()->year }} Universidad Nacional Autónoma de México</span>
-        <a href="{{ route('inicio') }}">Ver el sitio de la revista</a>
+        <div class="emp-autor__pie-fila">
+            <span>&copy; {{ now()->year }} Universidad Nacional Autónoma de México</span>
+            <a href="{{ route('inicio') }}">Ver el sitio de la revista</a>
+        </div>
     </footer>
 </body>
 </html>

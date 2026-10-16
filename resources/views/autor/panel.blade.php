@@ -53,10 +53,10 @@
                             <x-insignia :estatus="$articulo->arti_status" />
                             <div class="emp-envio__acciones">
                                 <a href="{{ route('autor.articulos.pdf', $articulo) }}" class="btn btn-quieto btn-sm">
-                                    <x-icono nombre="descargar" :tamano="14" /> PDF<span class="visually-hidden"> de «{{ $articulo->arti_titulo }}»</span>
+                                    <x-icono nombre="descargar" :tamano="14" /> <span>PDF<span class="visually-hidden"> de «{{ $articulo->arti_titulo }}»</span></span>
                                 </a>
                                 @if ($articulo->arti_status === $Estatus::APROBADO && $articulo->constancia)
-                                    <a href="{{ route('autor.articulos.aprobado', $articulo) }}" class="btn btn-secondary btn-sm">
+                                    <a href="{{ route('autor.articulos.constancia', $articulo) }}" class="btn btn-secondary btn-sm">
                                         Descargar constancia<span class="visually-hidden"> de «{{ $articulo->arti_titulo }}»</span>
                                     </a>
                                 @endif
