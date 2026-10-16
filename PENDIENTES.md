@@ -20,12 +20,9 @@
 - [ ] Índice GIN para el buscador (requiere cambio en la BD; por ahora el texto completo se calcula en cada consulta, suficiente para el volumen esperado).
 - [ ] Contador de visitas del sitio original (`includes/contador.php`): no se usaba en ninguna página y no se migró.
 
-### De la revisión de seguridad (fase F) — requieren decisión
+### De la revisión de seguridad (fase F)
 
-- [ ] **Verificar el correo al registrarse.** Hoy cualquiera puede registrarse con un correo ajeno (la columna `usua_correo_verificado` no se usa); la única barrera es que el administrador revise la cuenta antes de activarla. Si después alguien agrega ese correo como coautor, la cuenta queda ligada al artículo. Propuesta: enlace firmado de verificación antes de la activación, y mostrar al administrador si el correo ya se verificó.
-- [ ] **Correos «apartados» por el newsletter.** `uq_comunicacion_valor` impide repetir un correo en toda la tabla: si alguien suscribe un correo ajeno al newsletter, su dueño ya no puede registrarse como autor («Este correo ya está registrado»). Además, la suscripción reactiva un correo marcado como inactivo. Propuesta: que el registro reutilice la persona que solo es suscriptora (tras verificar el correo) y que el formulario público no reactive correos inactivos.
-- [ ] **Token del newsletter.** Un solo token sirve para confirmar y para dar de baja, se guarda en texto plano y no vence; si alguien vuelve a enviar la suscripción de una persona, el token cambia y los enlaces de baja de correos anteriores dejan de servir. Riesgo bajo (256 bits aleatorios; la baja pide confirmar con un botón).
-- [ ] **Contraseña del administrador.** Su hash bcrypt está en `database/datos_iniciales.sql` dentro del repositorio. Recomendación: cambiarla al instalar en producción (por recuperación de contraseña, que requiere su correo real, ya pendiente arriba).
+- [ ] **El formulario del newsletter reactiva correos inactivos.** Si un correo está marcado como inactivo en `comunicacion`, volver a suscribirlo lo reactiva. Se dejó como está; por decidir si el formulario público debe respetar el estado inactivo.
 - [ ] **Política de contenido (CSP) completa.** Por ahora solo se envía `frame-ancestors 'self'`; una CSP estricta requiere quitar los scripts en línea del sitio público.
 - [ ] Enumeración de cuentas: el registro dice «Este correo ya está registrado» (lo pide la especificación, 4.5) y el newsletter distingue «ya suscrito». El inicio de sesión y la recuperación de contraseña no revelan si la cuenta existe.
 
@@ -68,3 +65,7 @@
 | 2026-10-16 | Registro de acciones del administrador (`storage/logs/admin-*.log`): también altas, cambios y bajas de cursos. |
 | 2026-10-16 | Cola de correos: `queue:work --tries=3 --backoff=60` (servicio systemd); tarea programada diaria `auth:clear-resets`. Instalación en AlmaLinux 9.6/10 documentada en `README.md` (usuario de sistema `emprende`, Nginx + PHP-FPM, SELinux, PostgreSQL 18 de PGDG). |
 | 2026-10-16 | **Rediseño del sistema** (acceso, administrador y autor) con las skills `impeccable` y de Emil Kowalski: estándar de la categoría al nivel de Linear, Stripe y Vercel, dentro de la paleta cerrada (neutros mezclados del azul; café solo en acción principal, foco y elemento activo). Documentado en `DESIGN.md` y `.impeccable/design.json`; contexto del producto en `PRODUCT.md`. El sitio público no cambia. |
+| 2026-10-16 | Seguridad — verificación de correo al registrarse: **no se implementa**. La barrera es que el administrador revise y active cada cuenta; `usua_correo_verificado` sigue sin usarse. |
+| 2026-10-16 | Seguridad — correos «apartados»: si el correo de un registro pertenece a una persona **sin cuenta** (suscriptora del newsletter o coautora), la cuenta se crea sobre esa persona (se actualiza su nombre, se conserva la suscripción y su registro de autor, con lo que una coautora ve sus artículos al ser activada). Solo un correo con cuenta da «Este correo ya está registrado». |
+| 2026-10-16 | Seguridad — token del newsletter: se deja como está (riesgo bajo). |
+| 2026-10-16 | Seguridad — contraseña del administrador: se cambia al instalar con `php artisan emprende:clave-admin` (la pide oculta dos veces, 12 a 72 caracteres, guarda solo el hash, cierra sus sesiones y lo anota en el registro de acciones). No se escribe en ningún archivo. |

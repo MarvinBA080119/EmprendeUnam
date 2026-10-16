@@ -30,6 +30,13 @@ class RegistroAutorService
      * Crea persona, correo, usuario (inactivo), autor y rol en UNA transacción:
      * el trigger diferido tr_usuario_con_correo se revisa al COMMIT.
      *
+     * Si el correo ya pertenece a una persona SIN cuenta (suscriptora del
+     * newsletter o coautora de un artículo), se reutiliza esa persona: se
+     * actualizan sus datos con los del registro y se le crea la cuenta. Así
+     * nadie «aparta» un correo ajeno suscribiéndolo, y el coautor que se
+     * registra ve sus artículos. La activación del administrador sigue siendo
+     * el filtro antes de que la cuenta pueda entrar.
+     *
      * @param  array{nombre: string, primer_apellido: string, segundo_apellido?: ?string,
      *               correo: string, clave: string, institucion: string,
      *               grado_academico?: ?string, nombre_usuario?: ?string}  $datos
@@ -42,19 +49,37 @@ class RegistroAutorService
 
         try {
             $usuario = DB::transaction(function () use ($datos, $correo) {
-                $persona = Persona::create([
+                $nombre = [
                     'pers_nombre' => $datos['nombre'],
                     'pers_primer_apellido' => $datos['primer_apellido'],
                     'pers_segundo_apellido' => $datos['segundo_apellido'] ?? null,
-                ]);
+                ];
 
-                Comunicacion::create([
-                    'pers_id_persona' => $persona->pers_id_persona,
-                    'comu_id_tipo_comunicacion' => $this->idTipoCorreo(),
-                    'comu_valor_comunicacion' => $correo,
-                    'comu_etiqueta' => 'Principal',
-                    'comu_activo' => true,
-                ]);
+                $existente = Comunicacion::correos()->conValor($correo)->lockForUpdate()->first();
+
+                if ($existente?->pers_id_persona) {
+                    if (Usuario::where('pers_id_persona', $existente->pers_id_persona)->exists()) {
+                        throw ValidationException::withMessages(['correo' => 'Este correo ya está registrado.']);
+                    }
+
+                    $persona = Persona::lockForUpdate()->findOrFail($existente->pers_id_persona);
+                    $persona->forceFill($nombre)->save();
+
+                    // El trigger exige que el usuario tenga un correo activo.
+                    if (! $existente->comu_activo) {
+                        $existente->forceFill(['comu_activo' => true])->save();
+                    }
+                } else {
+                    $persona = Persona::create($nombre);
+
+                    Comunicacion::create([
+                        'pers_id_persona' => $persona->pers_id_persona,
+                        'comu_id_tipo_comunicacion' => $this->idTipoCorreo(),
+                        'comu_valor_comunicacion' => $correo,
+                        'comu_etiqueta' => 'Principal',
+                        'comu_activo' => true,
+                    ]);
+                }
 
                 $usuario = Usuario::create([
                     'pers_id_persona' => $persona->pers_id_persona,
@@ -66,11 +91,14 @@ class RegistroAutorService
                     'usua_activo' => false,
                 ]);
 
-                Autor::create([
-                    'pers_id_persona' => $persona->pers_id_persona,
-                    'auto_institucion' => $datos['institucion'],
-                    'auto_grado_academico' => $datos['grado_academico'] ?? null,
-                ]);
+                // Un coautor ya tiene registro de autor: se conserva y se actualiza.
+                Autor::updateOrCreate(
+                    ['pers_id_persona' => $persona->pers_id_persona],
+                    [
+                        'auto_institucion' => $datos['institucion'],
+                        'auto_grado_academico' => $datos['grado_academico'] ?? null,
+                    ],
+                );
 
                 RolUsuario::create([
                     'usua_id_usuario' => $usuario->usua_id_usuario,
@@ -156,10 +184,17 @@ class RegistroAutorService
         return $usuario->roles()->where('rol_nombre', Rol::AUTOR)->exists();
     }
 
-    /** ¿Existe ya este correo en comunicacion (tipo Correo, sin importar mayúsculas)? */
+    /**
+     * ¿El correo ya pertenece a una cuenta de usuario? Un correo de alguien
+     * sin cuenta (suscriptor o coautor) sí puede registrarse.
+     */
     public function correoRegistrado(string $correo): bool
     {
-        return Comunicacion::correos()->conValor(trim($correo))->exists();
+        return Comunicacion::correos()
+            ->conValor(trim($correo))
+            ->whereExists(fn ($q) => $q->selectRaw('1')->from('usuario')
+                ->whereColumn('usuario.pers_id_persona', 'comunicacion.pers_id_persona'))
+            ->exists();
     }
 
     public function nombreUsuarioEnUso(string $nombre): bool

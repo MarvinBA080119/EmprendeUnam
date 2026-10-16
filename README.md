@@ -29,6 +29,7 @@ php artisan key:generate
 
 scripts/crear_bd.sh           # crea el usuario 'emprende' y la base 'emprendeunam' y carga los SQL
 php artisan migrate           # solo tablas técnicas de Laravel (sesiones, caché, colas)
+php artisan emprende:clave-admin   # contraseña del administrador (se pide oculta)
 
 npm run build                 # o: npm run dev
 php artisan serve
@@ -161,6 +162,7 @@ error muestran la configuración y el código.
 cd /var/www/emprendeunam
 sudo bash scripts/crear_bd.sh                       # usuario 'emprende' en PostgreSQL y base 'emprendeunam'
 sudo -iu emprende php /var/www/emprendeunam/artisan migrate --force   # solo tablas técnicas de Laravel
+sudo -iu emprende php /var/www/emprendeunam/artisan emprende:clave-admin   # contraseña del administrador
 ```
 
 `crear_bd.sh` lee `DB_PASSWORD` de `.env`, carga
@@ -170,9 +172,13 @@ los conteos (50 tablas, 13 temas, 4 roles, 12 privilegios y el usuario
 borra y la recrea (**se pierden los datos**).
 
 El administrador es el usuario **`EmprendeUnam`**, cargado por
-`datos_iniciales.sql` con su contraseña ya cifrada; la contraseña la entrega
-la coordinación de la revista y no está escrita en el repositorio. Su correo
-provisional es `admin@emprendeunam.invalid` (ver `PENDIENTES.md`).
+`datos_iniciales.sql`. El hash que trae ese archivo está en el repositorio, así
+que **al instalar hay que cambiar la contraseña** con
+`php artisan emprende:clave-admin`: la pide dos veces sin mostrarla (12 a 72
+caracteres), guarda solo el hash, cierra las sesiones abiertas del
+administrador y lo anota en `storage/logs/admin-*.log`. Sirve también para
+cambiarla después. Su correo provisional es `admin@emprendeunam.invalid`
+(ver `PENDIENTES.md`).
 
 ### 6. SELinux y permisos
 
