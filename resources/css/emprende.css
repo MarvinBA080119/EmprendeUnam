@@ -696,9 +696,29 @@ table {
     }
 }
 
-@media (max-width: 419.98px) {
+/* Teléfonos: el nombre y «Volver al sitio» comparten renglón; la leyenda
+   institucional ocupa el segundo renglón completo, sin partirse */
+@media (max-width: 575.98px) {
+    .emp-acceso__barra {
+        position: relative;
+        display: block;
+    }
+
+    .emp-marca {
+        display: flex;
+        padding-right: 7rem;
+    }
+
     .emp-marca__sub {
-        display: none;
+        white-space: nowrap;
+        margin-right: -7rem;
+    }
+
+    .emp-acceso__volver {
+        position: absolute;
+        top: 0;
+        right: 0;
+        line-height: 1.4;
     }
 }
 
