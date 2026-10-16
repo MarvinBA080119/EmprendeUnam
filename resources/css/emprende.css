@@ -82,6 +82,12 @@ input, textarea, select {
     caret-color: var(--emp-cafe);
 }
 
+/* Al enfocar un campo (p. ej. el primero con error) no queda bajo las barras fijas */
+input, textarea, select, button, [tabindex] {
+    scroll-margin-top: 6rem;
+    scroll-margin-bottom: 2rem;
+}
+
 .emp-num,
 table {
     font-variant-numeric: tabular-nums;
