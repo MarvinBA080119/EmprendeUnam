@@ -36,6 +36,7 @@
                             <th scope="col">Institución</th>
                             <th scope="col">Inicio</th>
                             <th scope="col">Palabras clave</th>
+                            <th scope="col">Estado</th>
                             <th scope="col"><span class="visually-hidden">Acciones</span></th>
                         </tr>
                     </thead>
@@ -45,13 +46,17 @@
                             <tr>
                                 <td>
                                     <a href="{{ $curso->curs_url }}" target="_blank" rel="noopener noreferrer">{{ $curso->curs_nombre_curso }}</a>
-                                    @if ($pasado)
-                                        <div class="small text-body-secondary">No visible al público (fecha pasada)</div>
-                                    @endif
                                 </td>
                                 <td>{{ $curso->curs_institucion }}</td>
                                 <td class="text-nowrap emp-num">{{ $curso->curs_fecha?->format('d/m/Y') }}</td>
                                 <td class="text-body-secondary">{{ $curso->palabras->pluck('pala_descripcion')->join(' · ') }}</td>
+                                <td>
+                                    @if ($pasado)
+                                        <span class="emp-insignia emp-insignia-rechazado" title="La fecha de inicio ya pasó: no se muestra al público">Vencido</span>
+                                    @else
+                                        <span class="emp-insignia emp-insignia-aprobado" title="Se muestra en el sitio público">Visible</span>
+                                    @endif
+                                </td>
                                 <td class="text-end">
                                     <div class="d-flex justify-content-end gap-2">
                                         <a href="{{ route('admin.cursos.edit', $curso) }}" class="btn btn-secondary btn-sm">

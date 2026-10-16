@@ -27,21 +27,28 @@ const enlaceCsv = computed(() => {
 
 <template>
     <div>
+        <div class="emp-seccion__barra">
+            <h2 class="emp-seccion__titulo">Suscriptores</h2>
+            <a :href="enlaceCsv" class="btn btn-secondary btn-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" focusable="false" class="emp-icono">
+                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                </svg>
+                Exportar CSV
+            </a>
+        </div>
         <form class="row g-2 align-items-end emp-filtros" role="search" @submit.prevent>
-            <div class="col-12 col-md-5">
+            <div class="col-12 col-md-7">
                 <label for="sus-q" class="form-label">Buscar</label>
                 <input id="sus-q" v-model="filtros.q" type="search" maxlength="100" class="form-control"
                        placeholder="Nombre o correo" />
             </div>
-            <div class="col-8 col-md-4">
+            <div class="col-12 col-md-5">
                 <label for="sus-estado" class="form-label">Estado</label>
                 <select id="sus-estado" v-model="filtros.estado" class="form-select">
                     <option value="">Todos</option>
                     <option v-for="(etiqueta, valor) in estados" :key="valor" :value="valor">{{ etiqueta }}</option>
                 </select>
-            </div>
-            <div class="col-4 col-md-3">
-                <a :href="enlaceCsv" class="btn btn-secondary w-100">Exportar CSV</a>
             </div>
         </form>
 

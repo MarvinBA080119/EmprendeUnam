@@ -14,7 +14,7 @@
         <div class="alert alert-danger" role="alert"><span class="alert-texto">{{ $message }}</span></div>
     @enderror
 
-    <div @class(['emp-detalle', 'emp-detalle--con-lateral' => $pendiente])>
+    <div class="emp-detalle emp-detalle--con-lateral">
         <div class="emp-detalle__principal">
             <section class="emp-seccion" aria-labelledby="sec-mensaje">
                 <h2 id="sec-mensaje" class="emp-seccion__titulo">Mensaje</h2>
@@ -75,6 +75,35 @@
                         <button type="submit" class="btn btn-secondary w-100">Rechazar mensaje</button>
                         <p class="form-text mb-0">Un mensaje rechazado no se responde ni se publica.</p>
                     </form>
+                </div>
+            </aside>
+        @else
+            <aside class="emp-detalle__lateral" aria-labelledby="titulo-estado">
+                <div class="emp-accion">
+                    <h2 id="titulo-estado" class="emp-accion__titulo">Estado</h2>
+                    <dl class="emp-registro">
+                        <div>
+                            <dt>Resultado</dt>
+                            <dd><x-insignia :estatus="$mensaje->mens_status" /></dd>
+                        </div>
+                        @if ($mensaje->respuesta)
+                            <div>
+                                <dt>Respondido</dt>
+                                <dd class="emp-num">{{ $mensaje->respuesta->mens_fecha_envio->format('d/m/Y H:i') }}</dd>
+                            </div>
+                            <div>
+                                <dt>Por</dt>
+                                <dd>{{ $mensaje->respuesta->mens_remitente }}</dd>
+                            </div>
+                        @endif
+                    </dl>
+                    @if ($mensaje->respuesta)
+                        <a href="{{ route('consultorio') }}" class="emp-accion__enlace" target="_blank" rel="noopener">
+                            Ver en el consultorio público <x-icono nombre="externo" :tamano="12" />
+                        </a>
+                    @else
+                        <p class="emp-accion__texto mb-0">Un mensaje rechazado no se responde ni se publica.</p>
+                    @endif
                 </div>
             </aside>
         @endif

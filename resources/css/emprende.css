@@ -497,10 +497,15 @@ table {
 .emp-tabla a {
     color: var(--emp-azul);
     font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: var(--emp-n-300);
+    text-underline-offset: 0.25em;
+    transition: color var(--emp-rapido) ease, text-decoration-color var(--emp-rapido) ease;
 }
 
 .emp-tabla a:hover {
     color: var(--emp-cafe);
+    text-decoration-color: currentColor;
 }
 
 /* --- Contenedores -------------------------------------------------------- */
@@ -1037,6 +1042,11 @@ table {
     color: var(--emp-cafe);
 }
 
+.emp-lat__enlace.is-activo .emp-cuenta {
+    background-color: var(--emp-cafe);
+    color: var(--emp-blanco);
+}
+
 .emp-lat__texto {
     flex: 1;
     min-width: 0;
@@ -1051,8 +1061,8 @@ table {
     height: 1.25rem;
     padding: 0 0.375rem;
     border-radius: 999px;
-    background-color: var(--emp-cafe);
-    color: var(--emp-blanco);
+    background-color: var(--emp-n-150);
+    color: var(--emp-azul);
     font-size: 0.6875rem;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
@@ -1291,6 +1301,12 @@ a.emp-fila:hover .emp-fila__titulo {
     gap: 0.375rem;
     font-size: 0.8125rem;
     color: var(--emp-n-600);
+    font-variant-numeric: tabular-nums;
+}
+
+.emp-fila__lado time {
+    min-width: 5rem;
+    text-align: right;
 }
 
 @media (max-width: 575.98px) {
@@ -1302,6 +1318,11 @@ a.emp-fila:hover .emp-fila__titulo {
     a.emp-fila .emp-fila__lado {
         order: 2;
         width: 100%;
+    }
+
+    a.emp-fila .emp-fila__lado time {
+        min-width: 0;
+        text-align: left;
     }
 
     a.emp-fila .emp-fila__lado .emp-icono {
@@ -1361,6 +1382,10 @@ a.emp-fila:hover .emp-fila__titulo {
     border-radius: 0.75rem;
     background-color: var(--emp-blanco);
     overflow: hidden;
+}
+
+.emp-marco-tabla .table-responsive {
+    position: relative;
 }
 
 .emp-marco-tabla .emp-tabla thead th {
@@ -1485,6 +1510,24 @@ td.emp-vacio {
 }
 
 
+.emp-seccion__barra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.emp-seccion__barra .emp-seccion__titulo {
+    margin: 0;
+}
+
+.emp-seccion__barra .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
 .emp-lectura {
     font-size: 0.9375rem;
     line-height: 1.65;
@@ -1591,6 +1634,51 @@ td.emp-vacio {
     margin: 0 0 1rem;
 }
 
+.emp-registro {
+    margin: 0.75rem 0 1rem;
+}
+
+.emp-registro > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--emp-n-100);
+}
+
+.emp-registro dt {
+    font-weight: 400;
+    color: var(--emp-n-600);
+}
+
+.emp-registro dd {
+    margin: 0;
+    text-align: right;
+}
+
+.emp-accion .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+}
+
+.emp-accion__enlace {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-top: 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.emp-accion__etiqueta {
+    margin: 0.75rem 0 0.25rem;
+    font-size: 0.8125rem;
+    color: var(--emp-n-600);
+}
+
 .emp-accion__separador {
     display: flex;
     align-items: center;
@@ -1621,7 +1709,7 @@ td.emp-vacio {
 
 @media (min-width: 992px) {
     .emp-ajuste {
-        grid-template-columns: minmax(0, 18rem) minmax(0, 34rem);
+        grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
     }
 }
 

@@ -11,7 +11,6 @@
         'estados' => $estados,
         'filtros' => $filtros,
     ])
-    <h2 class="emp-seccion__titulo">Suscriptores</h2>
     <div id="tabla-suscriptores" data-props='@json($props)'>
         <noscript><div class="alert alert-warning">Esta sección necesita JavaScript.</div></noscript>
     </div>

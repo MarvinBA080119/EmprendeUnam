@@ -4,28 +4,44 @@ namespace App\Support;
 
 use Carbon\CarbonInterface;
 
-/** Fechas relativas en español para listas y bandejas. */
+/**
+ * Fechas relativas cortas en español, en minúsculas, para listas y bandejas:
+ * «ahora», «hace 5 min», «hace 3 h», «hoy», «ayer», «hace 4 días», «12 oct.».
+ */
 class Fecha
 {
-    /**
-     * «Hoy», «Ayer», «Hace 5 días» o, después de 30 días, «12 sep. 2026».
-     * Para columnas de solo fecha (sin hora).
-     */
+    /** Para columnas de solo fecha (sin hora). */
     public static function dias(CarbonInterface $fecha): string
     {
         $dias = (int) $fecha->copy()->startOfDay()->diffInDays(today(), false);
 
         return match (true) {
-            $dias <= 0 => 'Hoy',
-            $dias === 1 => 'Ayer',
-            $dias <= 30 => "Hace {$dias} días",
-            default => $fecha->locale('es')->translatedFormat('j M Y'),
+            $dias <= 0 => 'hoy',
+            $dias === 1 => 'ayer',
+            $dias <= 30 => "hace {$dias} días",
+            default => self::fechaCorta($fecha),
         };
     }
 
-    /** «Hace 3 horas», «Hace 2 días»… para fechas con hora. */
+    /** Para fechas con hora: minutos y horas el mismo día; después, como dias(). */
     public static function relativa(CarbonInterface $fecha): string
     {
-        return ucfirst($fecha->locale('es')->diffForHumans());
+        $minutos = (int) $fecha->diffInMinutes(now(), false);
+
+        if ($fecha->isToday() && $minutos < 60) {
+            return $minutos < 1 ? 'ahora' : "hace {$minutos} min";
+        }
+        if ($fecha->isToday()) {
+            return 'hace '.intdiv($minutos, 60).' h';
+        }
+
+        return self::dias($fecha);
+    }
+
+    private static function fechaCorta(CarbonInterface $fecha): string
+    {
+        $formato = $fecha->isCurrentYear() ? 'j M' : 'j M Y';
+
+        return $fecha->locale('es')->translatedFormat($formato);
     }
 }

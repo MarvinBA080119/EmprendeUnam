@@ -22,7 +22,7 @@
         <div class="alert alert-danger" role="alert"><span class="alert-texto">{{ $message }}</span></div>
     @enderror
 
-    <div @class(['emp-detalle', 'emp-detalle--con-lateral' => $enRevision])>
+    <div class="emp-detalle emp-detalle--con-lateral">
         <div class="emp-detalle__principal">
             <section class="emp-seccion" aria-labelledby="sec-resumen">
                 <h2 id="sec-resumen" class="emp-seccion__titulo">Resumen</h2>
@@ -46,22 +46,6 @@
                         <dt>Última modificación</dt>
                         <dd class="emp-num">{{ $articulo->arti_fecha_modificacion->format('d/m/Y') }}</dd>
                     </div>
-                    @if ($articulo->constancia)
-                        <div>
-                            <dt>Constancia</dt>
-                            <dd>
-                                Folio <strong>{{ $articulo->constancia->cons_folio }}</strong>,
-                                emitida el <span class="emp-num">{{ $articulo->constancia->cons_fecha_emision->format('d/m/Y') }}</span>
-                                · <a href="{{ route('autor.articulos.constancia', $articulo) }}">Descargar</a>
-                            </dd>
-                        </div>
-                    @endif
-                    @if ($articulo->arti_comentario_rechazo)
-                        <div>
-                            <dt>Motivo del rechazo</dt>
-                            <dd class="emp-texto-libre">{{ $articulo->arti_comentario_rechazo }}</dd>
-                        </div>
-                    @endif
                 </dl>
             </section>
 
@@ -129,6 +113,40 @@
                         </div>
                         <button type="submit" class="btn btn-secondary w-100">Rechazar artículo</button>
                     </form>
+                </div>
+            </aside>
+        @else
+            <aside class="emp-detalle__lateral" aria-labelledby="titulo-dictamen">
+                <div class="emp-accion">
+                    <h2 id="titulo-dictamen" class="emp-accion__titulo">Dictamen</h2>
+                    <dl class="emp-registro">
+                        <div>
+                            <dt>Resultado</dt>
+                            <dd><x-insignia :estatus="$articulo->arti_status" /></dd>
+                        </div>
+                        <div>
+                            <dt>Fecha</dt>
+                            <dd class="emp-num">{{ $articulo->arti_fecha_modificacion->format('d/m/Y') }}</dd>
+                        </div>
+                        @if ($articulo->constancia)
+                            <div>
+                                <dt>Folio</dt>
+                                <dd><strong>{{ $articulo->constancia->cons_folio }}</strong></dd>
+                            </div>
+                        @endif
+                    </dl>
+                    @if ($articulo->constancia)
+                        <a href="{{ route('autor.articulos.constancia', $articulo) }}" class="btn btn-secondary w-100">
+                            <x-icono nombre="descargar" :tamano="14" /> Descargar constancia
+                        </a>
+                        <a href="{{ route('constancias.verificar', $articulo->constancia->cons_folio) }}" class="emp-accion__enlace" target="_blank" rel="noopener">
+                            Ver la verificación pública <x-icono nombre="externo" :tamano="12" />
+                        </a>
+                    @endif
+                    @if ($articulo->arti_comentario_rechazo)
+                        <p class="emp-accion__etiqueta">Motivo del rechazo</p>
+                        <p class="emp-texto-libre mb-0">{{ $articulo->arti_comentario_rechazo }}</p>
+                    @endif
                 </div>
             </aside>
         @endif

@@ -52,7 +52,7 @@
                     <li class="emp-fila">
                         <span class="emp-fila__principal">
                             <span class="emp-fila__titulo">{{ $usuario->persona->nombre_completo }}</span>
-                            <span class="emp-fila__meta">{{ $usuario->persona->autor?->auto_institucion }} · {{ mb_strtolower(\App\Support\Fecha::dias($usuario->usua_fecha_registro)) }}</span>
+                            <span class="emp-fila__meta">{{ $usuario->persona->autor?->auto_institucion }} · {{ \App\Support\Fecha::dias($usuario->usua_fecha_registro) }}</span>
                         </span>
                         <form method="POST" action="{{ route('admin.autores.activar', $usuario) }}"
                               data-confirmar="¿Activar la cuenta de {{ $usuario->persona->nombre_completo }}? Se le avisará por correo.">

@@ -8,15 +8,30 @@ use Tests\TestCase;
 
 class FechaTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        Carbon::setTestNow();
+        parent::tearDown();
+    }
+
     public function test_fechas_de_solo_dia_en_palabras(): void
     {
         Carbon::setTestNow('2026-10-16 10:00:00');
 
-        $this->assertSame('Hoy', Fecha::dias(Carbon::parse('2026-10-16')));
-        $this->assertSame('Ayer', Fecha::dias(Carbon::parse('2026-10-15')));
-        $this->assertSame('Hace 5 días', Fecha::dias(Carbon::parse('2026-10-11')));
-        $this->assertSame('12 sep. 2026', Fecha::dias(Carbon::parse('2026-09-12')));
+        $this->assertSame('hoy', Fecha::dias(Carbon::parse('2026-10-16')));
+        $this->assertSame('ayer', Fecha::dias(Carbon::parse('2026-10-15')));
+        $this->assertSame('hace 5 días', Fecha::dias(Carbon::parse('2026-10-11')));
+        $this->assertSame('12 sep.', Fecha::dias(Carbon::parse('2026-09-12')));
+        $this->assertSame('3 dic. 2025', Fecha::dias(Carbon::parse('2025-12-03')));
+    }
 
-        Carbon::setTestNow();
+    public function test_fechas_con_hora_en_minutos_y_horas_el_mismo_dia(): void
+    {
+        Carbon::setTestNow('2026-10-16 10:00:00');
+
+        $this->assertSame('ahora', Fecha::relativa(Carbon::parse('2026-10-16 09:59:40')));
+        $this->assertSame('hace 5 min', Fecha::relativa(Carbon::parse('2026-10-16 09:55:00')));
+        $this->assertSame('hace 3 h', Fecha::relativa(Carbon::parse('2026-10-16 07:00:00')));
+        $this->assertSame('ayer', Fecha::relativa(Carbon::parse('2026-10-15 23:00:00')));
     }
 }
