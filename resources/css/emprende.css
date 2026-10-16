@@ -494,7 +494,7 @@ table {
     border-bottom: 0;
 }
 
-.emp-tabla a {
+.emp-tabla a:not(.btn) {
     color: var(--emp-azul);
     font-weight: 500;
     text-decoration: underline;
@@ -503,7 +503,7 @@ table {
     transition: color var(--emp-rapido) ease, text-decoration-color var(--emp-rapido) ease;
 }
 
-.emp-tabla a:hover {
+.emp-tabla a:not(.btn):hover {
     color: var(--emp-cafe);
     text-decoration-color: currentColor;
 }
@@ -1608,11 +1608,6 @@ td.emp-vacio {
     border: 1px solid var(--emp-n-150);
 }
 
-.emp-respuesta__meta {
-    margin: 0 0 0.5rem;
-    font-size: 0.8125rem;
-    color: var(--emp-n-600);
-}
 
 /* Panel de acción lateral (dictamen, respuesta) */
 .emp-accion {

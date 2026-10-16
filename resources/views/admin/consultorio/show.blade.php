@@ -37,10 +37,6 @@
                 <section class="emp-seccion" aria-labelledby="sec-respuesta">
                     <h2 id="sec-respuesta" class="emp-seccion__titulo">Respuesta</h2>
                     <div class="emp-respuesta">
-                        <p class="emp-respuesta__meta">
-                            {{ $mensaje->respuesta->mens_remitente }} ·
-                            <span class="emp-num">{{ $mensaje->respuesta->mens_fecha_envio->format('d/m/Y H:i') }}</span>
-                        </p>
                         <p class="emp-lectura emp-texto-libre mb-0">{{ $mensaje->respuesta->mens_descripcion }}</p>
                     </div>
                 </section>
