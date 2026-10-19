@@ -1,0 +1,126 @@
+// ---------------------------------------------------------------------------
+// Sistema visual de la Revista EmprendeUNAM (autores y administrador).
+// Paleta cerrada: café #664300, azul #001328, blanco y negro, más mezclas de
+// esos colores (los neutros salen del azul mezclado con blanco).
+// Nunca texto café sobre azul ni azul sobre café.
+// Se define ANTES de importar Bootstrap para sobrescribir sus valores.
+// ---------------------------------------------------------------------------
+$emp-cafe: #664300;
+$emp-cafe-hover: #573900;
+$emp-azul: #001328;
+$emp-blanco: #ffffff;
+$emp-negro: #000000;
+
+// Neutros: azul mezclado con blanco (contraste sobre blanco entre paréntesis).
+$emp-n-25: #fafafb;
+$emp-n-50: #f6f7f7;
+$emp-n-100: #edeef0;
+$emp-n-150: #e6e7ea;
+$emp-n-200: #dbdee1;
+$emp-n-300: #ccd0d4;
+$emp-n-500: #8c959e; // (3.0) solo para texto deshabilitado
+$emp-n-600: #616d7a; // (5.3) texto secundario
+$emp-n-700: #4c5a68; // (7.1)
+
+$primary: $emp-cafe;
+$secondary: $emp-azul;
+$dark: $emp-azul;
+$light: $emp-n-50;
+
+// Los colores de estado de Bootstrap se redefinen con la paleta (sin verdes ni rojos).
+$success: $emp-azul;
+$info: $emp-azul;
+$warning: $emp-cafe;
+$danger: $emp-cafe;
+
+$body-color: $emp-azul;
+$body-bg: $emp-blanco;
+$body-secondary-color: $emp-n-600;
+$border-color: $emp-n-150;
+$link-color: $emp-cafe;
+$link-hover-color: $emp-cafe-hover;
+$link-decoration: none;
+$link-hover-decoration: underline;
+
+// Tipografía: Inter como cara de interfaz, sin cara decorativa.
+$font-family-sans-serif: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+$font-size-base: 0.875rem; // 14px
+$line-height-base: 1.5;
+$headings-font-family: null;
+$headings-font-weight: 600;
+$headings-color: $emp-azul;
+$headings-margin-bottom: 0.5rem;
+$h1-font-size: 1.5rem;
+$h2-font-size: 1.25rem;
+$h3-font-size: 1.0625rem;
+$h4-font-size: 0.9375rem;
+$h5-font-size: 0.875rem;
+$h6-font-size: 0.8125rem;
+$small-font-size: 0.8125rem;
+
+// Formas: 6px en controles, 12px en contenedores.
+$border-radius: 0.375rem;
+$border-radius-sm: 0.25rem;
+$border-radius-lg: 0.75rem;
+$border-radius-xl: 0.75rem;
+$enable-shadows: false;
+
+// Foco: anillo café translúcido.
+$focus-ring-color: rgba($emp-cafe, 0.22);
+$focus-ring-width: 3px;
+
+// Botones y campos.
+$input-btn-padding-y: 0.5rem;
+$input-btn-padding-x: 0.75rem;
+$input-btn-font-size: 0.875rem;
+$input-btn-focus-width: 3px;
+$input-btn-focus-color: rgba($emp-cafe, 0.22);
+$btn-padding-x: 0.875rem;
+$btn-font-weight: 500;
+$btn-padding-y-sm: 0.3125rem;
+$btn-padding-x-sm: 0.625rem;
+$btn-font-size-sm: 0.8125rem;
+$btn-border-radius: $border-radius;
+$btn-border-radius-sm: $border-radius;
+$btn-border-radius-lg: $border-radius;
+$btn-disabled-opacity: 0.5;
+
+$input-color: $emp-azul;
+$input-border-color: $emp-n-300;
+$input-placeholder-color: $emp-n-600;
+$input-focus-border-color: $emp-cafe;
+$input-disabled-bg: $emp-n-50;
+$form-label-font-weight: 500;
+$form-label-margin-bottom: 0.375rem;
+$form-text-margin-top: 0.375rem;
+$form-text-font-size: 0.8125rem;
+$form-text-color: $emp-n-600;
+$form-select-indicator-color: $emp-n-600;
+$form-check-input-checked-bg-color: $emp-cafe;
+$form-check-input-checked-border-color: $emp-cafe;
+$form-feedback-font-size: 0.8125rem;
+$form-feedback-invalid-color: $emp-cafe;
+$form-feedback-valid-color: $emp-azul;
+
+// Tablas.
+$table-cell-padding-y: 0.75rem;
+$table-cell-padding-x: 0.75rem;
+$table-cell-padding-y-sm: 0.5rem;
+$table-border-color: $emp-n-150;
+$table-th-font-weight: 500;
+$table-color: $emp-azul;
+
+// Otros componentes.
+$card-border-color: $emp-n-150;
+$card-border-radius: 0.75rem;
+$dropdown-border-color: $emp-n-150;
+$pagination-color: $emp-azul;
+$pagination-border-color: $emp-n-200;
+$pagination-hover-bg: $emp-n-50;
+$pagination-active-bg: $emp-azul;
+$pagination-active-border-color: $emp-azul;
+$hr-border-color: $emp-n-150;
+$hr-opacity: 1;
+
+// Contraste: texto blanco sobre café y sobre azul.
+$min-contrast-ratio: 4.5;

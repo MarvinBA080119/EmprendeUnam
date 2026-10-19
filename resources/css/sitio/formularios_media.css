@@ -1,0 +1,438 @@
+/* ==========================================================================
+   REVISTA FCA UNAM · formularios_media.css
+   Reglas exclusivas de Podcasts, Webinars, Temáticas y Consultorio
+   Se carga DESPUÉS de css/styles.css y hereda sus variables
+   ========================================================================== */
+
+/* Respaldo de variables por si esta hoja se usa de forma aislada */
+:root {
+  --rojo:     #C8102E;
+  --negro:    #0A0A0A;
+  --blanco:   #FFFFFF;
+  --linea:    #E0E0E0;
+  --gris-txt: #5A5C60;
+  --gris-bg:  #F8F9FA;
+}
+
+/* --------------------------------------------------------------------------
+   1. ENCABEZADO DE SECCIÓN (común a las cuatro páginas)
+   -------------------------------------------------------------------------- */
+.seccion-head {
+  padding: 4.5rem 0 3rem;
+  border-bottom: 1px solid var(--linea);
+  margin-bottom: 3.5rem;
+}
+
+.seccion-head--centro { text-align: center; }
+
+.seccion-head h1 {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  color: var(--negro);
+  margin: 1.25rem 0 0;
+}
+
+.seccion-head h1 em { font-style: normal; font-weight: 600; }
+
+.seccion-head__intro {
+  max-width: 60ch;
+  margin-top: 1.5rem;
+  color: var(--gris-txt);
+  font-size: 1rem;
+}
+
+.seccion-head--centro .seccion-head__intro { margin-left: auto; margin-right: auto; }
+
+.seccion-head__filete {
+  width: 48px;
+  height: 1px;
+  background: var(--rojo);
+  margin-top: 2rem;
+}
+
+.seccion-head--centro .seccion-head__filete { margin-left: auto; margin-right: auto; }
+
+/* --------------------------------------------------------------------------
+   2. VIDEOS · marco simétrico
+   -------------------------------------------------------------------------- */
+
+/* El .ratio de Bootstrap sostiene el 16:9; aquí sólo se enmarca */
+.video-marco {
+  background: var(--negro);
+  border: 1px solid var(--linea);
+  overflow: hidden;
+  transition: border-color .35s cubic-bezier(.4, 0, .2, 1);
+}
+
+.video-marco iframe {
+  border: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.video-item:hover .video-marco { border-color: var(--negro); }
+
+.video-item__titulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 1.55rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -.01em;
+  color: var(--negro);
+  margin: 1.35rem 0 .5rem;
+}
+
+.video-item__titulo a { color: var(--negro); }
+.video-item__titulo a:hover { color: var(--rojo); }
+
+.video-item__meta {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .62rem;
+  font-weight: 400;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gris-txt);
+  margin: 0;
+}
+
+.video-item__meta strong { color: var(--negro); font-weight: 500; }
+
+.video-item__desc {
+  color: var(--gris-txt);
+  font-size: .9rem;
+  margin: .75rem 0 0;
+}
+
+/* Variante compacta para los clips de webinar */
+.video-item--clip .video-item__titulo { font-size: 1.15rem; margin: 1rem 0 .4rem; }
+.video-item--clip .video-item__meta { font-size: .58rem; letter-spacing: .2em; }
+
+/* Lista de puntos clave del webinar principal */
+.puntos-clave { list-style: none; padding: 0; margin: 1.5rem 0 0; }
+
+.puntos-clave li {
+  position: relative;
+  padding-left: 1.6rem;
+  margin-bottom: .7rem;
+  font-size: .92rem;
+  color: var(--gris-txt);
+}
+
+.puntos-clave li::before {
+  content: '\2014';
+  position: absolute;
+  left: 0;
+  color: var(--rojo);
+}
+
+.participante {
+  padding: .9rem 0;
+  border-bottom: 1px solid var(--linea);
+}
+
+.participante:first-of-type { border-top: 1px solid var(--linea); }
+
+.participante strong {
+  display: block;
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--negro);
+}
+
+.participante span {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .62rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gris-txt);
+}
+
+/* --------------------------------------------------------------------------
+   3. ACORDEÓN DE TEMÁTICAS
+   -------------------------------------------------------------------------- */
+.acordeon-lux.accordion-flush .accordion-item {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--linea);
+}
+
+.acordeon-lux.accordion-flush .accordion-item:first-of-type {
+  border-top: 1px solid var(--negro);
+}
+
+.acordeon-lux .accordion-button {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--negro);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 1.75rem 2.5rem 1.75rem 0;
+  transition: color .3s ease;
+}
+
+.acordeon-lux .accordion-button:not(.collapsed) {
+  color: var(--rojo);
+  background: transparent;
+  box-shadow: none;
+}
+
+.acordeon-lux .accordion-button:hover { color: var(--rojo); }
+
+.acordeon-lux .accordion-button:focus {
+  box-shadow: none;
+  outline: 1px solid var(--rojo);
+  outline-offset: 4px;
+}
+
+/* Sustituimos el chevron de Bootstrap por un signo + / − tipográfico */
+.acordeon-lux .accordion-button::after {
+  content: '+';
+  background-image: none;
+  width: auto;
+  height: auto;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1;
+  color: currentColor;
+  transform: none;
+  transition: transform .3s ease;
+}
+
+.acordeon-lux .accordion-button:not(.collapsed)::after {
+  content: '\2212';
+  transform: none;
+}
+
+.acordeon-lux .accordion-body {
+  padding: 0 0 2.25rem;
+  color: var(--gris-txt);
+  font-size: .95rem;
+  max-width: 68ch;
+}
+
+.acordeon-lux .accordion-body p { margin-bottom: 1rem; }
+.acordeon-lux .accordion-body p:last-child { margin-bottom: 0; }
+
+.acordeon-lux .accordion-body strong { color: var(--negro); font-weight: 500; }
+
+.acordeon-lux .accordion-body a { color: var(--rojo); border-bottom: 1px solid var(--rojo); }
+
+/* Subtítulo dentro de un panel */
+.panel-sub {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .62rem;
+  font-weight: 500;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--negro);
+  margin: 1.75rem 0 .85rem;
+}
+
+.panel-lista { list-style: none; padding: 0; margin: 0; }
+
+.panel-lista li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: .65rem;
+}
+
+.panel-lista li::before {
+  content: '\2014';
+  position: absolute;
+  left: 0;
+  color: var(--linea);
+}
+
+/* Áreas temáticas en columnas */
+.areas-lista { list-style: none; padding: 0; margin: 0; column-gap: 2.5rem; }
+
+.areas-lista li {
+  padding: .55rem 0;
+  border-bottom: 1px solid var(--linea);
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 1.15rem;
+  color: var(--negro);
+  break-inside: avoid;
+}
+
+@media (min-width: 768px) { .areas-lista { column-count: 2; } }
+
+/* --------------------------------------------------------------------------
+   4. FORMULARIO PREMIUM · sólo borde inferior
+   -------------------------------------------------------------------------- */
+.form-lux .form-control,
+.form-lux .form-select {
+  border: none;
+  border-bottom: 2px solid var(--linea);
+  border-radius: 0;
+  background-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .95rem;
+  font-weight: 400;
+  color: var(--negro);
+  box-shadow: none;
+  transition: border-color .3s ease;
+}
+
+.form-lux .form-control:focus,
+.form-lux .form-select:focus {
+  border-bottom-color: var(--rojo);
+  background-color: transparent;
+  box-shadow: none;
+  outline: none;
+}
+
+/* El select mantiene su flecha, alineada al borde derecho */
+.form-lux .form-select {
+  background-position: right center;
+  padding-right: 1.5rem;
+}
+
+.form-lux .form-control::placeholder { color: transparent; }
+
+/* Etiquetas flotantes */
+.form-lux .form-floating > label {
+  padding-left: 0;
+  padding-right: 0;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .95rem;
+  color: var(--gris-txt);
+  transition: color .3s ease, transform .2s ease, opacity .2s ease;
+}
+
+.form-lux .form-floating > .form-control:focus ~ label,
+.form-lux .form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-lux .form-floating > .form-select ~ label {
+  font-size: .62rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  opacity: 1;
+  color: var(--gris-txt);
+}
+
+.form-lux .form-floating > .form-control:focus ~ label { color: var(--rojo); }
+
+/* Bootstrap pinta un fondo blanco tras la etiqueta flotante: se elimina */
+.form-lux .form-floating > label::after { background: transparent !important; }
+
+.form-lux .form-floating > textarea.form-control { min-height: 8rem; }
+
+.form-lux .form-floating { margin-bottom: 2rem; }
+
+/* Botón de envío */
+.btn-enviar {
+  display: inline-block;
+  width: 100%;
+  background: var(--negro);
+  color: var(--blanco);
+  border: 1px solid var(--negro);
+  border-radius: 0;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .66rem;
+  font-weight: 500;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  padding: 1.15rem 2rem;
+  transition: background .3s ease, border-color .3s ease;
+}
+
+.btn-enviar:hover {
+  background: var(--rojo);
+  border-color: var(--rojo);
+  color: var(--blanco);
+}
+
+.form-nota {
+  font-size: .75rem;
+  color: var(--gris-txt);
+  line-height: 1.6;
+  margin-top: 1.25rem;
+}
+
+/* Aviso de envío */
+.form-aviso {
+  display: none;
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-left: 2px solid var(--rojo);
+  background: var(--gris-bg);
+  font-size: .85rem;
+  color: var(--negro);
+}
+
+.form-aviso.visible { display: block; }
+
+/* --------------------------------------------------------------------------
+   5. CONSULTORIO · columna de texto
+   -------------------------------------------------------------------------- */
+.consultorio__titulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(2.4rem, 5.5vw, 4rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  color: var(--negro);
+  margin: 1.25rem 0 2rem;
+  max-width: 12ch;
+}
+
+.consultorio__texto {
+  color: var(--gris-txt);
+  font-size: 1rem;
+  max-width: 46ch;
+  margin-bottom: 1.25rem;
+}
+
+.consultorio__contacto {
+  margin-top: 3rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--linea);
+  font-size: .85rem;
+  color: var(--gris-txt);
+  line-height: 1.9;
+}
+
+.consultorio__contacto span {
+  display: block;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .6rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--negro);
+  margin-bottom: .35rem;
+}
+
+.consultorio__contacto a { color: var(--gris-txt); border-bottom: 1px solid var(--linea); }
+.consultorio__contacto a:hover { color: var(--rojo); border-bottom-color: var(--rojo); }
+
+/* --------------------------------------------------------------------------
+   6. RESPONSIVO
+   -------------------------------------------------------------------------- */
+@media (max-width: 991.98px) {
+  .seccion-head { padding: 2.5rem 0 2rem; margin-bottom: 2.5rem; }
+  .consultorio__titulo { margin-bottom: 1.5rem; }
+  .consultorio__contacto { margin-top: 2rem; }
+  .form-lux { margin-top: 3rem; }
+}
+
+@media (max-width: 575.98px) {
+  .acordeon-lux .accordion-button { padding: 1.35rem 2rem 1.35rem 0; font-size: .66rem; letter-spacing: .18em; }
+  .video-item__titulo { font-size: 1.3rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-marco, .acordeon-lux .accordion-button, .form-lux .form-control { transition: none !important; }
+}

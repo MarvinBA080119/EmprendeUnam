@@ -1,0 +1,1275 @@
+/* ==========================================================================
+   REVISTA FCA UNAM · premium_sections.css
+   Histórico · 10 de 10 · Las PYME Hablan
+   Se carga DESPUÉS de css/styles.css y hereda sus variables
+   ========================================================================== */
+
+:root {
+  --rojo:     #C8102E;
+  --negro:    #0A0A0A;
+  --blanco:   #FFFFFF;
+  --linea:    #E4E4E4;
+  --gris-txt: #5A5C60;
+  --gris-bg:  #F8F9FA;
+}
+
+/* --------------------------------------------------------------------------
+   1. ENCABEZADO · sólo el H1
+   -------------------------------------------------------------------------- */
+.head-solo { padding: 3.5rem 0 2rem; }
+
+/* Títulos de sección: Source Serif 4 en semibold, a un cuerpo bastante menor.
+   Playfair tiene un contraste de trazo muy alto y remates finos, lo que a
+   5rem daba un aire de revista de moda; esta tiene el eje vertical y los
+   remates rectos, así que a menor tamaño sigue leyéndose institucional. */
+.head-solo h1 {
+  font-family: var(--serif-titulo, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -.015em;
+  color: var(--negro);
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   2. FILTROS DESPLEGABLES · dos botones discretos
+   -------------------------------------------------------------------------- */
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--linea);
+  margin-bottom: 3rem;
+}
+
+.filtro { position: relative; }
+
+/* Botón cerrado: sólo texto y una flecha fina */
+.filtro__boton {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .64rem;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--negro);
+  background: transparent;
+  border: 1px solid var(--linea);
+  border-radius: 50rem;
+  padding: .6rem 1.25rem;
+  transition: border-color .3s ease, color .3s ease;
+}
+
+.filtro__boton:hover { border-color: var(--negro); }
+
+/* El texto cambia al valor elegido, así el botón informa sin abrirse */
+.filtro__texto { display: inline-block; line-height: 1; }
+
+.filtro__boton::after {
+  content: '';
+  width: 0; height: 0;
+  border-left: 3.5px solid transparent;
+  border-right: 3.5px solid transparent;
+  border-top: 4px solid currentColor;
+  opacity: .5;
+  transition: transform .3s ease;
+}
+
+.filtro.abierto .filtro__boton { border-color: var(--negro); }
+.filtro.abierto .filtro__boton::after { transform: rotate(180deg); }
+
+/* Cuando hay un valor elegido, el botón se marca en rojo */
+.filtro__boton.con-valor {
+  border-color: var(--rojo);
+  color: var(--rojo);
+}
+
+/* Panel de opciones */
+.filtro__panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + .5rem);
+  left: 0;
+  z-index: 20;
+  /* Las áreas tienen nombres largos ("Toma de decisiones y resolución de
+     problemas"): con 15rem se partían en dos líneas dentro del desplegable. */
+  min-width: 21rem;
+  max-height: 22rem;
+  overflow-y: auto;
+  background: var(--blanco);
+  border: 1px solid var(--linea);
+  border-top: 2px solid var(--rojo);
+  padding: .4rem 0;
+  box-shadow: 0 .75rem 2rem rgba(10, 10, 10, .1);
+}
+
+.filtro.abierto .filtro__panel { display: block; }
+
+.filtro__opcion {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .8rem;
+  font-weight: 400;
+  color: var(--negro);
+  background: transparent;
+  border: 0;
+  padding: .6rem 1.25rem;
+  transition: background .2s ease, color .2s ease;
+}
+
+.filtro__opcion:hover { background: var(--gris-bg); color: var(--rojo); }
+
+.filtro__opcion.activo {
+  color: var(--rojo);
+  font-weight: 600;
+}
+
+.filtro__contador {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .6rem;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gris-txt);
+  margin: 0 0 0 auto;
+}
+
+.oculto { display: none !important; }
+
+.sin-resultados {
+  display: none;
+  padding: 4rem 0;
+  text-align: center;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .9rem;
+  color: var(--gris-txt);
+}
+
+.sin-resultados.visible { display: block; }
+
+/* --------------------------------------------------------------------------
+   3. HISTÓRICO · la portada manda
+   -------------------------------------------------------------------------- */
+
+/* El contenedor conserva la proporción aunque la imagen tarde o falle */
+.portada {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4;
+  background: var(--gris-bg);
+  border: 1px solid var(--linea);
+  overflow: hidden;
+}
+
+.portada img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .7s cubic-bezier(.4, 0, .2, 1);
+}
+
+.portada:hover img { transform: scale(1.05); }
+
+/* Capa con acciones: aparece al interactuar, sobre la portada */
+.portada__capa {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  background: rgba(10, 10, 10, .72);
+  opacity: 0;
+  transition: opacity .35s cubic-bezier(.4, 0, .2, 1);
+}
+
+.portada:hover .portada__capa,
+.portada:focus-within .portada__capa { opacity: 1; }
+
+.btn-capa {
+  display: inline-block;
+  min-width: 110px;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .58rem;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--blanco);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, .6);
+  border-radius: 0;
+  padding: .6rem 1rem;
+  transform: translateY(8px);
+  opacity: 0;
+  transition: transform .35s cubic-bezier(.4, 0, .2, 1),
+              opacity .35s cubic-bezier(.4, 0, .2, 1),
+              background .25s ease, border-color .25s ease;
+}
+
+.portada:hover .btn-capa,
+.portada:focus-within .btn-capa { transform: translateY(0); opacity: 1; }
+
+.portada .btn-capa:nth-of-type(2) { transition-delay: .06s; }
+
+.btn-capa:hover,
+.btn-capa:focus { background: var(--rojo); border-color: var(--rojo); color: var(--blanco); }
+
+.edicion__numero {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--negro);
+  margin: .9rem 0 .15rem;
+}
+
+.edicion__meta {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .58rem;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gris-txt);
+  margin: 0 0 .6rem;
+}
+
+/* Título de la edición, cuando el acervo lo tiene registrado */
+.edicion__titulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: .95rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--negro);
+  margin: 0 0 .5rem;
+}
+
+/* Ahora la ficha lista varias áreas y no una etiqueta suelta: se afloja el
+   espaciado entre letras y se deja respirar la línea, o tres nombres largos
+   se leen como una cadena continua. */
+.edicion__tema {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .55rem;
+  font-weight: 500;
+  letter-spacing: .12em;
+  line-height: 1.7;
+  text-transform: uppercase;
+  color: var(--rojo);
+  margin: 0 0 .7rem;
+}
+
+/* Contador de las áreas que no caben: gris, para que no compita con ellas */
+.edicion__tema-mas {
+  margin-left: .45rem;
+  color: var(--gris-txt);
+  font-weight: 600;
+}
+
+/* Accesos permanentes bajo cada portada (no dependen del hover) */
+.edicion__accesos { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .25rem; }
+
+/* Aviso de hemeroteca al pie del acervo */
+.aviso-acervo {
+  margin: 4rem 0 0;
+  padding-top: 2rem;
+  border-top: 1px solid var(--linea);
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .9rem;
+  line-height: 1.8;
+  color: var(--gris-txt);
+}
+
+.aviso-acervo a { color: var(--negro); border-bottom: 1px solid var(--rojo); }
+.aviso-acervo a:hover { color: var(--rojo); }
+
+/* Pasan de texto subrayado a etiqueta enmarcada: se leen como acción y no
+   como nota al pie. El marco es un filete de 1px y el relleno negro entra
+   desde abajo al pasar el cursor, así ganan presencia sin sumar color ni
+   peso permanentes. isolation evita que el relleno tape el texto. */
+.edicion__acceso {
+  position: relative;
+  isolation: isolate;
+  display: inline-block;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--negro);
+  border: 1px solid var(--negro);
+  padding: .42rem .95rem;
+  overflow: hidden;
+  transition: color .3s ease;
+}
+
+.edicion__acceso::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--negro);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform .3s cubic-bezier(.4, 0, .2, 1);
+}
+
+.edicion__acceso:hover { color: var(--blanco); }
+.edicion__acceso:hover::before { transform: scaleY(1); }
+
+/* --------------------------------------------------------------------------
+   4. 10 DE 10 · selección editorial sobre blanco
+   -------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------
+   BARRA DE ÁREAS · 10 de 10
+
+   Son la puerta de entrada a la sección: si no se leen como controles, la
+   página parece tener un solo contenido. Antes el selector de la hoja decía
+   .areas-nav y el marcado .areas-tabs, así que la barra nunca recibió sus
+   estilos de contenedor.
+
+   El peso visual se consigue con estructura, no con ornamento:
+   · rejilla de cuatro bloques iguales, de ancho parejo — se leen como un
+     conjunto de opciones y no como texto suelto;
+   · un ordinal tenue sobre cada rótulo, que da altura al bloque y anticipa
+     que hay cuatro y sólo cuatro;
+   · filete rojo superior que se despliega de izquierda a derecha en la activa.
+   Sin sombras, sin degradados, sin esquinas redondeadas.
+   -------------------------------------------------------------------------- */
+.areas-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--linea);          /* los huecos hacen de filete divisorio */
+  border: 1px solid var(--linea);
+  margin-bottom: 3.5rem;
+}
+
+.area-tab {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: .55rem;
+  min-height: 92px;
+  text-align: left;
+  white-space: normal;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  color: var(--gris-txt);
+  background: var(--blanco);
+  border: 0;
+  border-radius: 0;
+  padding: 1.15rem 1.35rem;
+  transition: color .3s ease, background .3s ease;
+}
+
+/* Ordinal: da altura y jerarquía sin añadir un solo elemento al marcado */
+.area-tab::before {
+  content: attr(data-orden);
+  font-size: .58rem;
+  font-weight: 500;
+  letter-spacing: .2em;
+  color: var(--linea);
+  transition: color .3s ease;
+}
+
+/* Filete rojo que se despliega en la activa */
+.area-tab::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--rojo);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .4s cubic-bezier(.4, 0, .2, 1);
+}
+
+.area-tab:hover { color: var(--negro); background: var(--gris-bg); }
+.area-tab:hover::before { color: var(--gris-txt); }
+
+/* El bloque negro pesaba demasiado para lo que es: un selector. La activa se
+   distingue ahora por contraste tipográfico y por el filete rojo superior,
+   sobre un fondo apenas más claro que el resto. Discreto pero inequívoco. */
+.area-tab.activo {
+  color: var(--negro);
+  background: var(--blanco);
+  font-weight: 600;
+}
+
+.area-tab.activo::before { color: var(--rojo); }
+.area-tab.activo::after { transform: scaleX(1); }
+
+.area-tab.activo:hover { color: var(--negro); background: var(--blanco); }
+
+/* Las inactivas retroceden: fondo gris tenue y rótulo más ligero */
+.area-tab:not(.activo) {
+  background: var(--gris-bg);
+  font-weight: 500;
+}
+
+.area-panel { display: none; }
+
+.area-panel.activo { display: block; animation: entrada .45s cubic-bezier(.4, 0, .2, 1); }
+
+@keyframes entrada {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Pieza principal (el número 01) ── */
+.top-uno { margin-bottom: 4rem; padding-bottom: 4rem; border-bottom: 1px solid var(--linea); }
+
+/* 3:2 en lugar de 4:3. Junto con el reparto a seis columnas (antes siete),
+   la fotografía deja de dominar el bloque y el titular entra en el mismo
+   golpe de vista. */
+.top-uno__figure {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 3 / 2;
+  background: var(--gris-bg);
+  overflow: hidden;
+}
+
+.top-uno__figure img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .9s cubic-bezier(.4, 0, .2, 1);
+}
+
+.top-uno:hover .top-uno__figure img { transform: scale(1.04); }
+
+/* Sello de posición sobre la imagen */
+.top-uno__sello {
+  position: absolute;
+  left: 0; bottom: 0;
+  background: var(--negro);
+  color: var(--blanco);
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 1.9rem;
+  line-height: 1;
+  padding: .7rem 1.05rem .6rem;
+}
+
+.top-uno__eyebrow {
+  display: block;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--rojo);
+  margin-bottom: 1rem;
+}
+
+.top-uno__titulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.6rem, 2.9vw, 2.15rem);
+  font-weight: 600;
+  line-height: 1.16;
+  letter-spacing: -.02em;
+  color: var(--negro);
+  margin: 0 0 1rem;
+}
+
+.top-uno__titulo a { color: var(--negro); }
+.top-uno__titulo a:hover { color: var(--rojo); }
+
+.top-uno__desc {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .95rem;
+  line-height: 1.75;
+  color: var(--gris-txt);
+  margin: 0 0 1.5rem;
+  max-width: 46ch;
+}
+
+/* ── Resto de la selección ── */
+.seleccion-label {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--gris-txt);
+  margin-bottom: 2rem;
+}
+
+.art-mini { display: flex; gap: 1.4rem; height: 100%; }
+
+/* Marco 3:2, no cuadrado: las fotos de la selección son horizontales (entre
+   1.2:1 y 2.3:1) y un cuadrado de 120 px les cortaba los lados, a veces con
+   personas a la mitad. El 3:2 respeta la mayoría con un recorte mínimo; las que
+   necesitan otro encuadre lo indican en el campo "enfoque" del JSON. */
+.art-mini__figure {
+  position: relative;
+  flex: 0 0 168px;
+  width: 168px;
+  aspect-ratio: 3 / 2;
+  align-self: flex-start;   /* sin esto la fila flex lo estira al alto del texto y rompe el 3:2 */
+  margin: 0;
+  background: var(--gris-bg);
+  overflow: hidden;
+}
+
+.art-mini__figure img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .8s cubic-bezier(.4, 0, .2, 1);
+}
+
+.art-mini:hover .art-mini__figure img { transform: scale(1.07); }
+
+.art-mini__body { flex: 1 1 auto; min-width: 0; }
+
+/* Tablet (768–991 px): las dos columnas son angostas y un marco de 168 px
+   dejaba el texto en una tira. */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .art-mini__figure { flex: 0 0 124px; width: 124px; }
+}
+
+/* El número es el ancla de jerarquía: dice qué lugar ocupa en la selección */
+.art-mini__num {
+  display: block;
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--linea);
+  margin-bottom: .5rem;
+  transition: color .3s ease;
+}
+
+.art-mini:hover .art-mini__num { color: var(--rojo); }
+
+.art-mini__titulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.28;
+  color: var(--negro);
+  margin: 0 0 .5rem;
+}
+
+.art-mini__titulo a { color: var(--negro); }
+.art-mini__titulo a:hover { color: var(--rojo); }
+
+.art-mini__desc {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .85rem;
+  line-height: 1.65;
+  color: var(--gris-txt);
+  margin: 0 0 .75rem;
+}
+
+/* Enlace común a ambos formatos */
+.link-pdf {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--negro);
+  border-bottom: 1px solid var(--rojo);
+  padding-bottom: 3px;
+  transition: color .3s ease, gap .3s ease;
+}
+
+.link-pdf:hover { color: var(--rojo); gap: .8rem; }
+
+/* --------------------------------------------------------------------------
+   5. PYMES · tarjetas amplias a dos columnas
+
+   Con dos casos registrados, un grid de 3 columnas dejaba una casilla vacía.
+   A 2 columnas la tarjeta ocupa el ancho disponible y la imagen pasa de
+   16:9 a 4:3 (más cuadrada), como se pidió para cubrir el espacio en web.
+   -------------------------------------------------------------------------- */
+.pyme-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--blanco);
+  border: 1px solid var(--linea);
+  border-radius: 0;
+  transition: box-shadow .4s cubic-bezier(.4, 0, .2, 1), border-color .4s ease;
+}
+
+.pyme-card img { border-radius: 0 !important; }
+
+.pyme-card:hover {
+  border-color: var(--negro);
+  box-shadow: 0 1rem 3rem rgba(10, 10, 10, .12);
+}
+
+/* 4:3 · imagen más cuadrada y de mayor presencia */
+.pyme-card__figure {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  background: var(--gris-bg);
+  overflow: hidden;
+}
+
+.pyme-card__figure img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .8s cubic-bezier(.4, 0, .2, 1);
+}
+
+.pyme-card:hover .pyme-card__figure img { transform: scale(1.04); }
+
+/* Cuerpo generoso: la tarjeta respira y llena la columna */
+.pyme-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 2.25rem 2rem 2rem;
+}
+
+.pyme-card__cat {
+  display: block;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--rojo);
+  margin-bottom: .45rem;
+  line-height: 1.5;
+}
+
+.pyme-card__empresa {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .66rem;
+  font-weight: 500;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--gris-txt);
+  margin: 0 0 .75rem;
+}
+
+.pyme-card__titulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.45rem, 2.4vw, 1.85rem);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--negro);
+  margin: 0 0 .9rem;
+}
+
+.pyme-card__titulo a { color: var(--negro); }
+.pyme-card__titulo a:hover { color: var(--rojo); }
+
+.pyme-card__desc {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--gris-txt);
+  margin: 0 0 1.75rem;
+}
+
+/* Obstáculos y logros: los dos ejes narrativos del caso */
+.pyme-card__eje {
+  border-top: 1px solid var(--linea);
+  padding-top: 1.1rem;
+  margin-bottom: 1.35rem;
+}
+
+.pyme-card__eje-label {
+  display: block;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--negro);
+  margin-bottom: .55rem;
+}
+
+.pyme-card__eje--logros .pyme-card__eje-label { color: var(--rojo); }
+
+.pyme-card__eje p {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--gris-txt);
+  margin: 0;
+}
+
+/* TAMAÑOS DE "LAS PYME HABLAN"
+   ---------------------------------------------------------------------------
+   La coordinación editorial pidió aumentar el cuerpo de estas fichas: los
+   rótulos de .55rem quedaban al borde de lo legible y la narración a .93rem
+   se percibía pequeña frente al ancho de dos columnas. Los rótulos suben a
+   .64rem, la descripción a 1.05rem y los ejes a 1rem. El espaciado entre
+   letras se afloja unas centésimas: a mayor cuerpo, el mismo tracking abre
+   demasiado las versalitas.
+   --------------------------------------------------------------------------- */
+.pyme-card__link {
+  margin-top: auto;
+  align-self: flex-start;
+  padding-top: 1.5rem;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--negro);
+  transition: color .3s ease;
+}
+
+.pyme-card__link::after {
+  content: '';
+  display: block;
+  height: 1px;
+  background: var(--rojo);
+  margin-top: 4px;
+}
+
+.pyme-card__link:hover { color: var(--rojo); }
+
+/* Llamada final a enviar casos */
+.pyme-cta {
+  margin-top: 4.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--linea);
+}
+
+/* El título creció ("¿Tienes una historia de emprendimiento que contar?"):
+   con el tope anterior de 2rem se partía en tres líneas dentro de sus ocho
+   columnas. Se acota el máximo y se ajusta el interlineado. */
+.pyme-cta__titulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.45rem, 2.6vw, 1.85rem);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--negro);
+  margin: 0 0 .6rem;
+}
+
+.pyme-cta__texto {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--gris-txt);
+  margin: 0;
+  max-width: 56ch;
+}
+
+/* --------------------------------------------------------------------------
+   6. RESPONSIVO
+   -------------------------------------------------------------------------- */
+@media (max-width: 991.98px) {
+  .head-solo { padding: 2.75rem 0 1.75rem; }
+  /* Dos columnas: cuatro bloques en fila serían ilegibles en pantalla chica */
+  .areas-tabs { grid-template-columns: repeat(2, 1fr); margin-bottom: 2.5rem; }
+  .area-tab { min-height: 78px; padding: .9rem 1rem; font-size: .62rem; letter-spacing: .12em; }
+  .top-uno { margin-bottom: 3rem; padding-bottom: 3rem; }
+  .top-uno__figure { margin-bottom: 1.75rem; }
+}
+
+@media (max-width: 575.98px) {
+  .filtros { gap: .5rem; }
+  .filtro, .filtro__boton { width: 100%; }
+  .filtro__boton { justify-content: space-between; }
+  .filtro__panel { width: 100%; }
+  .filtro__contador { margin: .5rem 0 0; }
+
+  /* En táctil no hay hover: la capa queda visible y más tenue */
+  .portada__capa { opacity: 1; background: rgba(10, 10, 10, .45); }
+  .portada .btn-capa { transform: none; opacity: 1; min-width: 88px; font-size: .5rem; padding: .45rem .6rem; }
+
+  .art-mini { gap: 1rem; }
+  .art-mini__figure { flex: 0 0 116px; width: 116px; }
+  .top-uno__sello { font-size: 1.9rem; padding: .75rem 1rem .65rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portada img, .portada__capa, .btn-capa, .pyme-card, .pyme-card__figure img, .area-panel,
+  .top-uno__figure img, .art-mini__figure img { transition: none !important; animation: none !important; }
+  .portada:hover img, .pyme-card:hover .pyme-card__figure img { transform: none; }
+}
+
+/* --------------------------------------------------------------------------
+   7. CONSULTORIO · archivo de consultas y envío de casos
+
+   Las respuestas del comité son largas (5 y 6 párrafos). Se pliegan con
+   <details> para que el archivo se pueda recorrer de un vistazo. El pliegue
+   es nativo: funciona sin JavaScript y responde al teclado.
+   -------------------------------------------------------------------------- */
+.consultorio__entrada {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--negro);
+  margin: 0 0 1rem;
+}
+
+.consultorio__nota {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .9rem;
+  line-height: 1.75;
+  color: var(--gris-txt);
+  margin: 0;
+  max-width: 60ch;
+}
+
+.consultorio__conteo {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .58rem;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gris-txt);
+  margin: 1.5rem 0 0;
+}
+
+.consultas { margin-top: 3.5rem; }
+
+.consulta {
+  padding: 2.75rem 0;
+  border-top: 1px solid var(--linea);
+}
+
+.consulta:last-child { border-bottom: 1px solid var(--linea); }
+
+.consulta__cabecera {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.consulta__num {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .24em;
+  color: var(--rojo);
+}
+
+.consulta__estado {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .52rem;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gris-txt);
+  border: 1px solid var(--linea);
+  padding: .3rem .7rem;
+}
+
+.consulta__asunto {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.35rem, 2.8vw, 1.9rem);
+  font-weight: 600;
+  line-height: 1.22;
+  color: var(--negro);
+  margin: 0 0 .6rem;
+  max-width: 34ch;
+}
+
+.consulta__firma {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .58rem;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--negro);
+  margin: 0 0 1.5rem;
+}
+
+.consulta__lugar { color: var(--gris-txt); }
+
+.consulta__lugar::before { content: '\00B7'; margin: 0 .55rem; color: var(--linea); }
+
+.consulta__pregunta {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .95rem;
+  line-height: 1.85;
+  color: var(--gris-txt);
+  margin: 0 0 1.5rem;
+  max-width: 72ch;
+  padding-left: 1.5rem;
+  border-left: 2px solid var(--linea);
+}
+
+/* Pliegue nativo de la respuesta.
+
+   El disparador deja de ser un enlace subrayado y pasa a ser una barra con
+   filete rojo a la izquierda: se distingue del cuerpo de la consulta a
+   primera vista y deja claro que es accionable. Se mantiene el minimalismo
+   porque en reposo no hay más que un fondo gris muy tenue; el negro sólo
+   aparece cuando la respuesta está abierta, marcando el estado. */
+.consulta__respuesta { max-width: 72ch; }
+
+.consulta__respuesta summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .95rem 1.25rem;
+  background: var(--gris-bg);
+  border-left: 2px solid var(--rojo);
+  transition: background .3s ease;
+}
+
+.consulta__respuesta summary::-webkit-details-marker { display: none; }
+
+.consulta__respuesta summary:hover { background: #EFEFEF; }
+
+.consulta__respuesta[open] summary { background: var(--negro); }
+
+.consulta__abrir {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--negro);
+  transition: color .3s ease;
+}
+
+.consulta__respuesta summary:hover .consulta__abrir { color: var(--rojo); }
+
+/* Abierto: fondo negro y rótulo en blanco. Se repite el selector con :hover
+   porque de lo contrario el color de hover (rojo) ganaría por especificidad
+   justo después del clic, cuando el cursor sigue sobre la barra. */
+.consulta__respuesta[open] summary .consulta__abrir,
+.consulta__respuesta[open] summary:hover .consulta__abrir { color: var(--blanco); }
+
+.consulta__respuesta[open] summary:hover { background: #1A1A1A; }
+
+/* Signo + que pasa a − al abrir */
+.consulta__respuesta summary::after {
+  content: '+';
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: 1.15rem;
+  line-height: 1;
+  color: var(--rojo);
+  flex-shrink: 0;
+}
+
+.consulta__respuesta[open] summary::after { content: '\2212'; }
+
+.consulta__cuerpo { padding-top: 1.75rem; }
+
+.consulta__cuerpo p {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .93rem;
+  line-height: 1.9;
+  color: var(--gris-txt);
+  margin: 0 0 1.15rem;
+}
+
+.consulta__cuerpo p:last-child { margin-bottom: 0; }
+
+/* Bloque de envío */
+.consulta-envio {
+  margin-top: 5rem;
+  padding-top: 3.5rem;
+  border-top: 2px solid var(--negro);
+}
+
+.consulta-envio__titulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--negro);
+  margin: 1rem 0 1.5rem;
+}
+
+.consulta-envio__texto {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .93rem;
+  line-height: 1.8;
+  color: var(--gris-txt);
+  margin: 0 0 1.25rem;
+}
+
+.form-aviso--error { color: var(--rojo) !important; }
+
+@media (max-width: 767.98px) {
+  .consulta { padding: 2rem 0; }
+  .consulta__pregunta { padding-left: 1rem; }
+  .consulta-envio { margin-top: 3.5rem; padding-top: 2.5rem; }
+}
+
+/* Autoría del artículo en la selección 10 de 10 (cuando el JSON la registra) */
+.art-mini__autor {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .58rem;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gris-txt);
+  margin: 0 0 .9rem;
+}
+
+/* --------------------------------------------------------------------------
+   HISTÓRICO EN MÓVIL · la portada se queda sin capa
+
+   La capa con "Abrir PDF" y "Abrir eBook" depende del hover, que en pantalla
+   táctil no existe: aparecía al primer toque y robaba el gesto. Se retira, y
+   los accesos permanentes de debajo de cada portada quedan como única vía.
+   -------------------------------------------------------------------------- */
+@media (max-width: 991.98px) {
+
+  .portada__capa { display: none; }
+
+  /* Sin capa, la portada ya no necesita atenuarse */
+  .portada:hover img { opacity: 1; transform: none; }
+
+  /* Los accesos ganan algo de aire y se reparten el ancho de la tarjeta */
+  .edicion__accesos { gap: .4rem; }
+  .edicion__acceso { flex: 1 1 0; text-align: center; padding: .5rem .5rem; }
+}
+
+/* Atajo al formulario, en la cabecera del consultorio */
+.consultorio__atajo { margin-top: 1.5rem; }
+
+@media (max-width: 991.98px) {
+  /* A ancho completo: en móvil es la acción principal de la página */
+  .consultorio__atajo { width: 100%; justify-content: center; margin-top: 1.75rem; }
+  .consultorio__conteo { margin-top: 1.25rem; }
+}
+
+/* --------------------------------------------------------------------------
+   ENVÍO DE ARTÍCULOS · lineamientos y campos agrupados
+   -------------------------------------------------------------------------- */
+.lineamiento {
+  padding: 1.35rem 0;
+  border-bottom: 1px solid var(--linea);
+}
+
+.lineamiento:first-of-type { border-top: 1px solid var(--linea); margin-top: 1rem; }
+
+.lineamiento h2 {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--negro);
+  margin: 0 0 .5rem;
+}
+
+.lineamiento p {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .88rem;
+  line-height: 1.75;
+  color: var(--gris-txt);
+  margin: 0;
+}
+
+/* El compromiso institucional cierra la columna con más peso */
+.lineamiento--compromiso {
+  border-bottom: 0;
+  border-left: 2px solid var(--rojo);
+  padding-left: 1.25rem;
+  margin-top: .5rem;
+}
+
+/* Agrupaciones de campos (palabras clave, archivo) */
+.campo-grupo { border: 0; padding: 0; margin: 0 0 2rem; }
+
+.campo-grupo legend {
+  float: none;
+  width: auto;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--negro);
+  margin-bottom: .9rem;
+}
+
+.campo-archivo {
+  border: 1px solid var(--linea) !important;
+  border-radius: 0 !important;
+  padding: .85rem 1rem !important;
+  font-size: .88rem;
+}
+
+.campo-archivo:focus { border-color: var(--negro) !important; box-shadow: none !important; }
+
+.campo-ayuda {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .74rem;
+  color: var(--gris-txt);
+  margin: .6rem 0 0;
+}
+
+/* Botón para sumar coautor: acción secundaria, de trazo discontinuo */
+.btn-coautor {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 1px dashed var(--linea);
+  border-radius: 0;
+  padding: .9rem 1.15rem;
+  margin-bottom: 2rem;
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gris-txt);
+  cursor: pointer;
+  transition: border-color .3s ease, color .3s ease;
+}
+
+.btn-coautor::before { content: '+'; margin-right: .7rem; color: var(--rojo); font-size: .95rem; }
+
+.btn-coautor:hover { border-color: var(--negro); color: var(--negro); }
+
+.btn-coautor.activo { border-style: solid; border-color: var(--rojo); color: var(--rojo); }
+
+.btn-coautor.activo::before { content: '\2212'; }
+
+/* Ordinal en los beneficios de suscripción */
+.lineamiento__num {
+  color: var(--rojo);
+  margin-right: .6rem;
+  font-size: .62rem;
+  letter-spacing: .16em;
+}
+
+/* Casilla de verificación en el estilo de la hoja */
+.campo-check {
+  display: flex;
+  align-items: flex-start;
+  gap: .85rem;
+  margin: 0 0 2rem;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--linea);
+}
+
+.campo-check .form-check-input {
+  flex-shrink: 0;
+  margin-top: .15rem;
+  border-radius: 0;
+  border-color: var(--gris-txt);
+}
+
+.campo-check .form-check-input:checked { background-color: var(--negro); border-color: var(--negro); }
+.campo-check .form-check-input:focus { box-shadow: none; border-color: var(--negro); }
+
+.campo-check .form-check-label {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .86rem;
+  line-height: 1.7;
+  color: var(--gris-txt);
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   10 DE 10 · DETALLE POR ÁREA
+   -------------------------------------------------------------------------- */
+.miga {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gris-txt);
+  margin-bottom: 1rem;
+}
+
+.miga a { color: var(--rojo); }
+.miga a:hover { color: var(--negro); }
+.miga span[aria-hidden] { margin: 0 .6rem; color: var(--linea); }
+
+.head-solo__entrada {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .95rem;
+  line-height: 1.75;
+  color: var(--gris-txt);
+  margin: 1rem 0 0;
+  max-width: 68ch;
+}
+
+.lista-diez { list-style: none; padding: 0; margin: 0; counter-reset: none; }
+
+.lista-diez__item {
+  display: flex;
+  align-items: baseline;
+  gap: 1.75rem;
+  padding: 1.9rem 0;
+  border-bottom: 1px solid var(--linea);
+}
+
+.lista-diez__item:first-child { border-top: 1px solid var(--negro); }
+
+.lista-diez__num {
+  flex-shrink: 0;
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--linea);
+  min-width: 2.4rem;
+  transition: color .3s ease;
+}
+
+.lista-diez__item:hover .lista-diez__num { color: var(--rojo); }
+
+.lista-diez__cuerpo { flex: 1 1 auto; min-width: 0; }
+
+.lista-diez__titulo {
+  font-family: var(--serif, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--negro);
+  margin: 0 0 .6rem;
+}
+
+.lista-diez__desc {
+  font-family: var(--sans, 'Barlow', sans-serif);
+  font-size: .92rem;
+  line-height: 1.75;
+  color: var(--gris-txt);
+  margin: 0 0 .9rem;
+  max-width: 72ch;
+}
+
+.volver { margin-top: 3rem; }
+
+@media (max-width: 575.98px) {
+  .lista-diez__item { gap: 1rem; }
+  .lista-diez__num { font-size: 1.25rem; min-width: 1.9rem; }
+}

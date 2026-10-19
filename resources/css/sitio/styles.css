@@ -1,0 +1,1274 @@
+/* ==========================================================================
+   REVISTA EMPRENDEDORES · FCA UNAM
+   styles.css — Editorial de alto contraste
+   Negro profundo #0A0A0A · Blanco puro #FFFFFF · Rojo vibrante #C8102E
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. TOKENS
+   -------------------------------------------------------------------------- */
+:root {
+  --rojo:      #C8102E;
+  --rojo-osc:  #A50D26;
+  --negro:     #0A0A0A;
+  --blanco:    #FFFFFF;
+  --linea:     #E4E4E4;
+  --gris-txt:  #5A5C60;
+  --gris-bg:   #F8F9FA;
+
+  /* Tipografía alineada al logo "Emprende UNAM" (grotesca condensada).
+     Los nombres de variable se conservan para no reescribir cada regla. */
+  --serif: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --serif-titulo: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --color-bg-light: #f5f5f5;
+  --sans:  'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --ease: .35s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* --------------------------------------------------------------------------
+   2. RESET
+   -------------------------------------------------------------------------- */
+/* IMPORTANTE: 'overflow-x: hidden' en html/body convierte al elemento en
+   contenedor de scroll y ANULA el position:sticky del navbar.
+   'clip' recorta el desbordamiento sin crear ese contenedor, así el
+   header pegajoso sigue funcionando. */
+html {
+  overflow-x: clip;
+  width: 100%;
+  max-width: 100%;
+}
+
+body {
+  overflow-x: clip;
+  width: 100%;
+  max-width: 100%;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background: var(--blanco);
+  color: var(--negro);
+  font-family: var(--sans);
+  font-size: .95rem;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  font-weight: 600;
+  color: var(--negro);
+  letter-spacing: -.015em;
+}
+
+a { color: var(--negro); text-decoration: none; transition: color var(--ease); }
+a:hover { color: var(--rojo); }
+
+img { max-width: 100%; height: auto; }
+
+::selection { background: var(--rojo); color: #fff; }
+
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 2px solid var(--rojo);
+  outline-offset: 3px;
+}
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--rojo);
+}
+
+/* --------------------------------------------------------------------------
+   3-4. CABECERA FIJA · blanca en reposo, negra al desplazar
+
+   COMPORTAMIENTO
+   ---------------------------------------------------------------------------
+   El encabezado completo (logos + navegación) es sticky y acompaña siempre a
+   la lectura: nunca se va con el scroll. Antes sólo el navbar quedaba fijo y
+   los logos desaparecían.
+
+   Estado en reposo  : fondo blanco, filetes negros de separación, tipografía
+                       oscura. Es el estado por defecto.
+   Estado desplazado : la barra entera vira a negro y los logos se blanquean.
+                       Lo activa main.js añadiendo .cabecera--oscura.
+
+   Los logos se reducen en el estado desplazado. Un encabezado permanente con
+   los logos a tamaño completo ocuparía cerca de una quinta parte de la
+   pantalla durante toda la lectura; al encogerse libera ese espacio sin que
+   la identidad institucional deje de estar presente.
+   -------------------------------------------------------------------------- */
+:root {
+  --logo-alto: 108px;      /* 72px + 50%, según indicación editorial */
+  --logo-alto-min: 56px;   /* estado desplazado */
+  --logo-pad: .75rem;
+  --logo-pad-min: .4rem;
+}
+
+/* En escritorio el envoltorio se disuelve con display:contents. Es necesario:
+   un position:sticky sólo se desplaza dentro de su bloque contenedor, así que
+   mientras .cabecera fuera una caja real el navbar quedaba atrapado en sus
+   186px y se iba con el scroll. Al disolverla, logos y navbar pasan a ser
+   hermanos en el flujo del documento: los logos se van y el navbar se fija
+   contra la ventana.
+   La clase .cabecera--oscura sigue aplicando a los descendientes con
+   normalidad, porque display:contents no afecta a los selectores.
+   En móvil el envoltorio vuelve a ser una caja y recupera el sticky, para que
+   logos y hamburguesa viajen juntos (ver bloque RESPONSIVO). */
+.cabecera { display: contents; }
+
+/* ── Fila de logos ── */
+/* Fondo de la franja de logos: img/header_EMPRENDEUNAM_1.jpg
+
+   El archivo incluido es un liso de reserva, a la espera del definitivo.
+   Basta con sobrescribirlo para que la cabecera lo tome; si se prefiere otro
+   nombre, se cambia únicamente --cabecera-img.
+
+   Si la imagen definitiva es OSCURA hay que activar el bloque "FRANJA OSCURA"
+   de más abajo, o los logos negros quedarán ilegibles sobre ella. */
+:root { --cabecera-img: url('/img/header_EMPRENDEUNAM_1.jpg'); }
+
+.bloque-logos {
+  background-color: var(--blanco);
+  background-image: var(--cabecera-img);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-bottom: 1px solid var(--negro);
+  padding: var(--logo-pad) 0;
+  transition: border-color var(--ease), padding var(--ease);
+}
+
+/* ── FRANJA OSCURA · descomentar sólo si --cabecera-img pasa a la variante
+   header_fondo.jpg. Los PNG de UNAM y FCA ya son blancos, así que basta con
+   retirar la inversión; el logo de la revista cambia a su archivo alterno.
+
+.bloque-logos { background-color: var(--negro); }
+.bloque-logos .logo-invertido { filter: none; }
+.bloque-logos .logo-revista--claro  { display: none; }
+.bloque-logos .logo-revista--oscuro { display: block; }
+.nav-lux .navbar-toggler { border-color: rgba(255, 255, 255, .5); }
+.nav-lux .navbar-toggler-icon { filter: none; }
+   ─────────────────────────────────────────────────────────────────────── */
+
+/* El contenedor centrado dejaba los escudos flotando a media pantalla en
+   monitores anchos. Aquí se libera del ancho máximo para que la fila arranque
+   pegada al borde, con sólo el margen de seguridad. El navbar conserva su
+   contenedor centrado: son dos alineaciones distintas a propósito. */
+.bloque-logos > .container {
+  max-width: none;
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
+}
+
+.bloque-logos__lista { display: flex; align-items: center; gap: 30px; min-width: 0; }
+
+.logo-institucional {
+  max-height: var(--logo-alto);
+  width: auto;
+  object-fit: contain;
+  display: block;
+  transition: max-height var(--ease), filter var(--ease);
+}
+
+/* Los PNG de UNAM y FCA son blancos sobre transparente:
+   sobre el fondo blanco de reposo deben invertirse para ser legibles. */
+.logo-invertido { filter: invert(1); }
+
+/* --------------------------------------------------------------------------
+   ESTADO DESPLAZADO · toda la cabecera en negro
+   -------------------------------------------------------------------------- */
+/* La franja de logos no cambia de color: se va con el scroll y basta. */
+
+/* En escritorio los logos no cambian de color ni de tamaño: simplemente se van
+   con el scroll. Las reglas de blanqueo y compactación viven en el bloque
+   responsivo, donde la cabecera entera sí permanece en pantalla. */
+
+/* ── Logo de la revista: dos archivos, no un filtro ──────────────────────────
+   Es el único logo a color. Un filtro lo blanquearía por completo y se
+   perdería el rojo institucional, así que se alternan dos versiones: la
+   normal y otra con la palabra UNAM en blanco para el fondo oscuro. */
+.logo-revista { filter: none; }
+
+.logo-revista--oscuro,
+.logo-revista--rojo { display: none; }
+
+
+
+/* --------------------------------------------------------------------------
+   NAVEGACIÓN · hereda el color de la cabecera, no pinta fondo propio
+   -------------------------------------------------------------------------- */
+/* El navbar es la única pieza que permanece: se despega al rebasar los logos.
+   Su color es fijo, negro: no hay viraje al desplazar. */
+.nav-lux {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  background: var(--negro);
+  border-bottom: 0;
+  padding: 0;
+}
+
+/* Caja y baja, no versalitas: se lee como índice editorial, no como rótulo */
+.nav-lux .nav-link {
+  position: relative;
+  font-family: var(--sans);
+  font-size: 1.06rem;
+  font-weight: 500;
+  letter-spacing: .02em;
+  text-transform: none;
+  color: rgba(255, 255, 255, .8);
+  padding: 1.05rem 1.15rem;   /* ocho opciones en línea: aire lateral medido */
+  transition: color var(--ease);
+  white-space: nowrap;
+}
+
+/* Separadores finísimos entre opciones: dan estructura de índice sin cajas */
+.nav-lux .navbar-nav > .nav-item + .nav-item > .nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 12px;
+  background: rgba(255, 255, 255, .22);
+}
+
+/* Subrayado en rojo: sobre el negro es el único acento de color de la barra */
+.nav-lux .nav-link::before {
+  content: '';
+  position: absolute;
+  left: 1.15rem; right: 1.15rem; bottom: .6rem;
+  height: 1px;
+  background: var(--rojo);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s cubic-bezier(.4, 0, .2, 1);
+}
+
+.nav-lux .nav-link:hover,
+.nav-lux .nav-item:hover > .nav-link,
+.nav-lux .nav-link.active { color: var(--blanco); }
+
+.nav-lux .nav-link:hover::before,
+.nav-lux .nav-link.active::before,
+.nav-lux .nav-item:hover > .nav-link::before { transform: scaleX(1); }
+
+/* Sobre negro */
+
+
+/* ── Flecha minimalista ── */
+.nav-lux .dropdown-toggle::after {
+  display: inline-block;
+  width: 0; height: 0;
+  margin-left: .5rem;
+  vertical-align: .12em;
+  border: 0;
+  border-left: 3.5px solid transparent;
+  border-right: 3.5px solid transparent;
+  border-top: 4px solid currentColor;
+  opacity: .5;
+  transition: opacity var(--ease);
+}
+
+.nav-lux .nav-item:hover > .dropdown-toggle::after { opacity: 1; }
+
+/* ── Menús desplegables ── */
+.nav-lux .dropdown-menu {
+  background: var(--blanco);
+  border: 1px solid var(--linea);
+  border-top: 2px solid var(--rojo);
+  border-radius: 0;
+  box-shadow: none;
+  padding: .35rem 0;
+  margin-top: 0;
+  min-width: 17rem;
+  transition: background var(--ease), border-color var(--ease);
+}
+
+.nav-lux .dropdown-item {
+  font-size: .88rem;
+  font-weight: 400;
+  padding: .7rem 1.4rem;
+  color: var(--gris-txt);
+  white-space: normal;
+}
+
+.nav-lux .dropdown-item:hover,
+.nav-lux .dropdown-item:focus { background: var(--gris-bg); color: var(--rojo); }
+
+/* ── Hamburguesa ── */
+.nav-lux .navbar-toggler {
+  border: 1px solid var(--negro);
+  border-radius: 0;
+  padding: .4rem .6rem;
+  transition: border-color var(--ease);
+}
+
+.nav-lux .navbar-toggler:focus { box-shadow: none; }
+
+.nav-lux .navbar-toggler-icon { filter: invert(1) grayscale(100%) brightness(0); }
+
+
+
+/* --------------------------------------------------------------------------
+   5. HERO · equilibrado
+   -------------------------------------------------------------------------- */
+.hero { padding: 4.5rem 0; border-bottom: 1px solid var(--linea); }
+
+/* Título contenido: no compite con la portada */
+.hero__title {
+  font-family: var(--serif);
+  font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: -.015em;
+  margin: 1.1rem 0 1.25rem;
+  max-width: 18ch;
+}
+
+.hero__title em { font-style: italic; font-weight: 600; }
+
+.hero__lead {
+  color: var(--gris-txt);
+  font-size: 1rem;
+  max-width: 52ch;
+  margin-bottom: 2.25rem;
+}
+
+.hero__acciones { display: flex; flex-wrap: wrap; gap: 1rem; }
+
+/* Portada más presente: 350px */
+.hero__portada-wrap { display: flex; align-items: center; justify-content: center; height: 100%; }
+
+.hero__portada {
+  max-width: 350px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* El marco ciñe la imagen para que las capas del revelado se alineen al papel
+   y no a la columna. Lleva él la sombra —antes iba en la propia imagen con la
+   clase de Bootstrap— porque recorta lo que se desborda y la habría cortado. */
+.hero__portada-marco {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  box-shadow: 0 18px 50px -12px rgba(10, 10, 10, .28);
+}
+
+/* --------------------------------------------------------------------------
+   REVELADO DE LA PORTADA · exclusivo del número cero
+
+   Tres tiempos encadenados, en horizontal y con ritmo pausado:
+
+   1. ASENTAMIENTO. La portada entra ampliada, desplazada hacia abajo y con un
+      grado de inclinación, y se asienta en su sitio. Es lo que da la sensación
+      de que el ejemplar se coloca sobre la mesa en lugar de aparecer sin más.
+      La sombra crece con ella: al principio está en el aire y no proyecta
+      nada; al posarse gana peso.
+   2. APERTURA EN CORTINA. Una máscara descubre la portada desde el centro
+      hacia los dos lados a la vez, como una cortina que se abre. El titular
+      de la portada, al estar en la mitad izquierda del JPG, ya no se lee de
+      corrido letra a letra como con el barrido lateral: aparece partido,
+      con el resto del titular llegando cuando la cortina alcanza ese borde.
+   3. BARRIDO. Dos bandas del rojo institucional —una hacia cada lado— viajan
+      pegadas a los dos bordes del revelado y salen por los costados. Es lo
+      que le da el golpe de color y refuerza la lectura de "cortina que se
+      abre".
+
+   Los tiempos se alargaron a petición editorial: el gesto se sigue sintiendo
+   igual de editorial, pero da tiempo a leer la portada mientras se descubre.
+   Las curvas cubic-bezier se conservan intactas —son las que definen el
+   "carácter" del movimiento— y sólo se estiraron las duraciones.
+
+   Se descartó rematar con un destello blanco de papel satinado: la portada es
+   casi blanca y una luz clara sobre fondo claro no se percibía. El rojo es lo
+   único que contrasta de verdad contra este papel, y además es el color de la
+   revista.
+
+   El corte y el barrido comparten una curva que arranca contenida, acelera en
+   el centro del recorrido y frena al final: con una desaceleración simple, el
+   90% del movimiento se consumía en el primer medio segundo y el gesto se leía
+   como un salto. El asentamiento conserva su propia curva, más blanda, para
+   que la portada siga posándose después de que el barrido haya salido.
+
+   Los tres tiempos se solapan, de modo que se percibe un solo movimiento
+   continuo de casi tres segundos y no tres efectos sucesivos. Ocurre una vez,
+   sin repetición.
+
+   -webkit-mask-* acompaña a la propiedad estándar por Safari.
+   -------------------------------------------------------------------------- */
+
+/* 1 · Asentamiento + 2 · Apertura en cortina.
+   La máscara es un bloque opaco sólido, no un degradado: lo que anima es su
+   tamaño (mask-size), de 0% a 100% del ancho, con mask-position fija en
+   "center". Al estar centrada, el bloque crece por igual hacia los dos
+   lados a medida que se ensancha, así que sus dos bordes se alejan del
+   centro en espejo. Con porcentajes el cálculo lo hace el navegador contra
+   el ancho real, así que funciona igual en escritorio y en móvil, donde la
+   portada mide menos. Misma duración, mismo delay y misma curva que antes:
+   sólo cambia qué se anima (tamaño en vez de posición). */
+.hero__portada-wrap--revelado .hero__portada {
+  -webkit-mask-image: linear-gradient(#000, #000);
+          mask-image: linear-gradient(#000, #000);
+  -webkit-mask-position: center;
+          mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  animation: portada-corte 2.6s cubic-bezier(.62, .02, .22, 1) .25s both,
+             portada-asienta 3s cubic-bezier(.19, 1, .3, 1) .25s both;
+}
+
+@keyframes portada-corte {
+  from { -webkit-mask-size: 0% 100%;   mask-size: 0% 100%;   }
+  to   { -webkit-mask-size: 100% 100%; mask-size: 100% 100%; }
+}
+
+/* El giro es de poco más de un grado: lo justo para que se note que el
+   ejemplar cae en su sitio, sin que llegue a parecer torcido. */
+@keyframes portada-asienta {
+  from { transform: translateY(34px) scale(1.08) rotate(-1.4deg); }
+  to   { transform: translateY(0)    scale(1)    rotate(0deg);    }
+}
+
+.hero__portada-wrap--revelado .hero__portada-marco {
+  animation: portada-sombra 3s cubic-bezier(.19, 1, .3, 1) .25s both;
+}
+
+@keyframes portada-sombra {
+  from { box-shadow: 0 40px 65px -22px rgba(10, 10, 10, 0); }
+  to   { box-shadow: 0 18px 50px -12px rgba(10, 10, 10, .28); }
+}
+
+/* 3 · Barrido. Dos bandas macizas, una por lado, cada una con su caída corta
+   hacia el centro: se leen como un canto en movimiento y no como un
+   rectángulo que se desplaza. ::before sale por la derecha, ::after por la
+   izquierda; son espejo una de otra —misma posición de partida pegada al
+   centro, mismo ancho, degradado y recorrido invertidos— y comparten
+   duración y curva con la máscara para salir "pegadas" a sus dos bordes. */
+.hero__portada-wrap--revelado .hero__portada-marco::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 26%;
+  pointer-events: none;
+  z-index: 2;
+  background: linear-gradient(to right,
+              rgba(200, 16, 46, 0) 0%,
+              rgba(200, 16, 46, .55) 55%,
+              var(--rojo) 88%,
+              var(--rojo) 100%);
+  animation: portada-barrido-derecha 2.6s cubic-bezier(.62, .02, .22, 1) .25s both;
+}
+
+.hero__portada-wrap--revelado .hero__portada-marco::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 50%;
+  width: 26%;
+  pointer-events: none;
+  z-index: 2;
+  background: linear-gradient(to left,
+              rgba(200, 16, 46, 0) 0%,
+              rgba(200, 16, 46, .55) 55%,
+              var(--rojo) 88%,
+              var(--rojo) 100%);
+  animation: portada-barrido-izquierda 2.6s cubic-bezier(.62, .02, .22, 1) .25s both;
+}
+
+@keyframes portada-barrido-derecha {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  10%  { opacity: 1; }
+  86%  { opacity: 1; }
+  100% { transform: translateX(400%); opacity: 0; }
+}
+
+@keyframes portada-barrido-izquierda {
+  0%   { transform: translateX(100%); opacity: 0; }
+  10%  { opacity: 1; }
+  86%  { opacity: 1; }
+  100% { transform: translateX(-400%); opacity: 0; }
+}
+
+/* Quien haya pedido menos movimiento ve la portada completa desde el inicio.
+   La máscara se retira por entero —dejarla puesta sin animar degradaría la
+   imagen a transparente— y las bandas no se dibujan. */
+@media (prefers-reduced-motion: reduce) {
+  .hero__portada-wrap--revelado .hero__portada {
+    -webkit-mask-image: none;
+            mask-image: none;
+    animation: none;
+    transform: none;
+  }
+
+  .hero__portada-wrap--revelado .hero__portada-marco { animation: none; }
+  .hero__portada-wrap--revelado .hero__portada-marco::before,
+  .hero__portada-wrap--revelado .hero__portada-marco::after { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   6. BOTONES DE ALTA COSTURA
+   -------------------------------------------------------------------------- */
+.btn-lux {
+  --bs-btn-focus-shadow-rgb: 200, 16, 46;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  font-family: var(--sans);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  padding: 1.05rem 2.25rem;
+  border: 1px solid var(--negro);
+  border-radius: 0;
+  color: var(--negro);
+  background: transparent;
+  overflow: hidden;
+  transition: color var(--ease), border-color var(--ease);
+}
+
+/* El relleno entra desde abajo: el botón responde, no sólo cambia de color */
+.btn-lux::before {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 100%; height: 100%;
+  background: var(--negro);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform var(--ease);
+  z-index: 0;
+}
+
+.btn-lux > * { position: relative; z-index: 1; }
+
+.btn-lux:hover,
+.btn-lux:focus { color: var(--blanco); border-color: var(--negro); }
+
+.btn-lux:hover::before,
+.btn-lux:focus::before { transform: scaleY(1); }
+
+.btn-lux:active { transform: translateY(1px); }
+
+/* Variante de bloque: ocupa todo el ancho de su columna. Nace para el botón
+   del newsletter en la barra lateral, donde un botón suelto de ancho propio
+   se veía desalineado frente a los widgets, que sí llegan a los dos bordes. */
+.btn-lux--bloque {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  padding-inline: 1.25rem;
+}
+
+.btn-lux--bloque i { font-size: .95rem; }
+
+/* Variante secundaria: se rellena de rojo */
+.btn-lux--rojo { border-color: var(--linea); color: var(--gris-txt); }
+.btn-lux--rojo::before { background: var(--rojo); }
+.btn-lux--rojo:hover,
+.btn-lux--rojo:focus { color: var(--blanco); border-color: var(--rojo); }
+
+/* --------------------------------------------------------------------------
+   7. FEED DE ARTÍCULOS
+   -------------------------------------------------------------------------- */
+.feed-label {
+  font-family: var(--sans);
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--negro);
+  padding-bottom: 1.1rem;
+  border-bottom: 2px solid var(--negro);
+  margin-bottom: 2.75rem;
+}
+
+/* Separación entre artículos: la coordinación editorial pidió acercarlos.
+   Antes eran 2.75rem de relleno más 2.75rem de margen —5.5rem de blanco entre
+   un titular y el siguiente—, que en pantallas de portátil dejaban fuera de
+   campo el segundo artículo. La regla divisoria basta para separarlos. */
+.post { padding-bottom: 1.6rem; margin-bottom: 1.6rem; border-bottom: 1px solid var(--linea); }
+.post:last-of-type { border-bottom: 0; }
+
+.post__figure { margin: 0; overflow: hidden; background: var(--gris-bg); }
+
+.post__figure img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+  transition: transform .8s cubic-bezier(.4, 0, .2, 1);
+}
+
+.post:hover .post__figure img { transform: scale(1.04); }
+
+.post__title {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 2.8vw, 1.85rem);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: .55rem 0 .7rem;
+}
+
+.post__title a { color: var(--negro); }
+.post__title a:hover { color: var(--rojo); }
+
+.post__excerpt { color: var(--gris-txt); font-size: .92rem; margin-bottom: 1rem; }
+
+.post__meta {
+  font-family: var(--sans);
+  font-size: .64rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gris-txt);
+  margin: 0;
+}
+
+.post__meta strong { color: var(--negro); font-weight: 600; }
+
+/* Sin subrayado: el color rojo basta para señalar la acción */
+.post__more {
+  display: inline-block;
+  margin-top: 1rem;
+  font-family: var(--sans);
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--rojo);
+  border-bottom: 0;
+  padding-bottom: 0;
+  transition: color var(--ease);
+}
+
+.post__more:hover { color: var(--negro); }
+
+/* --------------------------------------------------------------------------
+   ARTÍCULO PRINCIPAL
+
+   Misma familia visual que el resto del feed, con más jerarquía pero sin
+   desbordarla. La fotografía va a 4:3 dentro de siete columnas: pesa más que
+   las miniaturas cuadradas de "En este número" y sigue cabiendo en pantalla
+   junto al titular, en lugar de empujarlo fuera del primer golpe de vista.
+   -------------------------------------------------------------------------- */
+.post--principal { padding-bottom: 3rem; }
+
+.post__figure--destacada { margin: 0; }
+
+.post__figure--destacada img { aspect-ratio: 4 / 3; }
+
+.post--principal:hover .post__figure--destacada img { transform: scale(1.03); }
+
+.post__title--mayor {
+  font-size: clamp(1.45rem, 2.6vw, 1.95rem);
+  line-height: 1.18;
+  margin-bottom: .85rem;
+}
+
+/* El extracto se acorta: en columna estrecha una medida larga se vuelve
+   una escalera de líneas sueltas. */
+.post--principal .post__excerpt { font-size: .95rem; margin-bottom: 1rem; }
+
+/* --------------------------------------------------------------------------
+   8. CAJA NEGRA DE CURSOS
+   -------------------------------------------------------------------------- */
+/* Nota marginal, no bloque publicitario.
+
+   Antes era una losa negra a sangre dentro de la columna de lectura: dentro
+   de un feed blanco leía como un anuncio insertado y cortaba el artículo en
+   dos. Ahora es un apunte al margen —regla roja a la izquierda, sin relleno—
+   que acompaña al texto en lugar de interrumpirlo.
+
+   El carácter lo dan tres cosas y ninguna es un color de fondo: la regla roja
+   vertical, el rótulo diminuto muy espaciado y los ordinales en rojo. El resto
+   es aire. */
+.curso-vip {
+  margin: 1.4rem 0 .25rem;
+  padding: 0 0 0 1.6rem;
+  border-left: 1px solid var(--linea);
+  background: transparent;
+  color: inherit;
+}
+
+.curso-vip__label {
+  display: block;
+  font-family: var(--sans);
+  font-size: .55rem;
+  font-weight: 600;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--gris-txt);
+  margin-bottom: .35rem;
+}
+
+.curso-vip__lista { list-style: none; padding: 0; margin: 0; }
+
+.curso-vip__lista li + li { border-top: 1px solid var(--linea); }
+
+.curso-vip__lista a {
+  display: flex;
+  align-items: baseline;
+  gap: .9rem;
+  padding: .8rem 0;
+  color: var(--negro);
+  transition: color var(--ease), padding-left var(--ease);
+}
+
+.curso-vip__lista a:hover { color: var(--rojo); padding-left: .4rem; }
+
+/* Ordinal: da ritmo a la lista y ancla el rojo sin pintar nada */
+.curso-vip__num {
+  flex-shrink: 0;
+  font-family: var(--sans);
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  color: var(--gris-txt);
+}
+
+.curso-vip__nombre {
+  flex: 1 1 auto;
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* La flecha sólo aparece al recorrer la fila: en reposo, aire */
+.curso-vip__flecha {
+  flex-shrink: 0;
+  font-family: var(--sans);
+  font-size: .8rem;
+  color: var(--rojo);
+  opacity: 0;
+  transform: translateX(-.4rem);
+  transition: opacity var(--ease), transform var(--ease);
+}
+
+.curso-vip__lista a:hover .curso-vip__flecha { opacity: 1; transform: translateX(0); }
+
+@media (max-width: 575.98px) {
+  .curso-vip { padding-left: 1.1rem; }
+  .curso-vip__nombre { font-size: .95rem; }
+  .curso-vip__flecha { display: none; }
+}
+
+
+/* --------------------------------------------------------------------------
+   9. SIDEBAR
+   -------------------------------------------------------------------------- */
+.widget { border-top: 3px solid var(--rojo); padding-top: 1.3rem; margin-bottom: 2.75rem; }
+
+.widget__title {
+  font-family: var(--sans);
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--negro);
+  margin-bottom: 1.1rem;
+}
+
+.widget .form-control,
+.widget .form-select {
+  border-radius: 0;
+  border-color: var(--linea);
+  font-size: .85rem;
+  padding: .72rem .9rem;
+  box-shadow: none;
+  color: var(--negro);
+}
+
+.widget .form-control:focus,
+.widget .form-select:focus { border-color: var(--negro); box-shadow: none; }
+
+.widget .input-group .btn {
+  border-radius: 0;
+  background: var(--negro);
+  border-color: var(--negro);
+  color: var(--blanco);
+  padding-inline: 1.1rem;
+}
+
+.widget .input-group .btn:hover { background: var(--rojo); border-color: var(--rojo); }
+
+.idioma-aviso { display: none; margin-top: .7rem; font-size: .72rem; color: var(--rojo); }
+.idioma-aviso.visible { display: block; }
+
+/* Texto introductorio dentro de un widget (newsletter) */
+.widget__texto {
+  font-size: .85rem;
+  line-height: 1.6;
+  color: var(--gris-txt);
+  margin-bottom: 1.2rem;
+}
+
+.widget__list { list-style: none; padding: 0; margin: 0; }
+.widget__list li { border-bottom: 1px solid var(--linea); }
+.widget__list li:first-child { border-top: 1px solid var(--linea); }
+
+.widget__list a {
+  display: block;
+  padding: .8rem 0;
+  font-size: .85rem;
+  transition: padding var(--ease), color var(--ease);
+}
+
+.widget__list a:hover { padding-left: .6rem; color: var(--rojo); }
+
+.cta-convocatoria {
+  background: var(--rojo);
+  color: var(--blanco);
+  padding: 2.4rem 1.75rem;
+  text-align: center;
+  margin-bottom: 2.75rem;
+}
+
+.cta-convocatoria i { font-size: 1.7rem; display: block; margin-bottom: .9rem; opacity: .9; }
+
+.cta-convocatoria h2 {
+  font-family: var(--sans);
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--blanco);
+  margin-bottom: .85rem;
+}
+
+.cta-convocatoria p { font-size: .85rem; color: rgba(255, 255, 255, .9); margin-bottom: 1.4rem; }
+
+.btn-blanco {
+  display: inline-block;
+  background: var(--blanco);
+  color: var(--rojo);
+  border: 1px solid var(--blanco);
+  border-radius: 0;
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  padding: .85rem 1.75rem;
+  transition: background var(--ease), color var(--ease);
+}
+
+.btn-blanco:hover { background: transparent; color: var(--blanco); }
+
+.directorio { padding: .85rem 0; border-bottom: 1px solid var(--linea); }
+.directorio:first-of-type { border-top: 1px solid var(--linea); }
+
+.directorio a {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--rojo);
+  margin-bottom: .1rem;
+}
+
+.directorio a:hover { color: var(--negro); }
+.directorio span { font-size: .78rem; color: var(--gris-txt); line-height: 1.55; display: block; }
+
+/* --------------------------------------------------------------------------
+   10. FOOTER
+   -------------------------------------------------------------------------- */
+/* Sin relleno inferior: la franja legal roja es ahora el último elemento del
+   pie, y cualquier padding-bottom aquí asomaría como una banda negra por
+   debajo de ella. El aire inferior del prepié lo pone su propio contenedor. */
+.footer-lux {
+  background: var(--negro);
+  color: rgba(255, 255, 255, .64);
+  padding: 1.75rem 0 0;
+  margin-top: 2rem;
+  font-size: .82rem;
+  line-height: 1.6;
+}
+
+.footer-lux__title {
+  font-family: var(--sans);
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--blanco);
+  margin-bottom: 1.15rem;
+}
+
+.footer-lux__list { list-style: none; padding: 0; margin: 0; }
+.footer-lux__list li { margin-bottom: .5rem; }
+.footer-lux a { color: rgba(255, 255, 255, .64); }
+.footer-lux a:hover { color: var(--rojo); }
+
+.footer-lux__social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px; height: 34px;
+  border: 1px solid rgba(255, 255, 255, .22);
+  margin-right: .4rem;
+  color: var(--blanco);
+  transition: border-color var(--ease), color var(--ease);
+}
+
+.footer-lux__social a:hover { border-color: var(--rojo); color: var(--rojo); }
+
+/* Logos del footer: blancos y al DOBLE de tamaño (52px → 104px) */
+/* Los dos escudos comparten altura exacta y van en la misma línea.
+   Antes llevaban 104px y no cabían juntos en su columna: se envolvían y
+   quedaban uno debajo del otro, que es lo que los hacía ver desiguales.
+   height (no max-height) fuerza la misma caja en ambos pese a que sus
+   proporciones difieren; object-fit evita cualquier deformación. */
+.logo-footer {
+  height: 92px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: .9;
+}
+
+/* Franja legal: banda de gris claro a todo el ancho, bajo el prepié negro.
+   Al ser fondo claro el texto vuelve a ser oscuro; se deja en gris de lectura
+   para que la nota no compita con el contenido del pie. */
+.footer-lux__legal {
+  background: var(--color-bg-light);
+  margin-top: 0;
+  padding: 1.5rem 0;
+  font-size: .72rem;
+  color: var(--gris-txt);
+  line-height: 1.7;
+}
+
+.footer-lux__legal a {
+  color: var(--negro);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer-lux__legal a:hover { color: var(--rojo); }
+
+/* El prepié cierra por su cuenta, ya sin la nota legal dentro */
+.footer-lux > .container { padding-bottom: 1.25rem; }
+
+/* --------------------------------------------------------------------------
+   11. RESPONSIVO
+   -------------------------------------------------------------------------- */
+@media (min-width: 992px) {
+  .nav-lux .nav-item.dropdown:hover > .dropdown-menu { display: block; }
+
+  /* Puente invisible para no perder el hover en el hueco */
+  .nav-lux .nav-item.dropdown > .dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -8px; left: 0; right: 0;
+    height: 8px;
+  }
+
+  .sidebar-lux { padding-left: 2.75rem; border-left: 1px solid var(--linea); }
+}
+
+@media (max-width: 991.98px) {
+
+  /* ── CABECERA MÓVIL DE UNA SOLA LÍNEA ──────────────────────────────────
+     Logos y botón hamburguesa comparten fila. No se duplica marcado: el
+     toggler se ancla sobre la fila de logos y el menú desplegado cae debajo,
+     a todo lo ancho. El vaivén blanco/negro es el mismo que en escritorio.  */
+
+  :root { --logo-alto: 56px; --logo-alto-min: 44px; --logo-pad: .5rem; --logo-pad-min: .35rem; }
+
+  /* Aquí sí permanece la cabecera completa: logos y hamburguesa en una fila.
+     El envoltorio recupera su caja para poder ser sticky y servir de
+     referencia al posicionamiento absoluto de la hamburguesa. */
+  .cabecera {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    background: var(--blanco);
+    border-bottom: 1px solid var(--linea);
+    transition: background var(--ease), border-color var(--ease);
+  }
+
+  /* Al desplazar sólo se compacta la cabecera: el color ya no cambia. */
+
+  /* La franja conserva su imagen al desplazar; sólo se ajusta el filete */
+
+  /* El navbar cede el sticky a la cabecera y deja de pintar barra propia */
+  .nav-lux {
+    position: static;
+    background: transparent;
+    border-bottom: 0;
+  }
+
+
+
+  /* Reserva del carril derecho para que los logos no pasen bajo el botón */
+  .bloque-logos { border-bottom: 0; }
+  .bloque-logos > .container { padding-left: 1rem; padding-right: 1rem; }
+  .bloque-logos__lista { gap: 14px; padding-right: 52px; }
+
+  .cabecera--oscura .bloque-logos { border-bottom: 0; padding: var(--logo-pad-min) 0; }
+
+  .cabecera--oscura .logo-institucional { max-height: var(--logo-alto-min); }
+
+  /* La franja conserva su imagen y sus logos en todo momento. */
+
+  /* Hamburguesa alineada exactamente con la fila de logos */
+  .nav-lux .navbar-toggler {
+    position: absolute;
+    top: var(--logo-pad);
+    right: calc(var(--bs-gutter-x, 1.5rem) * .5);
+    height: var(--logo-alto);
+    display: flex;
+    align-items: center;
+    z-index: 2;
+    transition: top var(--ease), height var(--ease), border-color var(--ease);
+  }
+
+
+
+  .cabecera--oscura .nav-lux .navbar-toggler {
+    top: var(--logo-pad-min);
+    height: var(--logo-alto-min);
+  }
+
+  /* El contenedor deja de limitar el ancho para que el panel llegue a los bordes */
+  .nav-lux > .container { padding-left: 0; padding-right: 0; max-width: none; }
+
+  /* El menú abierto se despliega bajo la barra, a sangre, en el mismo negro
+     del navbar: se superpone al contenido y necesita separarse de él. */
+  .nav-lux .navbar-collapse {
+    background: var(--negro);
+    margin-top: var(--logo-pad);
+    padding: .5rem 0 .75rem;
+  }
+
+  /* Apiladas, las opciones no necesitan separador vertical: dejaba una marca
+     suelta a la izquierda de cada rótulo. */
+  .nav-lux .navbar-nav > .nav-item + .nav-item > .nav-link::after { display: none; }
+
+  .nav-lux .navbar-nav .nav-link { color: rgba(255, 255, 255, .82); }
+
+  .nav-lux .navbar-nav .nav-link:hover,
+  .nav-lux .navbar-nav .nav-link.active { color: var(--blanco); }
+
+
+
+  .nav-lux .nav-link { padding: .75rem 0; }
+  .nav-lux .nav-link::before { left: 0; right: 0; bottom: .45rem; }
+
+  /* En móvil no hay hover ni segundo nivel que abrir: el submenú se muestra
+     desplegado y sangrado bajo su pestaña, dentro del propio acordeón. Sobre
+     el fondo negro del menú, un panel blanco flotante sería un cuerpo extraño;
+     aquí es una lista más, marcada por la regla roja de la izquierda. */
+  .nav-lux .dropdown-menu {
+    display: block;
+    position: static;
+    float: none;
+    width: auto;
+    background: transparent;
+    border: 0;
+    border-left: 2px solid var(--rojo);
+    margin: 0 0 .5rem;
+    padding: 0 0 0 1rem;
+  }
+
+  .nav-lux .dropdown-item {
+    color: rgba(255, 255, 255, .68);
+    background: transparent;
+    padding: .5rem 0;
+    font-size: .95rem;
+  }
+
+  .nav-lux .dropdown-item:hover,
+  .nav-lux .dropdown-item:focus { background: transparent; color: var(--blanco); }
+
+  /* La flecha anuncia un despliegue que en móvil ya está hecho */
+  .nav-lux .dropdown-toggle::after { display: none; }
+
+  .nav-lux .navbar-nav { padding: 0 calc(var(--bs-gutter-x, 1.5rem) * .5); }
+
+  .hero { padding: 2.5rem 0; }
+  .hero__portada-wrap { margin-bottom: 2.25rem; }
+  .hero__portada { max-width: 260px; }
+
+  .post__figure { margin-bottom: 1.25rem; }
+
+  .logo-footer { height: 80px; }
+
+  .sidebar-lux { margin-top: 3rem; }
+}
+
+@media (max-width: 575.98px) {
+  /* Sigue siendo una sola línea: sólo se ajusta la escala */
+  :root { --logo-alto: 46px; }
+  .bloque-logos__lista { gap: 10px; padding-right: 52px; }
+  .hero__acciones .btn-lux { width: 100%; justify-content: center; }
+  .hero__portada { max-width: 220px; }
+  .logo-footer { height: 70px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: .001ms !important; animation-duration: .001ms !important; }
+}
+
+/* --------------------------------------------------------------------------
+   ACENTOS EN ROJO
+
+   El rojo institucional se reparte en puntos de anclaje, no en superficies:
+   cada aparición marca un comienzo (de página, de bloque, de dato). Son trazos
+   de uno o dos píxeles, de modo que suman presencia sin teñir la página.
+   -------------------------------------------------------------------------- */
+
+/* La franja de logos queda limpia: sin filete superior ni trama, para que la
+   imagen de cabecera se vea sin nada encima. Los acentos rojos viven en el
+   cuerpo de la página, no sobre ella. */
+
+/* Los rótulos del feed y la firma del autor van limpios: el rojo se reserva
+   para la barra de navegación y para los subrayados de acción. */
+
+/* 1 · "Leer artículo": la flecha entra en rojo al recorrer el enlace */
+.post__more::after {
+  content: ' \2192';
+  color: var(--rojo);
+  opacity: 0;
+  transition: opacity var(--ease), transform var(--ease);
+  display: inline-block;
+  transform: translateX(-.3rem);
+}
+
+.post__more:hover::after { opacity: 1; transform: translateX(.15rem); }
+
+/* 2 · Widgets del sidebar: el filete superior ya es rojo; el título recibe
+       además una marca de inicio para enlazarlos visualmente */
+.widget__list li::marker { color: var(--rojo); }
+
+/* Escudos institucionales del prepié, en su propia columna */
+.footer-lux__marcas {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+@media (max-width: 991.98px) {
+  .footer-lux__marcas { justify-content: flex-start; margin-top: .5rem; }
+}
+
+/* ==========================================================================
+   JUSTIFICACIÓN DE TEXTOS
+
+   Los párrafos de lectura van justificados a ambos márgenes, como en la
+   edición impresa. Se activa la partición de palabras (hyphens) porque sin
+   ella la justificación abre "ríos" de espacio en blanco entre palabras,
+   sobre todo en columnas estrechas y en móvil; el idioma lo toma del
+   lang="es" declarado en <html>.
+
+   text-wrap: pretty evita líneas viudas de una sola palabra al final del
+   párrafo en los navegadores que ya lo soportan; donde no, se ignora.
+
+   NO se justifican los rótulos, firmas, metadatos ni etiquetas: son textos
+   de una o dos líneas, y justificarlos produce separaciones absurdas entre
+   palabras. Su lista de exclusión va justo debajo.
+   ========================================================================== */
+main p,
+main li,
+.sidebar-lux p,
+.footer-lux p,
+.consulta__cuerpo p,
+.tem-vacio,
+.aviso-acervo {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  text-wrap: pretty;
+}
+
+/* Rótulos, firmas y metadatos: siempre alineados a la izquierda */
+.eyebrow,
+.feed-label,
+.post__meta,
+.post__more,
+.curso-vip__label,
+.curso-vip__nombre,
+.edicion__numero,
+.edicion__meta,
+.edicion__tema,
+.edicion__titulo,
+.edicion__accesos,
+.rotulo,
+.footer-lux__title,
+.form-nota,
+.form-aviso,
+.filtro__contador,
+.consultorio__conteo,
+.consulta__firma,
+.consulta__estado,
+.yt-meta,
+.tem-articulo__meta,
+.art-mini__autor,
+.player__eyebrow,
+.player__invitado,
+.top-uno__eyebrow,
+.pyme-card__cat,
+.pyme-card__empresa,
+.pyme-card__eje-label,
+.widget__title,
+.seleccion-label,
+.bloque-titulo,
+.panel-sub,
+.miembro__nombre,
+.miembro__cargo,
+.ep-card__autor,
+.ep-card__meta,
+.nav-lux .nav-link,
+.subnav .nav-link,
+.tem-indice__lista a,
+.tem-cabecera__conteo,
+.widget__list li,
+.puntos-clave li,
+.participante,
+.directorio,
+.curso-vip__lista li {
+  text-align: left;
+  hyphens: manual;
+  -webkit-hyphens: manual;
+}
+
+/* Los titulares nunca se justifican ni se parten */
+h1, h2, h3, h4, h5, h6 {
+  text-align: left;
+  hyphens: manual;
+  -webkit-hyphens: manual;
+}
+
+.footer-lux__legal p { text-align: justify; }
+
+/* Los rótulos del pie son <p>, así que .footer-lux p los alcanzaba por
+   especificidad (0,1,1) y quedaban justificados. Se repite el selector con
+   el ancestro para ganarle sin recurrir a !important. */
+.footer-lux p.footer-lux__title { text-align: left; }
+
+/* Rótulos del prepié: menos aire, el bloque debe quedar bajo */
+.footer-lux .footer-lux__title { margin-bottom: .5rem; }
+.footer-lux p { margin-bottom: .75rem; }
+
+/* El último artículo del feed no necesita su relleno inferior: lo seguía el
+   pie, y sumado al padding del contenedor y al margen del footer dejaba más
+   de 200px de blanco muerto. */
+.post:last-child { padding-bottom: 0; border-bottom: 0; }
