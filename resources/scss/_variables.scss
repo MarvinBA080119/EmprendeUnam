@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------
 // Sistema visual de la Revista EmprendeUNAM (autores y administrador).
 // Paleta cerrada: café #664300, azul #001328, blanco y negro, más mezclas de
-// esos colores (los neutros salen del azul mezclado con blanco).
+// esos colores (superficies y líneas: blanco con café; textos: azul con blanco).
 // Nunca texto café sobre azul ni azul sobre café.
 // Se define ANTES de importar Bootstrap para sobrescribir sus valores.
 // ---------------------------------------------------------------------------
@@ -11,13 +11,15 @@ $emp-azul: #001328;
 $emp-blanco: #ffffff;
 $emp-negro: #000000;
 
-// Neutros: azul mezclado con blanco (contraste sobre blanco entre paréntesis).
-$emp-n-25: #fafafb;
-$emp-n-50: #f6f7f7;
-$emp-n-100: #edeef0;
-$emp-n-150: #e6e7ea;
-$emp-n-200: #dbdee1;
-$emp-n-300: #ccd0d4;
+// Superficies y líneas: blanco con café (cálidos).
+$emp-marfil: #f1eee8;
+$emp-n-25: #faf8f6;
+$emp-n-50: #f7f6f2;
+$emp-n-100: #f3f0eb;
+$emp-n-150: #ede8e0;
+$emp-n-200: #e5dfd4;
+$emp-n-300: #dad2c2;
+// Textos: azul mezclado con blanco (contraste sobre blanco entre paréntesis).
 $emp-n-500: #8c959e; // (3.0) solo para texto deshabilitado
 $emp-n-600: #616d7a; // (5.3) texto secundario
 $emp-n-700: #4c5a68; // (7.1)
@@ -58,23 +60,23 @@ $h5-font-size: 0.875rem;
 $h6-font-size: 0.8125rem;
 $small-font-size: 0.8125rem;
 
-// Formas: 6px en controles, 12px en contenedores.
-$border-radius: 0.375rem;
-$border-radius-sm: 0.25rem;
-$border-radius-lg: 0.75rem;
-$border-radius-xl: 0.75rem;
+// Formas: 10px en controles, 16px en contenedores.
+$border-radius: 0.625rem;
+$border-radius-sm: 0.375rem;
+$border-radius-lg: 1rem;
+$border-radius-xl: 1.25rem;
 $enable-shadows: false;
 
 // Foco: anillo café translúcido.
-$focus-ring-color: rgba($emp-cafe, 0.22);
-$focus-ring-width: 3px;
+$focus-ring-color: rgba($emp-cafe, 0.14);
+$focus-ring-width: 4px;
 
 // Botones y campos.
 $input-btn-padding-y: 0.5rem;
 $input-btn-padding-x: 0.75rem;
 $input-btn-font-size: 0.875rem;
-$input-btn-focus-width: 3px;
-$input-btn-focus-color: rgba($emp-cafe, 0.22);
+$input-btn-focus-width: 4px;
+$input-btn-focus-color: rgba($emp-cafe, 0.14);
 $btn-padding-x: 0.875rem;
 $btn-font-weight: 500;
 $btn-padding-y-sm: 0.3125rem;
@@ -86,7 +88,7 @@ $btn-border-radius-lg: $border-radius;
 $btn-disabled-opacity: 0.5;
 
 $input-color: $emp-azul;
-$input-border-color: $emp-n-300;
+$input-border-color: #d6cdbd;
 $input-placeholder-color: $emp-n-600;
 $input-focus-border-color: $emp-cafe;
 $input-disabled-bg: $emp-n-50;
@@ -112,7 +114,7 @@ $table-color: $emp-azul;
 
 // Otros componentes.
 $card-border-color: $emp-n-150;
-$card-border-radius: 0.75rem;
+$card-border-radius: 1rem;
 $dropdown-border-color: $emp-n-150;
 $pagination-color: $emp-azul;
 $pagination-border-color: $emp-n-200;

@@ -11,6 +11,44 @@
         </x-slot:acciones>
     </x-encabezado>
 
+    <ul class="emp-metricas" aria-label="Resumen">
+        <li>
+            <a class="emp-metrica" href="{{ route('admin.articulos.index', ['estatus' => 'EN_REVISION']) }}">
+                <span class="emp-metrica__etiqueta"><x-icono nombre="articulos" :tamano="14" /> Artículos en revisión</span>
+                <span class="emp-metrica__valor emp-num">{{ $contadores['articulos_en_revision'] }}</span>
+                <span class="emp-metrica__nota">{{ $contadores['articulos_en_revision'] > 0 ? 'Esperan dictamen' : 'Todo dictaminado' }}</span>
+            </a>
+        </li>
+        <li>
+            <a class="emp-metrica" href="{{ route('admin.autores.index', ['estatus' => 'pendiente']) }}">
+                <span class="emp-metrica__etiqueta"><x-icono nombre="autores" :tamano="14" /> Autores por activar</span>
+                <span class="emp-metrica__valor emp-num">{{ $contadores['autores_pendientes'] }}</span>
+                <span class="emp-metrica__nota">{{ $contadores['autores_pendientes'] > 0 ? 'Solicitudes de registro' : 'Sin solicitudes' }}</span>
+            </a>
+        </li>
+        <li>
+            <a class="emp-metrica" href="{{ route('admin.consultorio.index', ['estatus' => 'PENDIENTE']) }}">
+                <span class="emp-metrica__etiqueta"><x-icono nombre="consultorio" :tamano="14" /> Mensajes sin responder</span>
+                <span class="emp-metrica__valor emp-num">{{ $contadores['mensajes_pendientes'] }}</span>
+                <span class="emp-metrica__nota">{{ $contadores['mensajes_pendientes'] > 0 ? 'En el consultorio' : 'Consultorio al día' }}</span>
+            </a>
+        </li>
+        <li>
+            <a class="emp-metrica" href="{{ route('admin.newsletter.index', ['estado' => 'activo']) }}">
+                <span class="emp-metrica__etiqueta"><x-icono nombre="newsletter" :tamano="14" /> Suscriptores activos</span>
+                <span class="emp-metrica__valor emp-num">{{ $contadores['suscriptores_activos'] }}</span>
+                <span class="emp-metrica__nota">Del newsletter</span>
+            </a>
+        </li>
+        <li>
+            <a class="emp-metrica" href="{{ route('admin.cursos.index', ['vigencia' => 'vigentes']) }}">
+                <span class="emp-metrica__etiqueta"><x-icono nombre="cursos" :tamano="14" /> Cursos visibles</span>
+                <span class="emp-metrica__valor emp-num">{{ $cursosVigentes }}</span>
+                <span class="emp-metrica__nota">En el sitio público</span>
+            </a>
+        </li>
+    </ul>
+
     <div class="emp-panel">
         <section class="emp-bandeja emp-panel__principal" aria-labelledby="bandeja-articulos">
             <header class="emp-bandeja__cabeza">
@@ -96,15 +134,4 @@
             </section>
         </div>
     </div>
-
-    <dl class="emp-resumen">
-        <div>
-            <dt>Suscriptores activos del newsletter</dt>
-            <dd class="emp-num"><a href="{{ route('admin.newsletter.index', ['estado' => 'activo']) }}">{{ $contadores['suscriptores_activos'] }}</a></dd>
-        </div>
-        <div>
-            <dt>Cursos visibles al público</dt>
-            <dd class="emp-num"><a href="{{ route('admin.cursos.index', ['vigencia' => 'vigentes']) }}">{{ $cursosVigentes }}</a></dd>
-        </div>
-    </dl>
 @endsection

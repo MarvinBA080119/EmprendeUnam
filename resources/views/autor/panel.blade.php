@@ -13,6 +13,39 @@
         @endif
     </x-encabezado>
 
+    @if ($resumen['total'] > 0)
+        <ul class="emp-metricas emp-metricas--cuatro" aria-label="Resumen de tus envíos">
+            <li>
+                <div class="emp-metrica">
+                    <span class="emp-metrica__etiqueta"><x-icono nombre="articulos" :tamano="14" /> Enviados</span>
+                    <span class="emp-metrica__valor emp-num">{{ $resumen['total'] }}</span>
+                    <span class="emp-metrica__nota">En total</span>
+                </div>
+            </li>
+            <li>
+                <div class="emp-metrica">
+                    <span class="emp-metrica__etiqueta"><span class="emp-punto emp-punto--revision" aria-hidden="true"></span> En revisión</span>
+                    <span class="emp-metrica__valor emp-num">{{ $resumen['en_revision'] }}</span>
+                    <span class="emp-metrica__nota">Esperan dictamen</span>
+                </div>
+            </li>
+            <li>
+                <div class="emp-metrica">
+                    <span class="emp-metrica__etiqueta"><span class="emp-punto emp-punto--aprobado" aria-hidden="true"></span> Aprobados</span>
+                    <span class="emp-metrica__valor emp-num">{{ $resumen['aprobados'] }}</span>
+                    <span class="emp-metrica__nota">Con constancia</span>
+                </div>
+            </li>
+            <li>
+                <div class="emp-metrica">
+                    <span class="emp-metrica__etiqueta"><span class="emp-punto emp-punto--rechazado" aria-hidden="true"></span> No aprobados</span>
+                    <span class="emp-metrica__valor emp-num">{{ $resumen['rechazados'] }}</span>
+                    <span class="emp-metrica__nota">Con motivo del dictamen</span>
+                </div>
+            </li>
+        </ul>
+    @endif
+
     @if ($articulos->isEmpty())
         <div class="emp-vacio-grande">
             <span class="emp-vacio-grande__icono" aria-hidden="true"><x-icono nombre="articulos" :tamano="22" /></span>
@@ -24,6 +57,7 @@
             <a href="{{ route('autor.articulos.create') }}" class="btn btn-primary"><x-icono nombre="mas" :tamano="14" /> Enviar mi primer artículo</a>
         </div>
     @else
+        <h2 class="emp-historial__titulo">Historial de envíos</h2>
         <div class="emp-marco-tabla">
             <ul class="emp-envios">
                 @foreach ($articulos as $articulo)

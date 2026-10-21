@@ -11,11 +11,12 @@ class PanelController extends Controller
 {
     public function __construct(private ArticuloService $articulos) {}
 
-    /** Historial de los artículos del autor (6.5). */
+    /** Historial de los artículos del autor (6.5) y cuántos hay en cada estatus. */
     public function index(Request $request): View
     {
         return view('autor.panel', [
             'articulos' => $this->articulos->historialDe($request->user(), config('emprende.por_pagina')),
+            'resumen' => $this->articulos->resumenDe($request->user()),
         ]);
     }
 }

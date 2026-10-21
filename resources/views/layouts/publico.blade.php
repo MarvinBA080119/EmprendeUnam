@@ -1,6 +1,8 @@
 {{-- Plantilla de acceso: iniciar sesión, registro de autores y contraseña.
-     Columna del formulario a la izquierda y, en escritorio, el proceso de
-     publicación sobre azul a la derecha. --}}
+     Encabezado azul global y, debajo, el formulario en una tarjeta centrada.
+     Con @section('ancho') (registro) la tarjeta se acompaña, en escritorio,
+     del proceso de publicación a la izquierda. --}}
+@php($ancho = View::hasSection('ancho'))
 <!DOCTYPE html>
 <html lang="es-MX">
 <head>
@@ -13,42 +15,30 @@
 <body class="emp-acceso">
     <a class="emp-saltar" href="#contenido">Saltar al contenido</a>
 
-    <div class="emp-acceso__marco">
-        <div class="emp-acceso__principal">
-            <header class="emp-acceso__barra">
-                <a class="emp-marca" href="{{ route('inicio') }}">
-                    <span class="emp-marca__nombre">Revista EmprendeUNAM</span>
-                    <span class="emp-marca__sub">UNAM · Facultad de Contaduría y Administración</span>
-                </a>
-                @auth
-                    <a class="emp-acceso__volver" href="{{ app(\App\Services\AccesoService::class)->rutaInicio(auth()->user()) }}">Mi panel</a>
+    <x-cabecera :inicio="route('inicio')">
+        <nav class="emp-cab__acciones" aria-label="Acceso">
+            @auth
+                <a class="emp-cab__boton" href="{{ app(\App\Services\AccesoService::class)->rutaInicio(auth()->user()) }}">Mi panel</a>
+            @else
+                <a class="emp-cab__enlace" href="{{ route('inicio') }}">Volver al sitio</a>
+                @if (request()->routeIs('registro'))
+                    <a class="emp-cab__boton" href="{{ route('login') }}">Iniciar sesión</a>
                 @else
-                    <a class="emp-acceso__volver" href="{{ route('inicio') }}">Volver al sitio</a>
-                @endauth
-            </header>
-
-            <main id="contenido" @class(['emp-acceso__contenido', 'emp-acceso__contenido--ancho' => View::hasSection('ancho')])>
-                <x-alertas />
-                @if ($errors->count() > 1)
-                    <div class="alert alert-danger" role="alert">
-                        <span class="alert-texto">Revisa los {{ $errors->count() }} campos marcados.</span>
-                    </div>
+                    <a class="emp-cab__boton" href="{{ route('registro') }}">Regístrate</a>
                 @endif
-                @yield('contenido')
-            </main>
+            @endauth
+        </nav>
+    </x-cabecera>
 
-            <footer class="emp-acceso__pie">&copy; {{ now()->year }} Universidad Nacional Autónoma de México</footer>
-        </div>
-
-        <aside class="emp-acceso__panel" aria-label="Cómo publicar en la revista">
-            <div class="emp-panel__fijo">
-                <div>
-                    <h2 class="emp-panel__titulo">Publica tu investigación sobre emprendimiento</h2>
-                    <p class="emp-panel__texto">
-                        La revista de la Facultad de Contaduría y Administración recibe artículos de académicos e
-                        investigadores. Todo el proceso se sigue desde tu panel.
-                    </p>
-                </div>
+    <main id="contenido" @class(['emp-acceso__escena', 'emp-acceso__escena--ancha' => $ancho])>
+        @if ($ancho)
+            <aside class="emp-acceso__intro" aria-label="Cómo publicar en la revista">
+                <p class="emp-acceso__ceja">Revista EmprendeUNAM</p>
+                <h2 class="emp-acceso__lema">Publica tu investigación sobre emprendimiento</h2>
+                <p class="emp-acceso__texto">
+                    La revista de la Facultad de Contaduría y Administración recibe artículos de académicos e
+                    investigadores. Todo el proceso se sigue desde tu panel.
+                </p>
 
                 <ol class="emp-pasos">
                     <li><strong>Regístrate</strong><span>El equipo editorial revisa y activa tu cuenta.</span></li>
@@ -57,15 +47,25 @@
                     <li><strong>Descarga tu constancia</strong><span>Con folio que cualquiera puede verificar en línea.</span></li>
                 </ol>
 
-                <div>
-                    <div class="emp-constancia-muestra">
-                        <span class="emp-constancia-muestra__tipo">Constancia de aprobación · ejemplo</span>
-                        <span class="emp-constancia-muestra__folio">EMP-2026-0042</span>
-                        <span class="emp-insignia emp-insignia-aprobado emp-constancia-muestra__estado">Verificable</span>
-                    </div>
+                <div class="emp-constancia-muestra">
+                    <span class="emp-constancia-muestra__tipo">Constancia de aprobación · ejemplo</span>
+                    <span class="emp-constancia-muestra__folio">EMP-2026-0042</span>
+                    <span class="emp-insignia emp-insignia-aprobado emp-constancia-muestra__estado">Verificable</span>
                 </div>
-            </div>
-        </aside>
-    </div>
+            </aside>
+        @endif
+
+        <div class="emp-tarjeta-acceso">
+            <x-alertas />
+            @if ($errors->count() > 1)
+                <div class="alert alert-danger" role="alert">
+                    <span class="alert-texto">Revisa los {{ $errors->count() }} campos marcados.</span>
+                </div>
+            @endif
+            @yield('contenido')
+        </div>
+    </main>
+
+    <footer class="emp-acceso__pie">&copy; {{ now()->year }} Universidad Nacional Autónoma de México · Facultad de Contaduría y Administración</footer>
 </body>
 </html>

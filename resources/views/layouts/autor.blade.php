@@ -1,5 +1,5 @@
-{{-- Plantilla del autor: barra superior con la navegación (dos secciones) y
-     contenido centrado. --}}
+{{-- Plantilla del autor: encabezado azul con los logotipos a la izquierda y,
+     a la derecha, sus dos secciones y el menú de la cuenta. --}}
 <!DOCTYPE html>
 <html lang="es-MX">
 <head>
@@ -12,48 +12,28 @@
 <body class="emp-app">
     <a class="emp-saltar" href="#contenido">Saltar al contenido</a>
 
-    <header class="emp-sup">
-        <div class="emp-sup__fila">
-            <a class="emp-marca" href="{{ route('autor.panel') }}">
-                <span class="emp-marca__nombre">Revista EmprendeUNAM</span>
-                <span class="emp-marca__sub">UNAM · Facultad de Contaduría y Administración</span>
-            </a>
-
-            <nav class="emp-sup__nav" aria-label="Secciones del autor">
-                <a @class(['emp-sup__enlace', 'is-activo' => request()->routeIs('autor.panel')])
-                   @if (request()->routeIs('autor.panel')) aria-current="page" @endif
-                   href="{{ route('autor.panel') }}">Mis artículos</a>
-                @if (Route::has('autor.articulos.create'))
-                    <a @class(['emp-sup__enlace', 'is-activo' => request()->routeIs('autor.articulos.create')])
-                       @if (request()->routeIs('autor.articulos.create')) aria-current="page" @endif
-                       href="{{ route('autor.articulos.create') }}">Enviar artículo</a>
-                @endif
-            </nav>
-
-            <div class="emp-usuario emp-sup__usuario">
-                <span class="emp-usuario__avatar" aria-hidden="true">{{ mb_strtoupper(mb_substr(auth()->user()->usua_nombre_usuario, 0, 1)) }}</span>
-                <span class="emp-usuario__datos">
-                    <span class="emp-usuario__nombre">{{ auth()->user()->usua_nombre_usuario }}</span>
-                </span>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="emp-usuario__salir" title="Cerrar sesión">
-                        <x-icono nombre="salir" />
-                        <span class="visually-hidden">Cerrar sesión</span>
-                    </button>
-                </form>
+    <x-cabecera :inicio="route('autor.panel')" menu="menu-autor" menu-etiqueta="Menú de secciones">
+        <nav class="offcanvas-lg offcanvas-end emp-nav" tabindex="-1" id="menu-autor" aria-label="Secciones del autor">
+            <div class="emp-nav__cabeza d-lg-none">
+                <span class="emp-nav__titulo">Secciones</span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" data-bs-target="#menu-autor" aria-label="Cerrar menú"></button>
             </div>
-        </div>
-    </header>
+            <ul class="emp-nav__lista">
+                <x-enlace-cabecera ruta="autor.panel" activa="autor.panel" icono="articulos">Mis artículos</x-enlace-cabecera>
+                <x-enlace-cabecera ruta="autor.articulos.create" activa="autor.articulos.create" icono="mas">Enviar artículo</x-enlace-cabecera>
+            </ul>
+        </nav>
+        <x-menu-usuario rol="Autor" />
+    </x-cabecera>
 
-    <main id="contenido" class="emp-autor">
+    <main id="contenido" class="emp-area emp-area--autor">
         <x-alertas />
         @yield('contenido')
     </main>
 
-    <footer class="emp-autor__pie">
-        <div class="emp-autor__pie-fila">
-            <span>&copy; {{ now()->year }} Universidad Nacional Autónoma de México</span>
+    <footer class="emp-pie">
+        <div class="emp-pie__fila emp-pie__fila--autor">
+            <span>&copy; {{ now()->year }} Universidad Nacional Autónoma de México · Facultad de Contaduría y Administración</span>
             <a href="{{ route('inicio') }}">Ver el sitio de la revista</a>
         </div>
     </footer>

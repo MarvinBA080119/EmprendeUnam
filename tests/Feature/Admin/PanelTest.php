@@ -41,7 +41,8 @@ class PanelTest extends TestCase
             ->assertSee('Autores pendientes de activar')
             ->assertSee('Artículos en revisión')
             ->assertSee('Mensajes del consultorio pendientes')
-            ->assertSee('Suscriptores activos del newsletter');
+            ->assertSee('Suscriptores activos')
+            ->assertSee('Cursos visibles');
     }
 
     public function test_la_bandeja_muestra_lo_pendiente_y_escapa_los_nombres(): void
