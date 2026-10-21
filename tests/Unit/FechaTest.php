@@ -34,4 +34,12 @@ class FechaTest extends TestCase
         $this->assertSame('hace 3 h', Fecha::relativa(Carbon::parse('2026-10-16 07:00:00')));
         $this->assertSame('ayer', Fecha::relativa(Carbon::parse('2026-10-15 23:00:00')));
     }
+
+    public function test_saludo_segun_la_hora_y_fecha_larga(): void
+    {
+        $this->assertSame('Buenos días', Fecha::saludo(Carbon::parse('2026-10-16 08:30')));
+        $this->assertSame('Buenas tardes', Fecha::saludo(Carbon::parse('2026-10-16 12:00')));
+        $this->assertSame('Buenas noches', Fecha::saludo(Carbon::parse('2026-10-16 19:00')));
+        $this->assertSame('viernes 16 de octubre', Fecha::hoyLargo(Carbon::parse('2026-10-16 08:30')));
+    }
 }

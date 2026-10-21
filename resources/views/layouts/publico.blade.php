@@ -1,6 +1,8 @@
 {{-- Plantilla de acceso: iniciar sesión, registro de autores y contraseña.
-     Columna del formulario a la izquierda y, en escritorio, el proceso de
-     publicación sobre azul a la derecha. --}}
+     Encabezado azul con los logotipos y, debajo, dos mitades: a la izquierda
+     una nota editorial sobre fondo hueso (en el registro, el proceso de
+     publicación) y a la derecha el formulario sobre blanco, sin cajas. --}}
+@php($ancho = View::hasSection('ancho'))
 <!DOCTYPE html>
 <html lang="es-MX">
 <head>
@@ -13,21 +15,48 @@
 <body class="emp-acceso">
     <a class="emp-saltar" href="#contenido">Saltar al contenido</a>
 
-    <div class="emp-acceso__marco">
-        <div class="emp-acceso__principal">
-            <header class="emp-acceso__barra">
-                <a class="emp-marca" href="{{ route('inicio') }}">
-                    <span class="emp-marca__nombre">Revista EmprendeUNAM</span>
-                    <span class="emp-marca__sub">UNAM · Facultad de Contaduría y Administración</span>
-                </a>
-                @auth
-                    <a class="emp-acceso__volver" href="{{ app(\App\Services\AccesoService::class)->rutaInicio(auth()->user()) }}">Mi panel</a>
-                @else
-                    <a class="emp-acceso__volver" href="{{ route('inicio') }}">Volver al sitio</a>
-                @endauth
-            </header>
+    <x-cabecera :inicio="route('inicio')" />
 
-            <main id="contenido" @class(['emp-acceso__contenido', 'emp-acceso__contenido--ancho' => View::hasSection('ancho')])>
+    <div @class(['emp-acceso__marco', 'emp-acceso__marco--registro' => $ancho])>
+        <aside class="emp-acceso__nota" aria-label="Revista EmprendeUNAM">
+            <div class="emp-acceso__nota-interior">
+                @if ($ancho)
+                    <h2 class="emp-acceso__lema">Publica tu investigación sobre emprendimiento.</h2>
+                    <p class="emp-acceso__texto">
+                        La revista de la Facultad de Contaduría y Administración recibe artículos de académicos e
+                        investigadores. Todo el proceso se sigue desde tu panel.
+                    </p>
+                    <ol class="emp-pasos">
+                        <li><strong>Regístrate</strong><span>El equipo editorial revisa y activa tu cuenta.</span></li>
+                        <li><strong>Envía tu artículo</strong><span>En PDF, con resumen de hasta 50 palabras y cinco palabras clave.</span></li>
+                        <li><strong>Recibe el dictamen</strong><span>Te avisamos por correo; si no se aprueba, te decimos por qué.</span></li>
+                        <li><strong>Descarga tu constancia</strong><span>Con un folio que cualquiera puede verificar en línea.</span></li>
+                    </ol>
+                @else
+                    <h2 class="emp-acceso__lema">Revista EmprendeUNAM</h2>
+                    <p class="emp-acceso__texto">
+                        Envío, dictamen y constancias de artículos sobre emprendimiento de la Facultad de
+                        Contaduría y Administración.
+                    </p>
+                @endif
+                <p class="emp-acceso__pie">&copy; {{ now()->year }} Universidad Nacional Autónoma de México</p>
+            </div>
+        </aside>
+
+        <main id="contenido" class="emp-acceso__principal">
+            <div class="emp-acceso__barra">
+                @auth
+                    <a class="emp-acceso__volver" href="{{ app(\App\Services\AccesoService::class)->rutaInicio(auth()->user()) }}">
+                        <x-icono nombre="atras" :tamano="14" /> Ir a mi panel
+                    </a>
+                @else
+                    <a class="emp-acceso__volver" href="{{ route('inicio') }}">
+                        <x-icono nombre="atras" :tamano="14" /> Volver al sitio
+                    </a>
+                @endauth
+            </div>
+
+            <div @class(['emp-acceso__columna', 'emp-acceso__columna--ancha' => $ancho])>
                 <x-alertas />
                 @if ($errors->count() > 1)
                     <div class="alert alert-danger" role="alert">
@@ -35,37 +64,8 @@
                     </div>
                 @endif
                 @yield('contenido')
-            </main>
-
-            <footer class="emp-acceso__pie">&copy; {{ now()->year }} Universidad Nacional Autónoma de México</footer>
-        </div>
-
-        <aside class="emp-acceso__panel" aria-label="Cómo publicar en la revista">
-            <div class="emp-panel__fijo">
-                <div>
-                    <h2 class="emp-panel__titulo">Publica tu investigación sobre emprendimiento</h2>
-                    <p class="emp-panel__texto">
-                        La revista de la Facultad de Contaduría y Administración recibe artículos de académicos e
-                        investigadores. Todo el proceso se sigue desde tu panel.
-                    </p>
-                </div>
-
-                <ol class="emp-pasos">
-                    <li><strong>Regístrate</strong><span>El equipo editorial revisa y activa tu cuenta.</span></li>
-                    <li><strong>Envía tu artículo</strong><span>En PDF, con resumen de hasta 50 palabras y cinco palabras clave.</span></li>
-                    <li><strong>Recibe el dictamen</strong><span>Te avisamos por correo; si no se aprueba, te decimos por qué.</span></li>
-                    <li><strong>Descarga tu constancia</strong><span>Con folio que cualquiera puede verificar en línea.</span></li>
-                </ol>
-
-                <div>
-                    <div class="emp-constancia-muestra">
-                        <span class="emp-constancia-muestra__tipo">Constancia de aprobación · ejemplo</span>
-                        <span class="emp-constancia-muestra__folio">EMP-2026-0042</span>
-                        <span class="emp-insignia emp-insignia-aprobado emp-constancia-muestra__estado">Verificable</span>
-                    </div>
-                </div>
             </div>
-        </aside>
+        </main>
     </div>
 </body>
 </html>

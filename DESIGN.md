@@ -1,93 +1,198 @@
 ---
 name: Revista EmprendeUNAM — Sistema
-description: Panel de trabajo sobrio y preciso para autores y equipo editorial, donde lo pendiente se ve primero.
+description: Área de trabajo serena para autores y equipo editorial; el orden lo dan el aire, la tipografía y una sola hoja blanca, no las cajas.
 colors:
   emp-cafe: "#664300"
-  emp-cafe-hover: "#573900"
-  emp-cafe-50: "#f6f4f0"
-  emp-cafe-100: "#f0ece6"
-  emp-cafe-200: "#e7e1d6"
+  emp-cafe-hover: "#553800"
+  emp-cafe-50: "#f7f3ec"
+  emp-cafe-100: "#efe8dc"
+  emp-cafe-200: "#e3d8c6"
   emp-azul: "#001328"
+  emp-azul-velo: "rgba(0, 19, 40, 0.06)"
   emp-blanco: "#ffffff"
-  emp-n-25: "#fafafb"
-  emp-n-50: "#f6f7f7"
-  emp-n-100: "#edeef0"
-  emp-n-150: "#e6e7ea"
-  emp-n-200: "#dbdee1"
-  emp-n-300: "#ccd0d4"
+  emp-hueso: "#f5f2ec"
+  emp-hueso-2: "#ebe6dd"
+  emp-hueso-velo: "rgba(245, 242, 236, 0.92)"
+  emp-n-25: "#fbfaf8"
+  emp-n-50: "#f7f5f1"
+  emp-n-100: "#f1eee8"
+  emp-n-150: "#ebe6de"
+  emp-n-200: "#e2dcd2"
+  emp-n-300: "#d6cec1"
   emp-n-500: "#8c959e"
-  emp-n-600: "#616d7a"
-  emp-n-700: "#4c5a68"
-  emp-sobre-azul-2: "#b8bdc3"
-  emp-linea-sobre-azul: "rgba(255, 255, 255, 0.14)"
+  emp-n-600: "#56626e"
+  emp-n-700: "#46535f"
 typography:
   display:
-    fontFamily: "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
-    fontSize: "1.75rem"
-    fontWeight: 600
-    lineHeight: 1.2
-    letterSpacing: "-0.03em"
+    fontFamily: "'Newsreader Variable', 'Iowan Old Style', Georgia, serif"
+    fontSize: "clamp(2.375rem, 1.6rem + 2vw, 3.25rem)"
+    fontWeight: 420
+    lineHeight: 1.04
+    letterSpacing: "-0.028em"
+  display-acceso:
+    fontFamily: "'Newsreader Variable', 'Iowan Old Style', Georgia, serif"
+    fontSize: "clamp(2.375rem, 1.4rem + 2.4vw, 3.5rem)"
+    fontWeight: 420
+    lineHeight: 1.04
+    letterSpacing: "-0.028em"
   headline:
-    fontFamily: "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
-    fontSize: "1.5rem"
-    fontWeight: 600
-    lineHeight: 1.25
-    letterSpacing: "-0.025em"
+    fontFamily: "'Newsreader Variable', 'Iowan Old Style', Georgia, serif"
+    fontSize: "clamp(1.875rem, 1.5rem + 1vw, 2.375rem)"
+    fontWeight: 420
+    lineHeight: 1.08
+    letterSpacing: "-0.022em"
+  headline-acceso:
+    fontFamily: "'Newsreader Variable', 'Iowan Old Style', Georgia, serif"
+    fontSize: "clamp(2.125rem, 1.7rem + 1.2vw, 2.625rem)"
+    fontWeight: 420
+    lineHeight: 1.08
+    letterSpacing: "-0.022em"
+  headline-sm:
+    fontFamily: "'Newsreader Variable', 'Iowan Old Style', Georgia, serif"
+    fontSize: "1.625rem"
+    fontWeight: 420
+    lineHeight: 1.2
+    letterSpacing: "-0.022em"
   title:
-    fontFamily: "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontFamily: "'Geist Variable', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
     fontSize: "0.9375rem"
     fontWeight: 600
     lineHeight: 1.5
     letterSpacing: "-0.01em"
+  body-entrada:
+    fontFamily: "'Geist Variable', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "1rem"
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: "normal"
   body:
-    fontFamily: "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
-    fontSize: "0.875rem"
+    fontFamily: "'Geist Variable', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "0.9375rem"
     fontWeight: 400
     lineHeight: 1.5
     letterSpacing: "normal"
-  body-lectura:
-    fontFamily: "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
-    fontSize: "0.9375rem"
-    fontWeight: 400
-    lineHeight: 1.65
-    letterSpacing: "normal"
+  body-control:
+    fontFamily: "'Geist Variable', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 500
+    lineHeight: 1.5
+    letterSpacing: "-0.005em"
   body-meta:
-    fontFamily: "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontFamily: "'Geist Variable', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
     fontSize: "0.8125rem"
     fontWeight: 400
     lineHeight: 1.5
     letterSpacing: "normal"
   label:
-    fontFamily: "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontFamily: "'Geist Variable', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
     fontSize: "0.75rem"
     fontWeight: 500
     lineHeight: 1.25
     letterSpacing: "0.01em"
-  label-cuenta:
-    fontFamily: "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
-    fontSize: "0.6875rem"
-    fontWeight: 600
-    lineHeight: 1
     fontFeature: "\"tnum\""
+  cifra-paso:
+    fontFamily: "'Newsreader Variable', 'Iowan Old Style', Georgia, serif"
+    fontSize: "1.25rem"
+    fontWeight: 420
+    lineHeight: 1.2
+    fontFeature: "\"lnum\""
 rounded:
-  sm: "0.25rem"
-  md: "0.375rem"
-  aviso: "0.5rem"
-  lg: "0.75rem"
+  xs: "0.25rem"
+  sm: "0.375rem"
+  md: "0.5rem"
+  control: "0.625rem"
+  menu: "0.75rem"
+  contenedor: "0.875rem"
+  hoja: "1rem"
   pill: "999px"
+  full: "50%"
 spacing:
   xs: "0.375rem"
   sm: "0.5rem"
   md: "0.75rem"
-  contenedor: "1.125rem"
-  lg: "1.25rem"
-  xl: "1.75rem"
-  2xl: "2.5rem"
+  lg: "1rem"
+  xl: "1.5rem"
+  encabezado: "2.75rem"
+  seccion: "3.5rem"
+  columna: "4.5rem"
 components:
+  pagina:
+    backgroundColor: "{colors.emp-hueso}"
+    textColor: "{colors.emp-azul}"
+  cabecera:
+    backgroundColor: "{colors.emp-azul}"
+    height: "4rem"
+    padding: "0 clamp(1rem, 2.5vw, 1.75rem)"
+  lateral:
+    backgroundColor: "{colors.emp-hueso}"
+    textColor: "{colors.emp-n-700}"
+    width: "15.5rem"
+    padding: "1.75rem 0.875rem 0.875rem"
+  lateral-franja-movil:
+    backgroundColor: "{colors.emp-hueso-velo}"
+    padding: "0.5rem clamp(1rem, 2.5vw, 1.75rem)"
+  nav-grupo:
+    textColor: "{colors.emp-n-600}"
+    typography: "{typography.label}"
+    padding: "0 0.75rem"
+  nav-enlace:
+    backgroundColor: "transparent"
+    textColor: "{colors.emp-n-700}"
+    rounded: "{rounded.md}"
+    padding: "0 0.75rem"
+    height: "2.25rem"
+  nav-enlace-hover:
+    backgroundColor: "{colors.emp-hueso-2}"
+    textColor: "{colors.emp-azul}"
+  nav-enlace-activo:
+    backgroundColor: "{colors.emp-blanco}"
+    textColor: "{colors.emp-azul}"
+  cuenta:
+    backgroundColor: "transparent"
+    textColor: "{colors.emp-n-600}"
+    typography: "{typography.label}"
+  cuenta-activa:
+    textColor: "{colors.emp-azul}"
+  cuenta-menu-boton:
+    backgroundColor: "transparent"
+    textColor: "{colors.emp-azul}"
+    rounded: "{rounded.control}"
+    padding: "0.5rem"
+  cuenta-menu-boton-hover:
+    backgroundColor: "{colors.emp-hueso-2}"
+    textColor: "{colors.emp-azul}"
+  avatar:
+    backgroundColor: "{colors.emp-azul}"
+    textColor: "{colors.emp-blanco}"
+    rounded: "{rounded.full}"
+    size: "2rem"
+  menu-cuenta:
+    backgroundColor: "{colors.emp-blanco}"
+    textColor: "{colors.emp-azul}"
+    rounded: "{rounded.menu}"
+    padding: "0.375rem"
+    width: "14.5rem"
+  hoja:
+    backgroundColor: "{colors.emp-blanco}"
+    textColor: "{colors.emp-azul}"
+    rounded: "{rounded.hoja}"
+    padding: "clamp(1.75rem, 4vw, 3.5rem) clamp(1.25rem, 4vw, 3.5rem) 5rem"
+    width: "72rem"
+  saludo-titulo:
+    textColor: "{colors.emp-azul}"
+    typography: "{typography.display}"
+  saludo-resumen:
+    textColor: "{colors.emp-n-700}"
+    typography: "{typography.body-entrada}"
+    width: "54ch"
+  titulo-pagina:
+    textColor: "{colors.emp-azul}"
+    typography: "{typography.headline}"
   button-primary:
     backgroundColor: "{colors.emp-cafe}"
     textColor: "{colors.emp-blanco}"
-    rounded: "{rounded.md}"
+    typography: "{typography.body-control}"
+    rounded: "{rounded.control}"
     padding: "0.5rem 0.875rem"
   button-primary-hover:
     backgroundColor: "{colors.emp-cafe-hover}"
@@ -95,12 +200,14 @@ components:
   button-primary-lg:
     backgroundColor: "{colors.emp-cafe}"
     textColor: "{colors.emp-blanco}"
-    rounded: "{rounded.md}"
-    padding: "0.625rem 0.875rem"
+    rounded: "{rounded.control}"
+    padding: "0.6875rem 0.875rem"
+    height: "2.875rem"
   button-secondary:
     backgroundColor: "{colors.emp-blanco}"
     textColor: "{colors.emp-azul}"
-    rounded: "{rounded.md}"
+    typography: "{typography.body-control}"
+    rounded: "{rounded.control}"
     padding: "0.5rem 0.875rem"
   button-secondary-hover:
     backgroundColor: "{colors.emp-n-50}"
@@ -111,7 +218,7 @@ components:
   button-quieto:
     backgroundColor: "transparent"
     textColor: "{colors.emp-n-700}"
-    rounded: "{rounded.md}"
+    rounded: "{rounded.control}"
     padding: "0.3125rem 0.625rem"
   button-quieto-hover:
     backgroundColor: "{colors.emp-cafe-50}"
@@ -119,9 +226,15 @@ components:
   input:
     backgroundColor: "{colors.emp-blanco}"
     textColor: "{colors.emp-azul}"
-    rounded: "{rounded.md}"
+    typography: "{typography.body-control}"
+    rounded: "{rounded.control}"
     padding: "0.5rem 0.75rem"
-    height: "2.375rem"
+    height: "2.625rem"
+  input-acceso:
+    backgroundColor: "{colors.emp-blanco}"
+    textColor: "{colors.emp-azul}"
+    rounded: "{rounded.control}"
+    height: "2.875rem"
   input-invalid:
     backgroundColor: "{colors.emp-cafe-50}"
     textColor: "{colors.emp-azul}"
@@ -132,7 +245,7 @@ components:
     rounded: "{rounded.pill}"
     padding: "0.1875rem 0.5rem 0.1875rem 0.4375rem"
   insignia-aprobado:
-    backgroundColor: "{colors.emp-n-100}"
+    backgroundColor: "{colors.emp-azul-velo}"
     textColor: "{colors.emp-azul}"
     typography: "{typography.label}"
     rounded: "{rounded.pill}"
@@ -143,250 +256,297 @@ components:
     typography: "{typography.label}"
     rounded: "{rounded.pill}"
     padding: "0.1875rem 0.5rem 0.1875rem 0.4375rem"
-  cuenta:
-    backgroundColor: "{colors.emp-n-150}"
-    textColor: "{colors.emp-azul}"
-    typography: "{typography.label-cuenta}"
-    rounded: "{rounded.pill}"
-    padding: "0 0.375rem"
-    height: "1.25rem"
-  cuenta-activa:
-    backgroundColor: "{colors.emp-cafe}"
-    textColor: "{colors.emp-blanco}"
-  nav-lateral-enlace:
+  fila:
     backgroundColor: "transparent"
-    textColor: "{colors.emp-n-700}"
-    rounded: "{rounded.md}"
-    padding: "0.375rem 0.5rem"
-    height: "2.125rem"
-  nav-lateral-enlace-hover:
-    backgroundColor: "{colors.emp-n-100}"
     textColor: "{colors.emp-azul}"
-  nav-lateral-enlace-activo:
+    rounded: "{rounded.control}"
+    padding: "0.8125rem 0.75rem"
+  fila-hover:
+    backgroundColor: "{colors.emp-n-50}"
+    textColor: "{colors.emp-azul}"
+  panel-accion:
+    backgroundColor: "{colors.emp-n-50}"
+    textColor: "{colors.emp-azul}"
+    rounded: "{rounded.contenedor}"
+    padding: "1.5rem"
+  apartado:
     backgroundColor: "{colors.emp-blanco}"
     textColor: "{colors.emp-azul}"
-  nav-lateral:
-    backgroundColor: "{colors.emp-n-25}"
-    width: "15.5rem"
-  contenedor:
-    backgroundColor: "{colors.emp-blanco}"
+    rounded: "{rounded.contenedor}"
+    padding: "1.25rem"
+  cita:
+    backgroundColor: "{colors.emp-n-50}"
     textColor: "{colors.emp-azul}"
-    rounded: "{rounded.lg}"
-    padding: "0.75rem 1.125rem"
+    rounded: "{rounded.menu}"
+    padding: "1rem 1.125rem"
+  vacio-grande:
+    backgroundColor: "{colors.emp-n-50}"
+    textColor: "{colors.emp-azul}"
+    rounded: "{rounded.hoja}"
+    padding: "4.5rem 2rem"
   aviso:
     backgroundColor: "{colors.emp-n-25}"
     textColor: "{colors.emp-azul}"
-    rounded: "{rounded.aviso}"
+    rounded: "{rounded.md}"
     padding: "0.75rem 0.875rem"
   aviso-atencion:
     backgroundColor: "{colors.emp-cafe-50}"
     textColor: "{colors.emp-azul}"
-  panel-acceso:
+  etiqueta:
+    backgroundColor: "{colors.emp-n-50}"
+    textColor: "{colors.emp-azul}"
+    typography: "{typography.body-meta}"
+    rounded: "{rounded.sm}"
+    padding: "0.125rem 0.5rem"
+  paginacion-activa:
     backgroundColor: "{colors.emp-azul}"
     textColor: "{colors.emp-blanco}"
-    padding: "3.5rem"
+    rounded: "{rounded.sm}"
+    width: "2rem"
+  acceso-nota:
+    backgroundColor: "{colors.emp-hueso}"
+    textColor: "{colors.emp-azul}"
+    padding: "4rem clamp(2.5rem, 5vw, 5.5rem) 6rem"
+  acceso-formulario:
+    backgroundColor: "{colors.emp-blanco}"
+    textColor: "{colors.emp-azul}"
+    width: "24rem"
+  acceso-formulario-ancho:
+    backgroundColor: "{colors.emp-blanco}"
+    width: "34rem"
 ---
 
 # Design System: Revista EmprendeUNAM — Sistema
 
-Este documento cubre el **sistema** (iniciar sesión y registro, área del autor, área del administrador y páginas de error). El sitio público (`layouts/sitio.blade.php`, `resources/css/sitio/*`, `resources/js/sitio*`) conserva su diseño original y no forma parte de este sistema.
+Este documento cubre el **sistema** (iniciar sesión, registro y contraseña, área del autor, área del administrador y páginas de error). El sitio público (`layouts/sitio.blade.php`, `resources/css/sitio/*`, `resources/js/sitio*`) conserva su diseño original y no forma parte de este sistema: no se rediseña.
 
 ## Overview
 
-**Creative North Star: "La mesa de redacción ordenada"**
+**Creative North Star: "La hoja sobre el escritorio"**
 
-El sistema es un panel de trabajo sobrio y preciso: un escritorio editorial limpio donde lo que espera acción está arriba y contado, y todo lo demás guarda silencio. La dirección es el estándar de la categoría ejecutado con el acabado de Linear, Stripe Dashboard y Vercel: retícula alineada, escala tipográfica corta y real, bordes de un píxel, estados claros y movimiento mínimo. No hay mundo temático ni guiños decorativos; la seriedad institucional de la UNAM se transmite con orden, no con ornamento.
+El sistema es un escritorio en calma: una superficie hueso cálida sobre la que descansa una sola hoja blanca de trabajo, con la quietud y la precisión de iCloud y macOS, la calidez material de Nespresso y la limpieza de Linear o Stripe. La interfaz busca ser invisible: nada de marcos encadenados ni tarjetas sobre tarjetas; el orden lo dan el aire entre secciones, las proporciones, una serif editorial en los títulos grandes y hilos de 1px donde hace falta separar.
 
-La densidad es de herramienta de uso diario: cuerpo de 14px, filas de 12px de alto de relleno, contenedores con borde fino sobre fondo blanco. El color trabaja por exclusión: la tinta es azul, los neutros salen del azul mezclado con blanco y el café aparece solo donde algo pide acción o atención. La única superficie azul grande es el panel de las páginas de acceso, que muestra el proceso de publicación y una constancia de ejemplo.
+Arriba, una franja azul marino que solo lleva los logotipos de la UNAM y de la FCA, juntos y pegados a la izquierda: es la firma institucional, no una barra de herramientas. La navegación vive en una barra lateral sobre hueso, discreta, con grupos y contadores como cifras sueltas. Los paneles no abren con métricas, sino con un saludo según la hora en serif grande, la fecha del día y una frase en lenguaje natural que resume lo pendiente («3 artículos esperan dictamen y 1 cuenta de autor por activar»). Debajo, listas abiertas sin cajas cuyas filas se iluminan con un hover redondeado.
 
-Rechazos confirmados por la dirección: la plantilla de Bootstrap con barra de navegación azul pesada, los títulos serif decorativos y las filas de tarjetas de cifra iguales.
-
-El movimiento es casi invisible: transiciones de 160ms con salida exponencial, botones que ceden a escala 0.98 al presionarse, avisos que entran desde 4px arriba. Hay un solo momento con movimiento propio: la pantalla de artículo aprobado, donde el sello y la constancia aparecen una vez. Todo se apaga con `prefers-reduced-motion`.
+El color trabaja por exclusión y por temperatura: superficies e hilos son blanco mezclado con café, los textos son azul mezclado con blanco, el azul sólido es la cabecera y la tinta, y el café aparece solo donde algo pide acción o atención. El movimiento es una sola entrada suave y escalonada del contenido al cargar, y transiciones de estado de 160ms; todo se apaga con `prefers-reduced-motion`.
 
 **Key Characteristics:**
-- Fondo blanco, tinta azul `#001328`, neutros mezclados del azul; café `#664300` escaso y con propósito.
-- Inter en tres pesos (400/500/600), números tabulares en todo dato.
-- Elevación por borde de 1px; sombras de un píxel solo en controles.
-- Radios de 6px en controles y 12px en contenedores; píldora solo para estados y contadores.
-- Estados como píldora con punto y texto, nunca solo color; sin verdes ni rojos.
-- Contadores de pendientes en la navegación como firma del sistema.
+- Encabezado azul `#001328` de 4rem con únicamente los logotipos UNAM y FCA a la izquierda; sin texto, sin navegación, sin translucidez.
+- Fondo hueso cálido; una hoja blanca de 16px de radio con sombra casi imperceptible es la única superficie elevada.
+- Contenido sin cajas: secciones separadas por aire (2.75 a 4.5rem) y por hilos `emp-n-150`; filas con hover redondeado.
+- Geist para toda la interfaz; Newsreader con tamaño óptico, peso 420, solo en títulos grandes.
+- Café `#664300` para la acción; botones sólidos sin degradado.
+- Estados siempre con texto (insignia con punto); sin verdes ni rojos.
+- Acceso en dos mitades: nota editorial sobre hueso y formulario sobre blanco, sin tarjeta.
 
 ## Colors
 
-Paleta cerrada de cuatro colores (café, azul, blanco y negro) más sus mezclas; los neutros son el azul mezclado con blanco, así que hasta el gris tiene la temperatura de la tinta.
+Paleta cerrada de cuatro colores (café, azul, blanco y negro) más sus mezclas y transparencias, repartida por temperatura: lo que es superficie o hilo se calienta con café, lo que es texto se tiñe de azul.
 
 ### Primary
-- **Café Imprenta** (`emp-cafe`): el color de la acción. Botón primario, enlaces, anillo y contorno de foco, cursor de texto, ícono y contador del elemento activo de la navegación, subrayado de la pestaña activa del autor, estado «En revisión / Pendiente», campos con error y avisos de atención. Contraste sobre blanco ≈ 8.8:1.
-- **Café Tostado** (`emp-cafe-hover`): hover y estado presionado del botón primario y de los enlaces.
-- **Café Papel** (`emp-cafe-50`): fondo de la insignia «En revisión», de campos inválidos, de avisos de atención y del hover de la zona de archivo y del botón quieto.
-- **Café Velado** (`emp-cafe-100`): estado presionado de botones con tinte café.
+- **Café Imprenta** (`emp-cafe`): el color de la acción. Botón primario, enlaces, borde y anillo de foco, cursor de texto, ícono del enlace activo de la barra lateral, números del proceso de registro, estado «En revisión / Pendiente», campos con error y avisos de atención. ≈ 8.9:1 sobre blanco y 7.9:1 sobre hueso.
+- **Café Tostado** (`emp-cafe-hover`): hover y presionado del botón primario y de los enlaces.
+- **Café Papel** (`emp-cafe-50`): fondo de la insignia «En revisión», de campos inválidos, de avisos de atención, del hover del botón quieto y de la zona de archivo al pasar o arrastrar.
+- **Café Velado** (`emp-cafe-100`): presionado de los botones con tinte café.
 - **Café Bruma** (`emp-cafe-200`): borde de la insignia «En revisión» y de avisos de atención; fondo de la selección de texto.
 
 ### Secondary
-- **Azul Tinta** (`emp-azul`): color de todo el texto principal y los títulos, del estado «Aprobado / Contestado», del avatar del usuario y del panel de acceso. Es la tinta, no un acento.
+- **Azul Marino** (`emp-azul`): la tinta de todo texto principal y título, y la única superficie de color sólido: el encabezado, el avatar de la cuenta, el sello de artículo aprobado y la página activa de la paginación. También el estado «Aprobado / Contestado».
+- **Velo Azul** (`emp-azul-velo`): fondo de la insignia «Aprobado» (borde azul al 14%).
 
 ### Neutral
-- **Blanco** (`emp-blanco`): fondo de página, de contenedores, del botón secundario y del enlace activo de la barra lateral.
-- **Azul Niebla** (`emp-n-25`): la capa tonal más leve: barra lateral, encabezado de tablas enmarcadas, hover de filas, estado vacío, respuesta y motivo citados.
-- **Azul Nube** (`emp-n-50`): hover del botón secundario y de la navegación del autor, fondo de etiquetas de palabras clave y de campos deshabilitados.
-- **Azul Vapor** (`emp-n-100`): hover de la barra lateral, fondo de la insignia «Aprobado», divisores entre filas de una bandeja.
-- **Azul Hilo** (`emp-n-150`): el borde por defecto de todo contenedor, barra y separador (azul + 90% blanco).
-- **Azul Trazo** (`emp-n-200`): borde inferior del encabezado de tabla, borde de la insignia «Aprobado» y de la paginación.
-- **Azul Marco** (`emp-n-300`): borde de campos y del botón secundario, borde de la insignia «Rechazado» y de las zonas punteadas (azul + 80% blanco).
-- **Azul Ceniza** (`emp-n-500`): solo texto deshabilitado y borde de campo en hover (3.0:1, no apto para texto legible).
-- **Azul Pizarra** (`emp-n-600`): texto secundario: subtítulos, metadatos, ayudas, encabezados de tabla, placeholders (5.3:1).
-- **Azul Grafito** (`emp-n-700`): texto de navegación en reposo, insignia «Rechazado», botón quieto, notas (7.1:1; azul + 30% blanco).
-- **Blanco sobre Azul** (`emp-sobre-azul-2`): texto secundario dentro del panel azul de acceso, teñido del propio azul.
-- **Línea sobre Azul** (`emp-linea-sobre-azul`): la línea que une los pasos en el panel azul.
+- **Blanco** (`emp-blanco`): la hoja de trabajo, el lado del formulario en acceso, campos, botón secundario, menú de la cuenta, enlace activo de la barra lateral y la página de error.
+- **Hueso** (`emp-hueso`): fondo de las áreas de trabajo y de la barra lateral, y mitad editorial del acceso (con un halo radial café al 7% desde la esquina superior izquierda).
+- **Hueso Hondo** (`emp-hueso-2`): hover de los enlaces de la barra lateral y del botón de la cuenta.
+- **Hueso Velado** (`emp-hueso-velo`): la franja de secciones en pantallas angostas, translúcida con desenfoque; vuelve a hueso sólido con `prefers-reduced-transparency`.
+- **Niebla** (`emp-n-25`): hover de filas de tabla, avisos neutros.
+- **Nube** (`emp-n-50`): el tono sin sombra de paneles de acción, citas (respuesta, motivo del dictamen) y estado vacío grande; hover de filas de bandeja, del botón secundario y de opciones de menú; etiquetas de palabras clave; campos deshabilitados.
+- **Vapor** (`emp-n-100`): presionado del botón secundario; divisores entre celdas de tabla y renglones de registro.
+- **Hilo** (`emp-n-150`): el hilo estructural: bajo la cabecera de cada bandeja, encima del resumen, entre envíos, bloques, ajustes y grupos de campos, borde inferior de la franja móvil, borde de apartados.
+- **Trazo** (`emp-n-200`): borde del botón secundario, hilos del proceso de registro, borde de la zona de archivo ya llena.
+- **Marco** (`emp-n-300`): borde de campos y casillas, de la insignia «Rechazado», de la zona de archivo punteada y barra de desplazamiento.
+- **Azul Ceniza** (`emp-n-500`): solo texto deshabilitado (3.0:1, no apto para texto legible).
+- **Azul Pizarra** (`emp-n-600`): texto secundario: fecha del saludo, rótulos de grupo de la barra lateral, contadores, metadatos, ayudas, encabezados de tabla, placeholders (6.2:1 sobre blanco, 5.6:1 sobre hueso, 5.0:1 sobre el hover hueso-2).
+- **Azul Grafito** (`emp-n-700`): enlaces de la barra lateral en reposo, frase del saludo, texto de la nota editorial, notas e insignia «Rechazado» (7.9:1 sobre blanco, 7.1:1 sobre hueso).
 
-El negro forma parte de la paleta permitida, pero el sistema no lo usa: la tinta es siempre el azul.
+El negro forma parte de la paleta permitida, pero el sistema no lo usa como color visible: la tinta es siempre el azul.
 
 ### Named Rules
-**La Regla del No Cruce.** Nunca texto café sobre azul ni azul sobre café. Sobre la superficie azul solo va blanco o `emp-sobre-azul-2`; si un estado debe aparecer ahí, va dentro de una tarjeta blanca (como la constancia de ejemplo).
+**La Regla del No Cruce.** Nunca texto café sobre azul ni azul sobre café. Sobre el azul solo van los logotipos blancos; el contorno de foco dentro del encabezado cambia de café a blanco.
 
-**La Regla del Café Escaso.** El café marca lo que pide acción o atención: la acción principal, el foco, lo activo, lo pendiente y el error. Una vista tiene un solo botón primario por zona de acción; lo demás es secundario o quieto.
+**La Regla de la Temperatura Dividida.** Superficies e hilos se mezclan con café (hueso, `emp-n-25` a `emp-n-300`); textos se mezclan con azul (`emp-n-500` a `emp-n-700`). No se usan grises neutros.
+
+**La Regla del Café Escaso.** El café marca lo que pide acción o atención: la acción principal, el foco, lo pendiente y el error. Una zona de acción tiene un solo botón primario; lo demás es secundario o quieto.
 
 **La Regla de la Paleta Cerrada.** Ningún color fuera de café, azul, blanco, negro y sus mezclas o transparencias. Sin verdes ni rojos: los colores de estado de Bootstrap están remapeados (`success`/`info` → azul, `warning`/`danger` → café).
 
 ## Typography
 
-**Display Font:** Inter (con system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif)
-**Body Font:** Inter (misma pila)
+**Display Font:** Newsreader Variable, con tamaño óptico (con Iowan Old Style, Georgia, serif)
+**Body Font:** Geist Variable (con system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif)
 
-**Character:** Una sola cara de interfaz, neutra y exacta, que deja hablar a la jerarquía de tamaño y peso. Se instala localmente desde `@fontsource/inter` en 400, 500 y 600; no hay cara decorativa. Inter se conserva a propósito aunque el detector la marque como sobreusada: es una superficie de operación con Linear como referencia de acabado, y es una decisión registrada, no un defecto.
+**Character:** Geist, neutra y exacta, hace todo el trabajo de interfaz; Newsreader, con su eje óptico y un peso ligero de 420, pone la voz editorial de una revista solo donde el título es grande. Ambas se instalan localmente con `@fontsource-variable` (Geist y Newsreader `opsz`), sin CDN; la página de error las carga desde `public/fonts`.
 
 ### Hierarchy
-- **Display** (600, 1.75rem, 1.2, -0.03em): título del panel azul de acceso; ancho máximo 22ch.
-- **Headline** (600, 1.5rem, 1.25, -0.025em): título de página (`h1`) en toda vista del sistema y en las páginas de error.
-- **Title** (600, 0.9375rem, -0.01em): títulos de sección, de bloque de formulario, de panel de acción, de ajuste, de envío y leyendas de grupo. Los títulos de bandeja bajan a 0.875rem.
-- **Body** (400, 0.875rem, 1.5): texto de interfaz, campos, botones (500), etiquetas de campo (500), celdas de tabla.
-- **Body lectura** (400, 0.9375rem, 1.65): texto largo como el resumen de un artículo; medida máxima 68ch.
-- **Body meta** (400, 0.8125rem): metadatos de fila, ayudas de campo, errores de validación (500), enlaces secundarios (500), botones pequeños.
-- **Label** (500, 0.75rem, 0.01em): encabezados de tabla, insignias de estado, grupos de la barra lateral, etiquetas de filtros. Siempre en caja normal, nunca en versalitas ni mayúsculas espaciadas.
-- **Label cuenta** (600, 0.6875rem, cifras tabulares): solo dentro de los contadores de pendientes.
+- **Display** (Newsreader 420, clamp 2.375–3.25rem, 1.04, -0.028em): el saludo de los paneles («Buenas tardes», «Hola, Ana»).
+- **Display acceso** (Newsreader 420, clamp 2.375–3.5rem, 1.04, 13ch): el lema de la nota editorial; en registro baja a clamp 2.125–2.875rem y 16ch para que quepa el proceso.
+- **Headline** (Newsreader 420, clamp 1.875–2.375rem, 1.08, -0.022em): título de página (`h1`) en las áreas de trabajo. En acceso sube a clamp 2.125–2.625rem.
+- **Headline pequeño** (Newsreader 420, 1.625rem): título del estado vacío grande y de la pantalla de artículo aprobado.
+- **Title** (Geist 600, 0.9375rem, -0.01em): títulos de bandeja, sección, bloque, ajuste, panel de acción, envío y leyendas de grupo.
+- **Body entrada** (Geist 400, 1rem, 1.6–1.65, `emp-n-700`): la frase del saludo (54ch) y el texto de la nota editorial (36ch).
+- **Body** (Geist 400, 0.9375rem, 1.5): base del documento (15px). El texto largo (`emp-lectura`) usa 1.65 y 68ch; los subtítulos de página, 1.6.
+- **Body control** (Geist 500, 0.875rem, -0.005em): botones, campos y enlaces de la barra lateral. En acceso los campos suben a 0.9375rem.
+- **Body meta** (Geist 400/500, 0.8125rem): fecha del saludo, etiquetas de campo (500), metadatos de fila, ayudas, errores (500), nombre en la cuenta.
+- **Label** (Geist 500, 0.75rem, 0.01em, cifras tabulares): rótulos de grupo de la barra lateral, contadores, insignias, encabezados de tabla, rol de la cuenta.
+- **Cifra de paso** (Newsreader, 1.25rem, café, cifras de línea): los números 1–4 del proceso de registro; única serif por debajo del tamaño de título.
 
-Los títulos llevan `letter-spacing: -0.02em` y `text-wrap: balance`; los párrafos, `text-wrap: pretty`.
+Los títulos llevan `text-wrap: balance`; los párrafos, `text-wrap: pretty`. Nada va en mayúsculas espaciadas; la fecha del saludo solo capitaliza su primera letra.
 
 ### Named Rules
-**La Regla de los Tres Pesos.** Solo 400, 500 y 600. El 600 es para títulos y cifras, el 500 para controles y etiquetas, el 400 para leer.
+**La Regla de las Dos Voces.** Geist para todo lo que se opera; Newsreader solo para títulos grandes (saludo, título de página, lema, vacío y logro) y los números del proceso. Nunca serif en botones, campos, tablas, navegación ni cuerpo de texto.
 
-**La Regla de la Cifra Tabular.** Toda tabla, fecha, folio, contador y conteo de caracteres usa `font-variant-numeric: tabular-nums` (clase `emp-num`), para que las columnas de datos no bailen.
+**La Regla de los Pesos Contados.** Geist en 400, 500 y 600; Newsreader en 420. El 600 es para títulos pequeños y cifras de resumen; el 500 para controles y etiquetas; el 400 para leer.
+
+**La Regla de la Cifra Tabular.** Toda tabla, fecha, folio, contador y conteo usa `font-variant-numeric: tabular-nums` (clase `emp-num`), para que las columnas no bailen.
 
 ## Layout
 
-Tres plantillas comparten tokens y cambian de estructura según el uso:
+Un encabezado global y dos plantillas que comparten tokens:
 
-- **Acceso** (iniciar sesión, registro, contraseña): retícula de dos columnas a partir de 992px (`1fr` y `0.82fr`). A la izquierda, la marca y «Volver al sitio» arriba, el formulario centrado en una columna de 23.5rem (376px; 38rem en el registro) y el pie institucional abajo. A la derecha, el panel azul con contenido fijo (`position: sticky`, 100vh) y relleno de 3.5rem (4.5rem × 5rem desde 1400px). Debajo de 992px solo queda la columna, y el formulario arranca arriba en lugar de flotar al centro.
-- **Administrador**: barra lateral de 15.5rem (248px) fija al desplazar desde 992px; debajo se vuelve panel desplegable de 17.5rem con una barra superior translúcida de 3.25rem. El área de trabajo llega a 76rem con relleno de 1.5rem × 1.25rem (2.25rem × 2.5rem desde 992px).
-- **Autor**: barra superior fija, translúcida, con fila de 68rem centrada; debajo de 768px la navegación baja a un segundo renglón a todo lo ancho. Contenido centrado de 68rem con relleno de 2rem × 1.25rem (2.5rem × 1.5rem desde 768px).
+- **Encabezado** (acceso, autor, administrador y error): pegado arriba (`position: sticky`), 4rem de alto, relleno lateral `clamp(1rem, 2.5vw, 1.75rem)`. Solo los logotipos de la UNAM (2.5rem) y la FCA (2.375rem), separados 0.875rem, a la izquierda y enlazados al inicio del área.
+- **Escritorio** (autor y administrador): desde 992px, dos columnas: barra lateral de 15.5rem sobre hueso, fija bajo el encabezado con su propio desplazamiento, y la hoja blanca con 0.75rem de margen arriba, abajo y a la derecha. Dentro de la hoja, el contenido se centra a 72rem (62rem en el autor) con relleno `clamp(1.75rem, 4vw, 3.5rem)` arriba y a los lados y 5rem abajo. Debajo de 992px la hoja ocupa todo el ancho sin radio ni sombra y la barra lateral se vuelve una franja horizontal pegada bajo el encabezado: enlaces en renglón desplazable (sin rótulos de grupo, con desvanecido al borde derecho) y la cuenta reducida a su avatar.
+- **Acceso** (iniciar sesión, registro, contraseña): debajo del encabezado, dos mitades a toda la altura, `5fr` / `7fr` desde 992px. A la izquierda la nota editorial sobre hueso, fija al desplazar, centrada en vertical con relleno `4rem clamp(2.5rem, 5vw, 5.5rem) 6rem` y un pie institucional de 12px; a la derecha, sobre blanco, el enlace «Volver al sitio» arriba y la columna del formulario de 24rem centrada (34rem en registro). En pantallas angostas solo se muestra el formulario.
 
 Patrones de página recurrentes:
-- **Encabezado de página**: enlace de regreso opcional, título y descripción a la izquierda (máx. 48rem), acciones alineadas a la derecha; 1.75rem de separación con el contenido.
-- **Panel de pendientes**: la bandeja de artículos a la izquierda y las de autores y mensajes apiladas a la derecha (`1.45fr` / `1fr` desde 1200px, separación 1.25rem); un resumen en línea con borde superior cierra la página.
+- **Saludo de los paneles**: fecha, saludo y frase a la izquierda; acciones a la derecha, alineadas al pie; 3.5rem de aire antes del contenido.
+- **Encabezado de página**: enlace de regreso opcional, título serif y subtítulo (máx. 48rem) a la izquierda, acciones a la derecha; 2.75rem antes del contenido.
+- **Panel de pendientes**: la bandeja de artículos a la izquierda y las de autores y mensajes apiladas a la derecha (`1.35fr` / `1fr` desde 1200px), separadas por 3.5rem en vertical y 4.5rem entre columnas. Al pie, un resumen en línea (término y cifra) tras un hilo, a 4rem.
 - **Detalle**: columna de lectura de hasta 52rem; con acción lateral, `1fr` + 21rem fijo desde 1200px, separación 2.5rem.
-- **Formulario por bloques**: cada bloque es título y explicación (16rem; 18rem en ajustes) a la izquierda y campos (máx. 40rem) a la derecha desde 992px, separados por un borde de 1px.
-- **Lista de datos**: término de 11rem y valor a la derecha desde 576px; en teléfono se apilan.
+- **Formulario por bloques y ajustes**: cada bloque es título y explicación (16rem; 18rem en ajustes) a la izquierda y campos (máx. 40rem) a la derecha desde 992px, separados por un hilo `emp-n-150` y 2rem de aire; los ajustes, 3rem.
+- **Lista de datos**: término de 11rem y valor a la derecha desde 576px, entre hilos; en teléfono se apilan.
 
-Ritmo de espacio: grupos apretados (0.375rem entre ícono y texto, 0.5rem entre botones) y separación generosa entre secciones (1.75rem a 3rem). El relleno horizontal interno de bandejas y tablas enmarcadas es 1.125rem, constante, para que el texto de las filas quede alineado con el de la cabecera. Los campos enfocados dejan 6rem de margen de desplazamiento para no quedar bajo la barra fija. Cortes de Bootstrap: 576, 768, 992, 1200 y 1400px.
+Ritmo: grupos apretados (0.375rem ícono-texto, 0.5rem entre botones) y separación amplia entre secciones (2.75rem, 3.5rem, 4.5rem). Las filas de bandeja sobresalen 0.75rem a cada lado para que su hover respire sin desalinear el texto. Cortes de Bootstrap: 576, 768, 992 y 1200px; 992px es el cambio estructural.
+
+### Named Rules
+**La Regla del Encabezado Mudo.** El encabezado azul lleva únicamente los dos logotipos, juntos y pegados a la izquierda. Ni nombre de la revista, ni navegación, ni cuenta, ni botones: todo eso vive en la barra lateral o en la página.
+
+**La Regla del Aire antes que la Caja.** Para separar contenido se usa primero el espacio, después un hilo de 1px; un contenedor con fondo es el último recurso y nunca lleva sombra.
 
 ## Elevation & Depth
 
-El sistema es plano y separa capas con bordes de 1px y tonos del azul, no con sombras. Los contenedores no tienen sombra. Lo único elevado son los controles, con una sombra de un píxel que les da cuerpo sin despegarlos, y las capas flotantes. Las barras fijas usan blanco translúcido con desenfoque para que el contenido que pasa debajo se intuya sin competir.
+El sistema es plano salvo por una sola superficie: la hoja. Se separa del hueso con un anillo de 1px casi invisible, una sombra de contacto y una sombra amplia de desplazamiento negativo, todas teñidas del azul de la tinta. Lo demás se distingue por tono (hueso, blanco, nube) o por hilo. Solo flotan, además, lo que de verdad está encima: el menú de la cuenta y el enlace «Saltar al contenido».
 
 ### Shadow Vocabulary
-- **Presión del primario** (`box-shadow: 0 1px 2px rgba(0, 19, 40, 0.12)`): botón primario.
-- **Presión del secundario** (`box-shadow: 0 1px 2px rgba(0, 19, 40, 0.06)`): botón secundario y enlace activo de la barra lateral (junto con un anillo de 1px `emp-n-150`).
-- **Presión del campo** (`box-shadow: 0 1px 2px rgba(0, 19, 40, 0.04)`): campos de texto y selectores.
-- **Capa flotante** (`--emp-sombra-menu`): elementos que flotan sobre la página; hoy, el enlace «Saltar al contenido».
-- **Anillo de foco** (`--emp-anillo`): campos, casillas, paginación y zona de archivo al enfocarse. El resto de los elementos enfocables usa contorno café de 2px con 2px de separación.
+- **Hoja** (`--emp-sombra-hoja`: `0 0 0 1px rgba(0,19,40,.045), 0 1px 2px rgba(0,19,40,.03), 0 16px 48px -32px rgba(0,19,40,.14)`): la hoja de trabajo, desde 992px.
+- **Menú** (`--emp-sombra-menu`: `0 0 0 1px rgba(0,19,40,.06), 0 2px 6px rgba(0,19,40,.04), 0 12px 32px -12px rgba(0,19,40,.18)`): menú de la cuenta y enlace de salto.
+- **Enlace activo** (`0 0 0 1px rgba(0,19,40,.06), 0 1px 2px rgba(0,19,40,.06)`): el hilo que recorta el enlace activo blanco sobre la barra hueso.
+- **Controles** (`0 1px 1px rgba(0,19,40,.08)` con filo interior blanco al 8% en el primario; `0 1px 1px rgba(0,19,40,.04)` en el secundario; `0 1px 1px rgba(0,19,40,.03)` en campos): un píxel de apoyo, no elevación.
+- **Anillo de foco** (`--emp-anillo`: `0 0 0 3px rgba(102,67,0,.14)`): campos, casillas, paginación, botones y zona de archivo al enfocarse. Lo demás usa contorno café de 2px con 2px de separación (blanco dentro del encabezado).
 
 ### Named Rules
-**La Regla del Borde Primero.** Un contenedor se separa con borde `emp-n-150` de 1px y radio de 12px; nunca con sombra. Si algo necesita más presencia, sube de tono (`emp-n-25`), no de sombra.
+**La Regla de la Hoja Única.** Solo la hoja y lo que flota (menú) llevan sombra amplia. Paneles de acción, citas y estados vacíos se resuelven con un tono `emp-n-50` sin sombra; bandejas y tablas no tienen contenedor.
+
+**La Regla del Encabezado Sólido.** El encabezado es azul sólido, sin translucidez ni `backdrop-filter`. La única superficie translúcida es la franja de secciones en pantallas angostas.
 
 ## Shapes
 
-Esquinas suaves y consistentes: 6px (`rounded.md`) en todo control (botones, campos, enlaces de navegación, etiquetas, paginación, botones de ícono), 8px (`rounded.aviso`) en avisos y cajas citadas, 12px (`rounded.lg`) en todo contenedor (bandejas, tablas enmarcadas, paneles de acción, formularios de ajuste, constancia, zona de archivo, estado vacío). La píldora (`rounded.pill`) se reserva a las insignias de estado y los contadores; el círculo, al avatar, a los números de paso y a los sellos. Los bordes son siempre de 1px.
+Esquinas suaves escalonadas por tamaño: 10px (`rounded.control`) en todo control (botones, campos, selectores), en el hover de las filas y en el botón de la cuenta; 8px (`rounded.md`) en los enlaces de la barra lateral, avisos, opciones del menú y el cuadro del ícono de archivo; 6px (`rounded.sm`) en etiquetas de palabras clave, paginación y el enlace de salto; 12px (`rounded.menu`) en el menú de la cuenta, citas y la zona de archivo; 14px (`rounded.contenedor`) en paneles de acción y apartados (formulario de aviso, constancia); 16px (`rounded.hoja`) en la hoja y el estado vacío grande. La píldora (`rounded.pill`) se reserva a las insignias de estado; el círculo, al avatar, al sello de aprobado, al ícono del estado vacío y a los puntos de estado.
 
-**La Regla del Borde Punteado.** El borde punteado significa «espacio por llenar u opcional»: la zona para soltar el PDF, el estado vacío grande y el bloque de coautor. Al llenarse, la zona de archivo pasa a borde sólido.
+Los hilos son de 1px y separan contenido dentro de la hoja; casi nunca dibujan un contorno cerrado.
+
+**La Regla del Borde Punteado.** El borde punteado significa «espacio por llenar u opcional»: la zona para soltar el PDF y el bloque de coautor. Al llenarse, la zona de archivo pasa a borde sólido.
 
 ## Components
 
 ### Buttons
-Contenidos y firmes, como en una herramienta de oficina bien hecha.
-- **Shape:** esquinas de 6px en todos los tamaños.
-- **Primary:** fondo café, texto blanco, peso 500, relleno 0.5rem × 0.875rem; en las páginas de acceso va a todo lo ancho con relleno vertical de 0.625rem y 0.9375rem de texto.
-- **Hover / Focus:** transición de 160ms de color, fondo, borde y sombra; el fondo pasa a café tostado. El foco se muestra con el anillo café de 3px. Al presionar, el botón cede a `scale(0.98)` con salida exponencial.
-- **Secondary:** fondo blanco, borde `emp-n-300`, tinta azul; hover `emp-n-50`, presionado `emp-n-100`. Es el botón por defecto para toda acción que no es la principal, incluido «Rechazar artículo».
-- **Quieto:** texto `emp-n-700` sin fondo ni borde para acciones discretas en filas (descargar PDF, quitar coautor); en hover se tiñe de café sobre café papel.
-- **Link:** texto café sin subrayado que se subraya en hover (p. ej., «Limpiar filtros»).
-- **Deshabilitado:** opacidad 0.5; el secundario usa texto `emp-n-500` sobre blanco.
+Sólidos, callados y precisos.
+- **Shape:** 10px; relleno 0.5rem × 0.875rem, Geist 500 a 14px. El grande (`btn-lg`) sube a 0.9375rem y 2.875rem de alto en acceso.
+- **Primary:** café sólido, sin degradado, texto blanco, un píxel de sombra y filo interior blanco al 8%.
+- **Hover / Focus:** transición de 160ms; el fondo pasa a café tostado. Foco con el anillo café de 3px. Al presionar, `scale(0.97)` con salida exponencial.
+- **Secondary:** blanco, borde `emp-n-200`, tinta azul; hover `emp-n-50` con borde `emp-n-300`, presionado `emp-n-100`. Es el botón de toda acción que no es la principal.
+- **Quieto:** texto `emp-n-700` sin fondo ni borde para acciones discretas en filas (PDF, quitar); en hover, café sobre café papel.
+- **Link:** texto café sin subrayado que se subraya en hover.
+- **Deshabilitado:** opacidad 0.5; el secundario usa texto `emp-n-500`.
 
-### Chips (Insignias de estado)
-- **Style:** píldora con punto de 7px a la izquierda y texto de 12px peso 500, borde de 1px.
-- **State:** «En revisión / Pendiente» café sobre café papel con borde café bruma; «Aprobado / Contestado» azul sobre `emp-n-100` con borde `emp-n-200`; «Rechazado» grafito sobre blanco con borde `emp-n-300` y punto hueco. El tipo de punto distingue el estado aun sin color, y el texto siempre lo nombra.
+### Chips (insignias de estado)
+- **Style:** píldora con punto de 7px a la izquierda, texto Label, borde de 1px.
+- **State:** «En revisión / Pendiente» café sobre café papel con borde café bruma; «Aprobado / Contestado» azul sobre velo azul con borde azul al 14%; «Rechazado» grafito sobre blanco con borde `emp-n-300` y punto hueco. El tipo de punto distingue el estado aun sin color, y el texto siempre lo nombra.
 - **Etiquetas de palabras clave:** rectángulo de 6px, fondo `emp-n-50`, borde `emp-n-150`, 13px; no son estados y no llevan punto.
 
 ### Cards / Containers
-- **Corner Style:** 12px.
-- **Background:** blanco; tonos `emp-n-25` para cabeceras de tabla, estados vacíos y texto citado.
-- **Shadow Strategy:** ninguna (ver Elevation & Depth).
-- **Border:** 1px `emp-n-150`; filas internas divididas con `emp-n-100`.
-- **Internal Padding:** cabecera de bandeja 0.875rem × 1.125rem; filas 0.75rem × 1.125rem; panel de acción y formularios de ajuste 1.25rem.
-- **Filas de bandeja:** título en 500 y metadato en 13px `emp-n-600`; a la derecha, fecha tabular y chevron. En hover la fila toma `emp-n-25` y el título se vuelve café.
-- **Panel de acción** (dictamen, respuesta): contenedor lateral fijo con título, explicación breve, botón primario a todo lo ancho, un separador «o» con líneas `emp-n-150` y la acción alternativa como secundaria.
+No hay tarjetas: hay una hoja y tonos.
+- **Hoja:** blanca, 16px, sombra de hoja; contiene toda pantalla de trabajo.
+- **Panel de acción** (dictamen, respuesta): tono `emp-n-50`, 14px, relleno 1.5rem, sin borde ni sombra; título Title, explicación en 13px pizarra, botón primario a todo lo ancho, separador «o» con hilos y la alternativa como secundaria.
+- **Citas** (respuesta del consultorio, motivo del dictamen): tono `emp-n-50`, 12px, sin borde.
+- **Apartado** (formulario de aviso de edición, constancia): blanco con borde `emp-n-150`, 14px, relleno 1.25rem; la excepción enmarcada para un objeto que debe leerse como documento.
+- **Estado vacío grande:** tono `emp-n-50`, 16px, relleno 4.5 × 2rem, centrado: ícono café en círculo blanco de 3rem, título en Headline pequeño, explicación de hasta 46ch y el botón primario que resuelve el vacío.
 
 ### Inputs / Fields
-- **Style:** borde `emp-n-300` de 1px, fondo blanco, radio 6px, altura mínima 2.375rem, relleno 0.5rem × 0.75rem, sombra de un píxel. Etiqueta arriba en 500 azul; los opcionales se marcan con «(opcional)» en `emp-n-600`, los obligatorios no se marcan. Ayuda en 13px `emp-n-600`.
-- **Hover:** el borde sube a `emp-n-500`.
-- **Focus:** borde café y anillo café de 3px al 22%; el cursor de texto también es café.
-- **Error:** borde café con refuerzo interior de 1px, fondo café papel, y mensaje en 13px peso 500 precedido de un ícono de alerta dibujado en SVG. Tras un envío fallido, el foco va al primer campo marcado y un aviso arriba dice cuántos campos revisar.
-- **Contraseña:** botón «Mostrar / Ocultar» de texto dentro del campo, a la derecha.
+- **Style:** fondo blanco, borde `emp-n-300` de 1px, un píxel de sombra, radio 10px, alto mínimo 2.625rem (2.875rem y 15px en acceso). Etiqueta arriba en 13px 500 azul; los opcionales llevan «(opcional)» en pizarra. Ayuda en 13px pizarra.
+- **Hover:** el borde se oscurece un paso.
+- **Focus:** borde café y anillo café de 3px al 14%; cursor de texto café.
+- **Error:** borde café con refuerzo interior de 1px, fondo café papel y mensaje en 13px 500 precedido de un ícono de alerta SVG. Si hay más de un error, un aviso arriba dice cuántos campos revisar; el foco va al primer campo marcado.
+- **Contraseña:** botón de texto «Mostrar / Ocultar» dentro del campo, a la derecha.
 - **Disabled:** fondo `emp-n-50`.
-- **Zona de archivo:** etiqueta punteada de 12px con ícono en cuadro blanco de 8px; hover o arrastre la tiñe de café papel con borde café; con archivo elegido pasa a borde sólido `emp-n-200` sobre blanco.
+- **Grupos:** en formularios largos (registro), leyenda en Title con hilo inferior `emp-n-150`.
+- **Zona de archivo:** punteada `emp-n-300`, 12px, sobre `emp-n-25`, con ícono café en cuadro blanco de 8px; hover o arrastre la tiñe de café papel con borde café; con archivo pasa a borde sólido `emp-n-200` sobre blanco.
 
 ### Navigation
-- **Barra lateral (administrador):** fondo `emp-n-25` con borde derecho `emp-n-150`. Grupos («Trabajo editorial», «Difusión») en label de 12px `emp-n-600`. Enlaces de 2.125rem con ícono SVG de 16px, texto 500 `emp-n-700`; hover `emp-n-100` con tinta azul; activo en tarjeta blanca con anillo de 1px, ícono café y contador café. Al pie, el enlace al sitio público y el bloque de usuario (avatar azul con inicial, nombre, rol, botón de salir).
-- **Barra superior (autor):** blanco translúcido con borde inferior; marca, dos enlaces y usuario. Enlace activo con tinta azul y una línea café de 2px pegada al borde inferior de la barra.
-- **Móvil:** la barra lateral se vuelve panel desplegable desde la izquierda; la del autor baja la navegación a un segundo renglón y oculta el nombre del usuario en teléfonos.
-- **Marca:** «Revista EmprendeUNAM» en 15px peso 600 y la leyenda «UNAM · Facultad de Contaduría y Administración» en 12px `emp-n-600`. No hay logotipo.
+- **Barra lateral:** sobre hueso, rótulos de grupo en Label pizarra en tipo oración («Trabajo editorial», «Difusión»), separados 1.75rem. Enlaces de 2.25rem con ícono y texto 14px 500 grafito; hover en hueso hondo con texto azul; activo en blanco con el hilo de enlace activo, texto azul, ícono café y `aria-current="page"`.
+- **Contadores:** cifra suelta a la derecha del enlace, Label pizarra (azul en el activo), sin pastilla, con texto oculto para lectores de pantalla («3 en revisión»). Solo aparecen si hay pendientes. La misma cifra neutra acompaña los títulos de bandeja.
+- **Cuenta:** al pie de la barra lateral, botón de 10px con avatar azul circular de 2rem (inicial blanca), nombre en 13px 500, rol en Label pizarra y flecha doble. El menú abre hacia arriba: blanco, 14.5rem, 12px, sombra de menú, opciones de 8px con ícono pizarra («Ver el sitio de la revista», «Cerrar sesión»); entra con opacidad y escala desde 0.97 en 180ms.
+- **Móvil (debajo de 992px):** la barra lateral se vuelve una franja pegada bajo el encabezado, hueso velado al 92% con `backdrop-filter: saturate(1.4) blur(12px)` e hilo inferior; enlaces en renglón desplazable sin barra visible y desvanecido a la derecha; la cuenta queda solo como avatar circular y su menú se ancla arriba a la derecha.
+
+### Saludo de los paneles (firma)
+Ambos paneles abren igual: la fecha larga del día en 13px pizarra («Martes 20 de octubre»), el saludo en Display (según la hora en el administrador: «Buenos días» hasta las 11:59, «Buenas tardes» hasta las 18:59, «Buenas noches»; «Hola, {nombre}» en el autor) y una frase en Body entrada que dice lo pendiente con cantidades y concordancia («3 artículos esperan dictamen, 1 cuenta de autor por activar y 2 mensajes sin responder. Lo más antiguo aparece primero.») o, si no hay nada, que todo está al día. A la derecha, las acciones del panel con un solo primario.
+
+### Listas abiertas (bandejas e historial)
+- **Bandeja:** sin contenedor; título Title con su cifra neutra y «Ver todos» a la derecha, sobre un hilo `emp-n-150`. Filas sin divisores: título 500 y metadato en 13px pizarra, a la derecha fecha relativa tabular («hace 4 días», «ayer») y chevron. En hover la fila toma un fondo `emp-n-50` de 10px y el chevron avanza 2px. Vacío: una línea pizarra con palomita.
+- **Historial del autor:** envíos separados por hilos, cada uno con título Title, metadatos pizarra, nota o motivo citado, y a la derecha la insignia y las acciones (PDF quieto, constancia secundaria).
 
 ### Tablas
-- Encabezados en label de 12px `emp-n-600` con borde inferior `emp-n-200`; dentro de un marco, sobre `emp-n-25`. Celdas de 0.75rem, cifras tabulares, la última fila sin borde. El primer enlace de cada fila es azul 500 con subrayado `emp-n-300` que se vuelve café en hover. En pantallas menores de 768px la tabla desplaza en horizontal dentro de su marco (ancho mínimo 44rem). Paginación con números de 2rem de ancho, radio 6px y página activa en azul.
+Sin marco, alineadas con el texto de la página: encabezados en Label pizarra con hilo inferior `emp-n-150`, celdas con 0.9375rem de relleno vertical y divisores `emp-n-100`, primera y última columna sin relleno lateral, hover `emp-n-25`. El primer enlace de cada fila es azul 500 con subrayado `emp-n-300` que se vuelve café en hover. Debajo de 768px la tabla desplaza en horizontal (ancho mínimo 44rem). Paginación con números de 2rem, radio 6px y página activa en azul.
 
 ### Avisos
-- Caja de 8px con borde de 1px, ícono SVG de 16px a la izquierda pintado con `currentColor` y texto azul. Éxito e información: `emp-n-50` con borde `emp-n-200`; atención y error: café papel con borde café bruma e ícono café. Entran con 240ms desde 4px arriba y se pueden cerrar.
+Caja de 8px con borde de 1px, ícono SVG de 16px pintado con `currentColor` y texto azul. Neutro: `emp-n-25` con borde `emp-n-150`; éxito e información: `emp-n-50` con borde `emp-n-200`; atención y error: café papel con borde café bruma e ícono café. Entran con 240ms desde 4px arriba y se pueden cerrar.
 
-### Contadores de pendientes (firma)
-Píldora de 1.25rem de alto con la cifra tabular en 11px peso 600: `emp-n-150` con tinta azul en reposo, café con texto blanco en el enlace activo, y versión neutra (`emp-n-100`, grafito) junto a los títulos de bandeja. Solo aparecen si hay algo pendiente, y llevan texto oculto para lectores de pantalla («3 en revisión»).
+### Acceso
+- **Nota editorial:** sobre hueso con halo café, el lema en Display acceso y un párrafo en Body entrada grafito. En registro, el proceso de publicación en cuatro renglones separados por hilos `emp-n-200`: número en Cifra de paso café, paso en 600 y explicación en 14px pizarra.
+- **Formulario:** sobre blanco, sin tarjeta: título serif en Headline acceso, subtítulo de 15px, campos de 2.875rem, botón primario grande a todo lo ancho y, al pie, el enlace a la otra pantalla en pizarra.
 
-### Constancia y artículo aprobado (firma)
-El único momento con movimiento propio: un sello circular azul con palomita blanca crece desde 0.6 en 500ms y, 80ms después, la tarjeta de la constancia sube 10px y aparece; usa `@starting-style`, así que solo ocurre al llegar. La tarjeta es un contenedor blanco de 12px con la insignia de estado, el título del artículo en 600 y una lista de registro (folio, fecha) con divisores `emp-n-100`. El folio es el dato protagonista: va en 600 y es verificable públicamente.
-
-### Estado vacío
-Contenedor punteado de 12px sobre `emp-n-25`, centrado: ícono café en círculo blanco de 3rem, título de 17px en 600, explicación de hasta 46ch y el botón primario que resuelve el vacío.
+### Artículo aprobado
+El único momento con movimiento propio: un sello circular azul con palomita blanca crece desde 0.6 en 500ms y, 80ms después, la constancia sube 10px y aparece (`@starting-style`, solo al llegar). Título en Headline pequeño; la constancia es un apartado con la insignia, el título del artículo en 600 y un registro de folio y fecha.
 
 ### Páginas de error
-Plantilla autónoma, sin Vite ni sesión, que repite los valores del sistema en línea (Inter local, tinta azul, borde `emp-n-150`, título de 24px, botón café de 6px) para mostrarse aunque falle el resto de la aplicación.
+Plantilla autónoma, sin Vite ni sesión, que repite en línea los valores del sistema: encabezado azul de 4rem con los dos logotipos, fondo blanco, código en 13px pizarra, título Newsreader 420 de 40px, mensaje grafito y el botón primario café de 10px.
+
+### Movimiento
+Entrada única al cargar: cada hijo de la hoja, la columna del formulario y los elementos de la nota editorial suben 6px y aparecen en 560ms con `cubic-bezier(0.23, 1, 0.32, 1)`, escalonados 0, 50, 100 y 150ms. Las transiciones de estado duran 160ms. Con `prefers-reduced-motion: reduce` todo se reduce a 0.01ms.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** escribir todo texto en azul `#001328` o en un neutro mezclado del azul (`emp-n-600` para secundario, `emp-n-700` para navegación); el `emp-n-500` solo para lo deshabilitado.
-- **Do** separar contenedores con borde de 1px `emp-n-150` y radio de 12px, y los controles con radio de 6px.
-- **Do** mostrar cada estado como insignia con punto y texto: café para «En revisión / Pendiente», azul para «Aprobado / Contestado», grafito con punto hueco para «Rechazado».
-- **Do** dejar un solo botón primario café por zona de acción; las alternativas van como secundario o quieto.
-- **Do** poner las cifras, fechas y folios en números tabulares.
-- **Do** mantener las transiciones en 160ms con `cubic-bezier(0.23, 1, 0.32, 1)` y la presión de botón en `scale(0.98)`; reservar el movimiento propio al momento de artículo aprobado.
-- **Do** tematizar las superficies del navegador con la paleta: selección en café bruma, cursor café, barra de desplazamiento `emp-n-300`, subrayado con 0.2em de separación.
-- **Do** contar lo pendiente en la navegación y en las cabeceras de bandeja, y ordenar las bandejas con lo más antiguo primero.
+- **Do** poner el fondo de las áreas de trabajo en hueso `emp-hueso` y todo el contenido dentro de una sola hoja blanca de 16px con `--emp-sombra-hoja`.
+- **Do** mantener el encabezado azul sólido de 4rem con únicamente los logotipos de la UNAM y la FCA, juntos y pegados a la izquierda.
+- **Do** llevar la navegación en la barra lateral sobre hueso (grupos, enlace activo blanco con hilo, contadores como cifra suelta, cuenta al pie con menú hacia arriba) y convertirla en franja horizontal desplazable debajo de 992px.
+- **Do** abrir cada panel con fecha, saludo en serif y una frase en lenguaje natural que resuma lo pendiente con cantidades.
+- **Do** separar secciones con aire (2.75rem, 3.5rem, 4.5rem) y, si hace falta, un hilo `emp-n-150`; listas y tablas sin contenedor.
+- **Do** resolver paneles de acción, citas y estados vacíos con el tono `emp-n-50`, sin borde ni sombra.
+- **Do** usar Geist para toda la interfaz y Newsreader 420 con tamaño óptico solo en títulos grandes.
+- **Do** escribir todo texto en azul `#001328` o en un neutro mezclado del azul (`emp-n-600` secundario, `emp-n-700` notas); `emp-n-500` solo para lo deshabilitado.
+- **Do** mostrar cada estado con texto: insignia con punto (café «En revisión / Pendiente», azul «Aprobado / Contestado», grafito con punto hueco «Rechazado»).
+- **Do** dejar un solo botón primario café, sólido y sin degradado, por zona de acción.
+- **Do** poner cifras, fechas y folios en números tabulares.
+- **Do** limitar el movimiento a la entrada única escalonada del contenido y a transiciones de 160ms, respetando `prefers-reduced-motion`.
 
 ### Don't:
-- **Don't** poner texto café sobre azul ni azul sobre café; sobre el panel azul solo va blanco o `emp-sobre-azul-2`.
+- **Don't** poner texto café sobre azul ni azul sobre café.
 - **Don't** usar verde, rojo ni ningún color fuera de café, azul, blanco, negro y sus mezclas, ni siquiera para éxito o error.
 - **Don't** comunicar un estado solo con color o solo con un ícono.
-- **Don't** pintar la barra de navegación de azul sólido; el azul como superficie se reserva al panel de acceso.
-- **Don't** usar títulos serif decorativos ni una segunda familia tipográfica, ni pesos fuera de 400/500/600.
-- **Don't** armar páginas con filas de tarjetas de cifra iguales; los totales van en línea, como lista de datos.
-- **Don't** poner una etiqueta pequeña (kicker) encima de un título, ni etiquetas en mayúsculas espaciadas.
-- **Don't** dar sombra a los contenedores ni combinar borde con una sombra amplia.
-- **Don't** usar la píldora para nada que no sea un estado o un contador.
+- **Don't** agregar al encabezado texto, nombre de la revista, navegación, cuenta ni botones, ni darle translucidez o `backdrop-filter`.
+- **Don't** meter contenido en tarjetas con sombra dentro de la hoja ni encadenar marcos; la hoja es la única superficie elevada.
+- **Don't** abrir los paneles con franjas de tarjetas de métricas; lo pendiente se dice en la frase del saludo y en los contadores.
+- **Don't** usar la serif en botones, campos, tablas, navegación o cuerpo de texto, ni pesos de Geist fuera de 400/500/600.
+- **Don't** poner degradados en botones.
+- **Don't** poner una etiqueta pequeña (kicker) encima de un título ni etiquetas en mayúsculas espaciadas.
+- **Don't** usar la píldora para nada que no sea una insignia de estado.

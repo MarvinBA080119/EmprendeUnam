@@ -123,6 +123,31 @@ class ArticuloService
     }
 
     /**
+     * Cuántos artículos del autor hay en cada estatus (resumen de su panel).
+     *
+     * @return array{total: int, en_revision: int, aprobados: int, rechazados: int}
+     */
+    public function resumenDe(Usuario $usuario): array
+    {
+        $usuario->loadMissing('persona.autor');
+        $idAutor = $usuario->persona?->autor?->auto_id_autor;
+
+        $porEstatus = Articulo::query()
+            ->whereHas('autores', fn ($q) => $q->where('autor.auto_id_autor', $idAutor))
+            ->selectRaw('arti_status, count(*) as total')
+            ->groupBy('arti_status')
+            ->toBase()
+            ->pluck('total', 'arti_status');
+
+        return [
+            'total' => (int) $porEstatus->sum(),
+            'en_revision' => (int) ($porEstatus[EstatusArticulo::EN_REVISION->value] ?? 0),
+            'aprobados' => (int) ($porEstatus[EstatusArticulo::APROBADO->value] ?? 0),
+            'rechazados' => (int) ($porEstatus[EstatusArticulo::RECHAZADO->value] ?? 0),
+        ];
+    }
+
+    /**
      * Todos los artículos, para el administrador (RF-ADM-01): filtros por
      * estatus, tema y fecha de envío, y búsqueda por título, autor (principal
      * o coautor) o palabra clave, sin importar mayúsculas ni acentos.

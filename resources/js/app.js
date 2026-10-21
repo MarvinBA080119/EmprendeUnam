@@ -1,10 +1,10 @@
 import 'bootstrap';
 import { montarIslas } from './islas';
 
-// Tipografía de interfaz instalada localmente (sin CDN).
-import '@fontsource/inter/latin-400.css';
-import '@fontsource/inter/latin-500.css';
-import '@fontsource/inter/latin-600.css';
+// Tipografías instaladas localmente (sin CDN): Geist para la interfaz y
+// Newsreader, con tamaño óptico, para los títulos grandes.
+import '@fontsource-variable/geist';
+import '@fontsource-variable/newsreader/opsz.css';
 
 // Botón Mostrar/Ocultar de los campos de contraseña.
 document.addEventListener('click', (evento) => {

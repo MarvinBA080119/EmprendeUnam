@@ -2,14 +2,32 @@
 
 @section('titulo', 'Panel del administrador')
 
+@php
+    $pendientesTexto = \App\Support\Texto::lista([
+        $contadores['articulos_en_revision'] > 0 ? \App\Support\Texto::cantidad($contadores['articulos_en_revision'], 'artículo espera dictamen', 'artículos esperan dictamen') : null,
+        $contadores['autores_pendientes'] > 0 ? \App\Support\Texto::cantidad($contadores['autores_pendientes'], 'cuenta de autor por activar', 'cuentas de autor por activar') : null,
+        $contadores['mensajes_pendientes'] > 0 ? \App\Support\Texto::cantidad($contadores['mensajes_pendientes'], 'mensaje sin responder', 'mensajes sin responder') : null,
+    ]);
+@endphp
+
 @section('contenido')
-    <x-encabezado titulo="Pendientes"
-                  :descripcion="ucfirst(now()->locale('es')->translatedFormat('l j \d\e F')).' · Lo más antiguo aparece primero.'">
-        <x-slot:acciones>
+    <header class="emp-saludo">
+        <div class="emp-saludo__texto">
+            <p class="emp-saludo__fecha">{{ \App\Support\Fecha::hoyLargo() }}</p>
+            <h1 class="emp-saludo__titulo">{{ \App\Support\Fecha::saludo() }}</h1>
+            <p class="emp-saludo__resumen">
+                @if ($pendientesTexto !== '')
+                    {{ ucfirst($pendientesTexto) }}. Lo más antiguo aparece primero.
+                @else
+                    Todo está al día: no hay artículos, cuentas ni mensajes esperando.
+                @endif
+            </p>
+        </div>
+        <div class="emp-saludo__acciones">
             <a href="{{ route('admin.newsletter.index') }}#aviso-edicion" class="btn btn-secondary">Avisar nueva edición</a>
             <a href="{{ route('admin.cursos.create') }}" class="btn btn-primary"><x-icono nombre="mas" :tamano="14" /> Publicar un curso</a>
-        </x-slot:acciones>
-    </x-encabezado>
+        </div>
+    </header>
 
     <div class="emp-panel">
         <section class="emp-bandeja emp-panel__principal" aria-labelledby="bandeja-articulos">
@@ -35,7 +53,7 @@
                 </li>
                 @if ($loop->last)</ul>@endif
             @empty
-                <p class="emp-vacio">No hay artículos esperando dictamen.</p>
+                <p class="emp-vacio"><x-icono nombre="check" :tamano="14" /> No hay artículos esperando dictamen.</p>
             @endforelse
         </section>
 
@@ -64,7 +82,7 @@
                     </li>
                     @if ($loop->last)</ul>@endif
                 @empty
-                    <p class="emp-vacio">No hay cuentas por activar.</p>
+                    <p class="emp-vacio"><x-icono nombre="check" :tamano="14" /> No hay cuentas por activar.</p>
                 @endforelse
             </section>
 
@@ -91,7 +109,7 @@
                     </li>
                     @if ($loop->last)</ul>@endif
                 @empty
-                    <p class="emp-vacio">No hay mensajes sin responder.</p>
+                    <p class="emp-vacio"><x-icono nombre="check" :tamano="14" /> No hay mensajes sin responder.</p>
                 @endforelse
             </section>
         </div>
@@ -99,11 +117,11 @@
 
     <dl class="emp-resumen">
         <div>
-            <dt>Suscriptores activos del newsletter</dt>
+            <dt>Suscriptores activos</dt>
             <dd class="emp-num"><a href="{{ route('admin.newsletter.index', ['estado' => 'activo']) }}">{{ $contadores['suscriptores_activos'] }}</a></dd>
         </div>
         <div>
-            <dt>Cursos visibles al público</dt>
+            <dt>Cursos visibles en el sitio</dt>
             <dd class="emp-num"><a href="{{ route('admin.cursos.index', ['vigencia' => 'vigentes']) }}">{{ $cursosVigentes }}</a></dd>
         </div>
     </dl>
