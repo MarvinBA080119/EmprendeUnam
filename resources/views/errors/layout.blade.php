@@ -18,9 +18,10 @@
                -webkit-font-smoothing: antialiased; }
         header { display: flex; align-items: center; gap: 0.875rem; height: 4rem; padding: 0 1.5rem; background: #001328; }
         header img { display: block; width: auto; height: 2.5rem; }
+        header img + img { height: 2.375rem; }
         main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 4rem 1.5rem; }
         .caja { max-width: 32rem; text-align: center; }
-        .codigo { margin: 0 0 1rem; font-size: 13px; color: #5f6b77; font-variant-numeric: tabular-nums; }
+        .codigo { margin: 0 0 1rem; font-size: 13px; color: #56626e; font-variant-numeric: tabular-nums; }
         h1 { margin: 0 0 0.75rem; font-family: Newsreader, Georgia, serif; font-size: 40px; font-weight: 420;
              line-height: 1.08; letter-spacing: -0.022em; font-optical-sizing: auto; }
         p { margin: 0 0 2rem; color: #46535f; }
@@ -30,7 +31,7 @@
         a.boton:hover { background: #553800; }
         a.boton:active { transform: scale(0.97); }
         a.boton:focus-visible { outline: 2px solid #664300; outline-offset: 2px; }
-        footer { padding: 1.25rem 1.5rem; font-size: 12px; color: #5f6b77; text-align: center; }
+        footer { padding: 1.25rem 1.5rem; font-size: 12px; color: #56626e; text-align: center; }
     </style>
 </head>
 <body>
