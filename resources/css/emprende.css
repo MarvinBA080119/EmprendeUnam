@@ -31,11 +31,6 @@
     --emp-n-600: #616d7a;
     --emp-n-700: #4c5a68;
 
-    /* Blanco sobre azul (texto secundario en superficies azules) */
-    --emp-sobre-azul-2: #b8bdc3;
-    --emp-sobre-azul-3: #99a1a9;
-    --emp-linea-sobre-azul: rgba(255, 255, 255, 0.14);
-
     /* Profundidad: anillo de 1px + sombras en capas teñidas de azul */
     --emp-sombra-tarjeta:
         0 0 0 1px rgba(0, 19, 40, 0.05),
@@ -690,15 +685,6 @@ table {
     align-content: start;
 }
 
-.emp-acceso__ceja {
-    margin: 0 0 -1rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--emp-cafe);
-}
-
 .emp-acceso__lema {
     margin: 0;
     max-width: 18ch;
@@ -1020,10 +1006,8 @@ table {
 }
 
 .emp-nav__titulo {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 0.8125rem;
+    font-weight: 500;
     color: rgba(255, 255, 255, 0.66);
 }
 

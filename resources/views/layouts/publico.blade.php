@@ -33,7 +33,6 @@
     <main id="contenido" @class(['emp-acceso__escena', 'emp-acceso__escena--ancha' => $ancho])>
         @if ($ancho)
             <aside class="emp-acceso__intro" aria-label="Cómo publicar en la revista">
-                <p class="emp-acceso__ceja">Revista EmprendeUNAM</p>
                 <h2 class="emp-acceso__lema">Publica tu investigación sobre emprendimiento</h2>
                 <p class="emp-acceso__texto">
                     La revista de la Facultad de Contaduría y Administración recibe artículos de académicos e

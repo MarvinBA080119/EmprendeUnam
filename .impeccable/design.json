@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-16T14:00:29Z",
+  "generatedAt": "2026-10-21T12:00:00Z",
   "title": "Design System: Revista EmprendeUNAM — Sistema",
   "extensions": {
     "colorMeta": {
@@ -81,7 +81,7 @@
       },
       "emp-azul": {
         "role": "secondary",
-        "displayName": "Azul Tinta",
+        "displayName": "Azul Marino",
         "canonical": "#001328",
         "tonalRamp": [
           "#001328",
@@ -89,9 +89,24 @@
           "#4c5a68",
           "#616d7a",
           "#8c959e",
-          "#ccd0d4",
-          "#e6e7ea",
-          "#fafafb"
+          "#b8bdc3",
+          "#dbdee1",
+          "#f5f6f7"
+        ]
+      },
+      "emp-azul-velo": {
+        "role": "secondary",
+        "displayName": "Velo Azul",
+        "canonical": "rgba(0, 19, 40, 0.06)",
+        "tonalRamp": [
+          "#001328",
+          "#1a2b3e",
+          "#4c5a68",
+          "#616d7a",
+          "#8c959e",
+          "#b8bdc3",
+          "#dbdee1",
+          "#f5f6f7"
         ]
       },
       "emp-blanco": {
@@ -99,104 +114,134 @@
         "displayName": "Blanco",
         "canonical": "#ffffff",
         "tonalRamp": [
-          "#001328",
-          "#1a2b3e",
-          "#4c5a68",
-          "#616d7a",
-          "#8c959e",
-          "#ccd0d4",
-          "#e6e7ea",
-          "#fafafb"
+          "#664300",
+          "#947b4c",
+          "#c2b499",
+          "#dad2c2",
+          "#e5dfd4",
+          "#ede8e0",
+          "#f3f0eb",
+          "#faf8f6"
+        ]
+      },
+      "emp-marfil": {
+        "role": "neutral",
+        "displayName": "Marfil",
+        "canonical": "#f1eee8",
+        "tonalRamp": [
+          "#664300",
+          "#947b4c",
+          "#c2b499",
+          "#dad2c2",
+          "#e5dfd4",
+          "#ede8e0",
+          "#f3f0eb",
+          "#faf8f6"
         ]
       },
       "emp-n-25": {
         "role": "neutral",
-        "displayName": "Azul Niebla",
-        "canonical": "#fafafb",
+        "displayName": "Marfil Niebla",
+        "canonical": "#faf8f6",
         "tonalRamp": [
-          "#001328",
-          "#1a2b3e",
-          "#4c5a68",
-          "#616d7a",
-          "#8c959e",
-          "#ccd0d4",
-          "#e6e7ea",
-          "#fafafb"
+          "#664300",
+          "#947b4c",
+          "#c2b499",
+          "#dad2c2",
+          "#e5dfd4",
+          "#ede8e0",
+          "#f3f0eb",
+          "#faf8f6"
         ]
       },
       "emp-n-50": {
         "role": "neutral",
-        "displayName": "Azul Nube",
-        "canonical": "#f6f7f7",
+        "displayName": "Marfil Nube",
+        "canonical": "#f7f6f2",
         "tonalRamp": [
-          "#001328",
-          "#1a2b3e",
-          "#4c5a68",
-          "#616d7a",
-          "#8c959e",
-          "#ccd0d4",
-          "#e6e7ea",
-          "#fafafb"
+          "#664300",
+          "#947b4c",
+          "#c2b499",
+          "#dad2c2",
+          "#e5dfd4",
+          "#ede8e0",
+          "#f3f0eb",
+          "#faf8f6"
         ]
       },
       "emp-n-100": {
         "role": "neutral",
-        "displayName": "Azul Vapor",
-        "canonical": "#edeef0",
+        "displayName": "Marfil Vapor",
+        "canonical": "#f3f0eb",
         "tonalRamp": [
-          "#001328",
-          "#1a2b3e",
-          "#4c5a68",
-          "#616d7a",
-          "#8c959e",
-          "#ccd0d4",
-          "#e6e7ea",
-          "#fafafb"
+          "#664300",
+          "#947b4c",
+          "#c2b499",
+          "#dad2c2",
+          "#e5dfd4",
+          "#ede8e0",
+          "#f3f0eb",
+          "#faf8f6"
         ]
       },
       "emp-n-150": {
         "role": "neutral",
-        "displayName": "Azul Hilo",
-        "canonical": "#e6e7ea",
+        "displayName": "Marfil Hilo",
+        "canonical": "#ede8e0",
         "tonalRamp": [
-          "#001328",
-          "#1a2b3e",
-          "#4c5a68",
-          "#616d7a",
-          "#8c959e",
-          "#ccd0d4",
-          "#e6e7ea",
-          "#fafafb"
+          "#664300",
+          "#947b4c",
+          "#c2b499",
+          "#dad2c2",
+          "#e5dfd4",
+          "#ede8e0",
+          "#f3f0eb",
+          "#faf8f6"
         ]
       },
       "emp-n-200": {
         "role": "neutral",
-        "displayName": "Azul Trazo",
-        "canonical": "#dbdee1",
+        "displayName": "Marfil Trazo",
+        "canonical": "#e5dfd4",
         "tonalRamp": [
-          "#001328",
-          "#1a2b3e",
-          "#4c5a68",
-          "#616d7a",
-          "#8c959e",
-          "#ccd0d4",
-          "#e6e7ea",
-          "#fafafb"
+          "#664300",
+          "#947b4c",
+          "#c2b499",
+          "#dad2c2",
+          "#e5dfd4",
+          "#ede8e0",
+          "#f3f0eb",
+          "#faf8f6"
         ]
       },
       "emp-n-300": {
         "role": "neutral",
-        "displayName": "Azul Marco",
-        "canonical": "#ccd0d4",
+        "displayName": "Marfil Marco",
+        "canonical": "#dad2c2",
         "tonalRamp": [
-          "#001328",
-          "#1a2b3e",
-          "#4c5a68",
-          "#616d7a",
-          "#8c959e",
-          "#ccd0d4",
-          "#e6e7ea",
-          "#fafafb"
+          "#664300",
+          "#947b4c",
+          "#c2b499",
+          "#dad2c2",
+          "#e5dfd4",
+          "#ede8e0",
+          "#f3f0eb",
+          "#faf8f6"
+        ]
+      },
+      "emp-borde-campo": {
+        "role": "neutral",
+        "displayName": "Borde de Campo",
+        "canonical": "#d6cdbd",
+        "tonalRamp": [
+          "#664300",
+          "#947b4c",
+          "#c2b499",
+          "#dad2c2",
+          "#e5dfd4",
+          "#ede8e0",
+          "#f3f0eb",
+          "#faf8f6"
         ]
       },
       "emp-n-500": {
@@ -209,9 +254,9 @@
           "#4c5a68",
           "#616d7a",
           "#8c959e",
-          "#ccd0d4",
-          "#e6e7ea",
-          "#fafafb"
+          "#b8bdc3",
+          "#dbdee1",
+          "#f5f6f7"
         ]
       },
       "emp-n-600": {
@@ -224,9 +269,9 @@
           "#4c5a68",
           "#616d7a",
           "#8c959e",
-          "#ccd0d4",
-          "#e6e7ea",
-          "#fafafb"
+          "#b8bdc3",
+          "#dbdee1",
+          "#f5f6f7"
         ]
       },
       "emp-n-700": {
@@ -239,58 +284,111 @@
           "#4c5a68",
           "#616d7a",
           "#8c959e",
-          "#ccd0d4",
-          "#e6e7ea",
-          "#fafafb"
+          "#b8bdc3",
+          "#dbdee1",
+          "#f5f6f7"
         ]
       },
-      "emp-sobre-azul-2": {
+      "sobre-azul-texto": {
         "role": "neutral",
         "displayName": "Blanco sobre Azul",
-        "canonical": "#b8bdc3",
+        "canonical": "rgba(255, 255, 255, 0.76)",
         "tonalRamp": [
           "#001328",
           "#1a2b3e",
           "#4c5a68",
           "#616d7a",
           "#8c959e",
-          "#ccd0d4",
-          "#e6e7ea",
-          "#fafafb"
+          "#b8bdc3",
+          "#dbdee1",
+          "#f5f6f7"
         ]
       },
-      "emp-linea-sobre-azul": {
+      "sobre-azul-tenue": {
         "role": "neutral",
-        "displayName": "Línea sobre Azul",
-        "canonical": "rgba(255, 255, 255, 0.14)",
+        "displayName": "Blanco Tenue sobre Azul",
+        "canonical": "rgba(255, 255, 255, 0.66)",
         "tonalRamp": [
           "#001328",
           "#1a2b3e",
           "#4c5a68",
           "#616d7a",
           "#8c959e",
-          "#ccd0d4",
-          "#e6e7ea",
-          "#fafafb"
+          "#b8bdc3",
+          "#dbdee1",
+          "#f5f6f7"
+        ]
+      },
+      "sobre-azul-velo": {
+        "role": "neutral",
+        "displayName": "Velo sobre Azul",
+        "canonical": "rgba(255, 255, 255, 0.08)",
+        "tonalRamp": [
+          "#001328",
+          "#1a2b3e",
+          "#4c5a68",
+          "#616d7a",
+          "#8c959e",
+          "#b8bdc3",
+          "#dbdee1",
+          "#f5f6f7"
+        ]
+      },
+      "sobre-azul-activo": {
+        "role": "neutral",
+        "displayName": "Activo sobre Azul",
+        "canonical": "rgba(255, 255, 255, 0.13)",
+        "tonalRamp": [
+          "#001328",
+          "#1a2b3e",
+          "#4c5a68",
+          "#616d7a",
+          "#8c959e",
+          "#b8bdc3",
+          "#dbdee1",
+          "#f5f6f7"
+        ]
+      },
+      "sobre-azul-cuenta": {
+        "role": "neutral",
+        "displayName": "Contador sobre Azul",
+        "canonical": "rgba(255, 255, 255, 0.16)",
+        "tonalRamp": [
+          "#001328",
+          "#1a2b3e",
+          "#4c5a68",
+          "#616d7a",
+          "#8c959e",
+          "#b8bdc3",
+          "#dbdee1",
+          "#f5f6f7"
         ]
       }
     },
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Título del panel azul de acceso; ancho máximo 22ch."
+        "purpose": "Lema del proceso de publicación en el registro; máximo 18ch."
+      },
+      "cifra": {
+        "displayName": "Cifra",
+        "purpose": "Valor de cada métrica de los paneles, en cifras tabulares."
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "Título de página (h1) en toda vista del sistema y en las páginas de error."
+        "purpose": "Título de página (h1) en las áreas de trabajo."
+      },
+      "headline-acceso": {
+        "displayName": "Headline acceso",
+        "purpose": "Título dentro de la tarjeta de acceso y de la pantalla de artículo aprobado."
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Títulos de sección, bloque, panel de acción, ajuste, envío y leyendas de grupo."
+        "purpose": "Títulos de sección, bloque, panel de acción, ajuste, envío, historial y leyendas de grupo."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Texto de interfaz, campos, botones (500), etiquetas (500), celdas."
+        "purpose": "Texto de interfaz, campos, botones (500), celdas."
       },
       "body-lectura": {
         "displayName": "Body lectura",
@@ -298,11 +396,11 @@
       },
       "body-meta": {
         "displayName": "Body meta",
-        "purpose": "Metadatos, ayudas, errores de validación (500), enlaces secundarios."
+        "purpose": "Etiquetas de campo y de métrica (500), enlaces del encabezado, metadatos, ayudas, errores."
       },
       "label": {
         "displayName": "Label",
-        "purpose": "Encabezados de tabla, insignias, grupos de navegación, etiquetas de filtro; nunca en mayúsculas."
+        "purpose": "Encabezados de tabla, insignias, notas de métrica, filtros; nunca en mayúsculas."
       },
       "label-cuenta": {
         "displayName": "Label cuenta",
@@ -311,34 +409,44 @@
     },
     "shadows": [
       {
+        "name": "emp-sombra-tarjeta",
+        "value": "0 0 0 1px rgba(0, 19, 40, 0.05), 0 1px 2px rgba(0, 19, 40, 0.04), 0 8px 24px -12px rgba(0, 19, 40, 0.12)",
+        "purpose": "Toda tarjeta en reposo: bandejas, marcos de tabla, paneles de acción, formularios, constancia, métricas."
+      },
+      {
+        "name": "emp-sombra-tarjeta-alta",
+        "value": "0 0 0 1px rgba(0, 19, 40, 0.06), 0 2px 4px rgba(0, 19, 40, 0.04), 0 16px 32px -14px rgba(0, 19, 40, 0.2)",
+        "purpose": "Hover de una métrica enlazada, con translateY(-2px)."
+      },
+      {
+        "name": "emp-sombra-elevada",
+        "value": "0 0 0 1px rgba(0, 19, 40, 0.05), 0 2px 4px rgba(0, 19, 40, 0.04), 0 16px 32px -16px rgba(0, 19, 40, 0.14), 0 40px 80px -40px rgba(0, 19, 40, 0.22)",
+        "purpose": "Tarjeta de acceso, menú de la cuenta y enlace «Saltar al contenido» (alias --emp-sombra-menu)."
+      },
+      {
+        "name": "sombra-encabezado",
+        "value": "inset 0 -1px 0 rgba(255, 255, 255, 0.06), 0 10px 30px -18px rgba(0, 19, 40, 0.7)",
+        "purpose": "Encabezado global azul sólido (sin backdrop-filter)."
+      },
+      {
         "name": "presion-primario",
-        "value": "0 1px 2px rgba(0, 19, 40, 0.12)",
-        "purpose": "Botón primario."
+        "value": "inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 1px 2px rgba(0, 19, 40, 0.16), 0 6px 16px -8px rgba(102, 67, 0, 0.55)",
+        "purpose": "Botón primario, con degradado linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,0) 60%); en hover la última capa pasa a 0 10px 22px -10px rgba(102, 67, 0, 0.6)."
       },
       {
         "name": "presion-secundario",
-        "value": "0 1px 2px rgba(0, 19, 40, 0.06)",
-        "purpose": "Botón secundario y enlace activo de la barra lateral (con anillo de 1px emp-n-150)."
+        "value": "0 1px 2px rgba(0, 19, 40, 0.05), inset 0 -1px 0 rgba(0, 19, 40, 0.03)",
+        "purpose": "Botón secundario."
       },
       {
         "name": "presion-campo",
-        "value": "0 1px 2px rgba(0, 19, 40, 0.04)",
-        "purpose": "Campos de texto y selectores."
-      },
-      {
-        "name": "emp-sombra-menu",
-        "value": "0 1px 2px rgba(0, 19, 40, 0.06), 0 12px 32px -12px rgba(0, 19, 40, 0.22)",
-        "purpose": "Capas flotantes; hoy, el enlace «Saltar al contenido»."
+        "value": "inset 0 1px 2px rgba(0, 19, 40, 0.04)",
+        "purpose": "Campos y selectores en reposo."
       },
       {
         "name": "emp-anillo",
-        "value": "0 0 0 3px rgba(102, 67, 0, 0.22)",
+        "value": "0 0 0 4px rgba(102, 67, 0, 0.14)",
         "purpose": "Anillo de foco de campos, casillas, paginación, botones y zona de archivo."
-      },
-      {
-        "name": "barra-translucida",
-        "value": "background: rgba(255, 255, 255, 0.92); backdrop-filter: saturate(1.4) blur(8px)",
-        "purpose": "Barras fijas (autor y barra móvil del administrador), con borde inferior emp-n-150."
       }
     ],
     "motion": [
@@ -349,13 +457,28 @@
       },
       {
         "name": "emp-rapido",
-        "value": "160ms",
+        "value": "180ms",
         "purpose": "Duración de toda transición de estado (color, fondo, borde, sombra, transform)."
       },
       {
         "name": "presion-boton",
         "value": "transform: scale(0.98)",
-        "purpose": "Botón presionado (:active)."
+        "purpose": "Botón presionado (:active); enlaces del encabezado 0.97, botón de menú 0.94."
+      },
+      {
+        "name": "levantar-metrica",
+        "value": "220ms; translateY(-2px) + emp-sombra-tarjeta-alta",
+        "purpose": "Hover de una métrica enlazada del administrador."
+      },
+      {
+        "name": "entrada-tarjeta-acceso",
+        "value": "opacity 420ms, transform 520ms desde translateY(8px) con @starting-style",
+        "purpose": "Aparición de la tarjeta de acceso."
+      },
+      {
+        "name": "entrada-menu-cuenta",
+        "value": "opacity 160ms, scale 200ms desde 0.96 con @starting-style; flecha rotate(180deg) en 200ms",
+        "purpose": "Apertura del menú de la cuenta."
       },
       {
         "name": "entrada-aviso",
@@ -401,33 +524,33 @@
       "name": "Botón primario",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "La acción principal de una zona; uno solo por zona de acción.",
+      "description": "La acción principal de una zona: café con degradado sutil, filo de luz y sombra cálida; uno solo por zona.",
       "html": "<button type=\"button\" class=\"ds-btn-primario\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill-rule=\"evenodd\" d=\"M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2\"/></svg> Publicar un curso</button>",
-      "css": ".ds-btn-primario { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.875rem; font-weight: 500; letter-spacing: -0.005em; line-height: 1.5; padding: 0.5rem 0.875rem; border-radius: 0.375rem; border: 1px solid transparent; cursor: pointer; transition: color var(--emp-rapido, 160ms) ease, background-color var(--emp-rapido, 160ms) ease, border-color var(--emp-rapido, 160ms) ease, box-shadow var(--emp-rapido, 160ms) ease, transform var(--emp-rapido, 160ms) var(--emp-ease-out, cubic-bezier(0.23, 1, 0.32, 1)); background: var(--emp-cafe, #664300); color: var(--emp-blanco, #ffffff); border-color: var(--emp-cafe, #664300); box-shadow: 0 1px 2px rgba(0, 19, 40, 0.12); } .ds-btn-primario:hover { background: var(--emp-cafe-hover, #573900); border-color: var(--emp-cafe-hover, #573900); } .ds-btn-primario:focus-visible { outline: none; box-shadow: var(--emp-anillo, 0 0 0 3px rgba(102, 67, 0, 0.22)); } .ds-btn-primario:active { background: var(--emp-cafe-hover, #573900); transform: scale(0.98); }"
+      "css": ".ds-btn-primario { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.875rem; font-weight: 500; letter-spacing: -0.005em; line-height: 1.5; padding: 0.5rem 0.875rem; border-radius: 0.625rem; border: 1px solid transparent; cursor: pointer; transition: color var(--emp-rapido, 180ms) ease, background-color var(--emp-rapido, 180ms) ease, border-color var(--emp-rapido, 180ms) ease, box-shadow var(--emp-rapido, 180ms) ease, transform var(--emp-rapido, 180ms) var(--emp-ease-out, cubic-bezier(0.23, 1, 0.32, 1)); background-color: var(--emp-cafe, #664300); background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 60%); color: var(--emp-blanco, #ffffff); border-color: var(--emp-cafe, #664300); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 1px 2px rgba(0, 19, 40, 0.16), 0 6px 16px -8px rgba(102, 67, 0, 0.55); } .ds-btn-primario:hover { background-color: var(--emp-cafe-hover, #573900); border-color: var(--emp-cafe-hover, #573900); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 1px 2px rgba(0, 19, 40, 0.16), 0 10px 22px -10px rgba(102, 67, 0, 0.6); } .ds-btn-primario:focus-visible { outline: none; box-shadow: var(--emp-anillo, 0 0 0 4px rgba(102, 67, 0, 0.14)); } .ds-btn-primario:active { background-color: var(--emp-cafe-hover, #573900); transform: scale(0.98); }"
     },
     {
       "name": "Botón secundario",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Toda acción que no es la principal: blanco con borde neutro y tinta azul.",
-      "html": "<button type=\"button\" class=\"ds-btn-secundario\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5\"/><path d=\"M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z\"/></svg> Descargar PDF</button>",
-      "css": ".ds-btn-secundario { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.875rem; font-weight: 500; letter-spacing: -0.005em; line-height: 1.5; padding: 0.5rem 0.875rem; border-radius: 0.375rem; border: 1px solid transparent; cursor: pointer; transition: color var(--emp-rapido, 160ms) ease, background-color var(--emp-rapido, 160ms) ease, border-color var(--emp-rapido, 160ms) ease, box-shadow var(--emp-rapido, 160ms) ease, transform var(--emp-rapido, 160ms) var(--emp-ease-out, cubic-bezier(0.23, 1, 0.32, 1)); background: var(--emp-blanco, #ffffff); color: var(--emp-azul, #001328); border-color: var(--emp-n-300, #ccd0d4); box-shadow: 0 1px 2px rgba(0, 19, 40, 0.06); } .ds-btn-secundario:hover { background: var(--emp-n-50, #f6f7f7); } .ds-btn-secundario:focus-visible { outline: none; box-shadow: var(--emp-anillo, 0 0 0 3px rgba(102, 67, 0, 0.22)); } .ds-btn-secundario:active { background: var(--emp-n-100, #edeef0); transform: scale(0.98); }"
+      "description": "Toda acción que no es la principal: blanco con borde cálido, tinta azul y sombra de un píxel.",
+      "html": "<button type=\"button\" class=\"ds-btn-secundario\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5\"/><path d=\"M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z\"/></svg> Descargar constancia</button>",
+      "css": ".ds-btn-secundario { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.875rem; font-weight: 500; letter-spacing: -0.005em; line-height: 1.5; padding: 0.5rem 0.875rem; border-radius: 0.625rem; border: 1px solid transparent; cursor: pointer; transition: color var(--emp-rapido, 180ms) ease, background-color var(--emp-rapido, 180ms) ease, border-color var(--emp-rapido, 180ms) ease, box-shadow var(--emp-rapido, 180ms) ease, transform var(--emp-rapido, 180ms) var(--emp-ease-out, cubic-bezier(0.23, 1, 0.32, 1)); background: var(--emp-blanco, #ffffff); color: var(--emp-azul, #001328); border-color: var(--emp-n-300, #dad2c2); box-shadow: 0 1px 2px rgba(0, 19, 40, 0.05), inset 0 -1px 0 rgba(0, 19, 40, 0.03); } .ds-btn-secundario:hover { background: var(--emp-n-25, #faf8f6); border-color: #cdc3b1; } .ds-btn-secundario:focus-visible { outline: none; box-shadow: var(--emp-anillo, 0 0 0 4px rgba(102, 67, 0, 0.14)); } .ds-btn-secundario:active { background: var(--emp-n-100, #f3f0eb); transform: scale(0.98); }"
     },
     {
       "name": "Botón quieto",
       "kind": "button",
       "refersTo": "button-quieto",
-      "description": "Acción discreta en filas (descargar, quitar): texto sin relleno que se tiñe de café en hover.",
+      "description": "Acción discreta en filas (PDF, quitar): texto sin relleno que se tiñe de café en hover.",
       "html": "<button type=\"button\" class=\"ds-btn-quieto\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5\"/><path d=\"M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z\"/></svg> PDF</button>",
-      "css": ".ds-btn-quieto { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.875rem; font-weight: 500; letter-spacing: -0.005em; line-height: 1.5; padding: 0.5rem 0.875rem; border-radius: 0.375rem; border: 1px solid transparent; cursor: pointer; transition: color var(--emp-rapido, 160ms) ease, background-color var(--emp-rapido, 160ms) ease, border-color var(--emp-rapido, 160ms) ease, box-shadow var(--emp-rapido, 160ms) ease, transform var(--emp-rapido, 160ms) var(--emp-ease-out, cubic-bezier(0.23, 1, 0.32, 1)); font-size: 0.8125rem; padding: 0.3125rem 0.625rem; background: transparent; color: var(--emp-n-700, #4c5a68); } .ds-btn-quieto:hover { background: var(--emp-cafe-50, #f6f4f0); color: var(--emp-cafe, #664300); } .ds-btn-quieto:focus-visible { outline: none; box-shadow: var(--emp-anillo, 0 0 0 3px rgba(102, 67, 0, 0.22)); } .ds-btn-quieto:active { background: var(--emp-cafe-100, #f0ece6); color: var(--emp-cafe, #664300); transform: scale(0.98); }"
+      "css": ".ds-btn-quieto { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.875rem; font-weight: 500; letter-spacing: -0.005em; line-height: 1.5; padding: 0.5rem 0.875rem; border-radius: 0.625rem; border: 1px solid transparent; cursor: pointer; transition: color var(--emp-rapido, 180ms) ease, background-color var(--emp-rapido, 180ms) ease, border-color var(--emp-rapido, 180ms) ease, box-shadow var(--emp-rapido, 180ms) ease, transform var(--emp-rapido, 180ms) var(--emp-ease-out, cubic-bezier(0.23, 1, 0.32, 1)); font-size: 0.8125rem; padding: 0.3125rem 0.625rem; background: transparent; color: var(--emp-n-700, #4c5a68); } .ds-btn-quieto:hover { background: var(--emp-cafe-50, #f6f4f0); color: var(--emp-cafe, #664300); } .ds-btn-quieto:focus-visible { outline: none; box-shadow: var(--emp-anillo, 0 0 0 4px rgba(102, 67, 0, 0.14)); } .ds-btn-quieto:active { background: var(--emp-cafe-100, #f0ece6); color: var(--emp-cafe, #664300); transform: scale(0.98); }"
     },
     {
       "name": "Campo de texto",
       "kind": "input",
       "refersTo": "input",
-      "description": "Etiqueta arriba, borde neutro, foco café con anillo; el error tiñe de café papel y nombra el problema.",
+      "description": "Fondo tenue que se aclara al enfocar, borde café y anillo de 4px; el error tiñe de café papel y nombra el problema.",
       "html": "<div class=\"ds-campo\"><label class=\"ds-campo__etiqueta\" for=\"ds-c1\">Correo o nombre de usuario</label><input id=\"ds-c1\" class=\"ds-campo__control\" type=\"text\" placeholder=\"nombre@unam.mx\"></div><div class=\"ds-campo\"><label class=\"ds-campo__etiqueta\" for=\"ds-c2\">Título <span class=\"ds-campo__opcional\">(opcional)</span></label><input id=\"ds-c2\" class=\"ds-campo__control ds-campo__control--error\" type=\"text\" value=\"Emprendimiento\" aria-invalid=\"true\"><div class=\"ds-campo__error\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm0 3.25a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0V5A.75.75 0 0 1 8 4.25Zm0 7.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z\"/></svg>El título debe tener al menos 20 caracteres.</div></div>",
-      "css": ".ds-campo { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; font-size: 0.875rem; color: var(--emp-azul, #001328); margin-bottom: 1rem; max-width: 22rem; } .ds-campo__etiqueta { display: block; font-weight: 500; margin-bottom: 0.375rem; } .ds-campo__opcional { color: var(--emp-n-600, #616d7a); font-weight: 400; } .ds-campo__control { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: block; width: 100%; box-sizing: border-box; min-height: 2.375rem; padding: 0.5rem 0.75rem; font-size: 0.875rem; color: var(--emp-azul, #001328); background: var(--emp-blanco, #ffffff); border: 1px solid var(--emp-n-300, #ccd0d4); border-radius: 0.375rem; box-shadow: 0 1px 2px rgba(0, 19, 40, 0.04); caret-color: var(--emp-cafe, #664300); transition: border-color var(--emp-rapido, 160ms) ease, box-shadow var(--emp-rapido, 160ms) ease; } .ds-campo__control::placeholder { color: var(--emp-n-600, #616d7a); } .ds-campo__control:hover:not(:focus) { border-color: var(--emp-n-500, #8c959e); } .ds-campo__control:focus, .ds-campo__control:focus-visible { outline: none; border-color: var(--emp-cafe, #664300); box-shadow: var(--emp-anillo, 0 0 0 3px rgba(102, 67, 0, 0.22)); } .ds-campo__control--error { border-color: var(--emp-cafe, #664300); background: var(--emp-cafe-50, #f6f4f0); box-shadow: inset 0 0 0 1px var(--emp-cafe, #664300); } .ds-campo__control--error:hover:not(:focus) { border-color: var(--emp-cafe, #664300); } .ds-campo__control--error:focus { background: var(--emp-blanco, #ffffff); box-shadow: inset 0 0 0 1px var(--emp-cafe, #664300), var(--emp-anillo, 0 0 0 3px rgba(102, 67, 0, 0.22)); } .ds-campo__error { display: flex; align-items: center; gap: 0.375em; margin-top: 0.375rem; font-size: 0.8125rem; font-weight: 500; color: var(--emp-cafe, #664300); } .ds-campo__error svg { width: 0.875em; height: 0.875em; flex: none; }"
+      "css": ".ds-campo { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; font-size: 0.875rem; color: var(--emp-azul, #001328); margin-bottom: 1rem; max-width: 22rem; } .ds-campo__etiqueta { display: block; font-size: 0.8125rem; font-weight: 500; margin-bottom: 0.375rem; } .ds-campo__opcional { color: var(--emp-n-600, #616d7a); font-weight: 400; } .ds-campo__control { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: block; width: 100%; box-sizing: border-box; min-height: 2.5rem; padding: 0.5rem 0.75rem; font-size: 0.875rem; color: var(--emp-azul, #001328); background-color: var(--emp-n-25, #faf8f6); border: 1px solid #d6cdbd; border-radius: 0.625rem; box-shadow: inset 0 1px 2px rgba(0, 19, 40, 0.04); caret-color: var(--emp-cafe, #664300); transition: border-color var(--emp-rapido, 180ms) ease, box-shadow var(--emp-rapido, 180ms) ease, background-color var(--emp-rapido, 180ms) ease; } .ds-campo__control::placeholder { color: var(--emp-n-600, #616d7a); } .ds-campo__control:hover:not(:focus) { border-color: #c4b9a5; background-color: var(--emp-blanco, #ffffff); } .ds-campo__control:focus, .ds-campo__control:focus-visible { outline: none; border-color: var(--emp-cafe, #664300); background-color: var(--emp-blanco, #ffffff); box-shadow: var(--emp-anillo, 0 0 0 4px rgba(102, 67, 0, 0.14)); } .ds-campo__control--error { border-color: var(--emp-cafe, #664300); background-color: var(--emp-cafe-50, #f6f4f0); box-shadow: inset 0 0 0 1px var(--emp-cafe, #664300); } .ds-campo__control--error:hover:not(:focus) { border-color: var(--emp-cafe, #664300); background-color: var(--emp-cafe-50, #f6f4f0); } .ds-campo__control--error:focus { background-color: var(--emp-blanco, #ffffff); box-shadow: inset 0 0 0 1px var(--emp-cafe, #664300), var(--emp-anillo, 0 0 0 4px rgba(102, 67, 0, 0.14)); } .ds-campo__error { display: flex; align-items: center; gap: 0.375em; margin-top: 0.375rem; font-size: 0.8125rem; font-weight: 500; color: var(--emp-cafe, #664300); } .ds-campo__error svg { width: 0.875em; height: 0.875em; flex: none; }"
     },
     {
       "name": "Insignias de estado",
@@ -435,53 +558,75 @@
       "refersTo": "insignia-revision",
       "description": "Estado como píldora con punto y texto; el punto hueco distingue «Rechazado» sin color.",
       "html": "<span class=\"ds-insignia ds-insignia--revision\">En revisión</span> <span class=\"ds-insignia ds-insignia--aprobado\">Aprobado</span> <span class=\"ds-insignia ds-insignia--rechazado\">Rechazado</span>",
-      "css": ".ds-insignia { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.1875rem 0.5rem 0.1875rem 0.4375rem; font-size: 0.75rem; font-weight: 500; line-height: 1.25; white-space: nowrap; border-radius: 999px; border: 1px solid transparent; } .ds-insignia::before { content: ''; width: 0.4375rem; height: 0.4375rem; border-radius: 50%; background: currentColor; flex: none; } .ds-insignia--revision { color: var(--emp-cafe, #664300); background: var(--emp-cafe-50, #f6f4f0); border-color: var(--emp-cafe-200, #e7e1d6); } .ds-insignia--aprobado { color: var(--emp-azul, #001328); background: var(--emp-n-100, #edeef0); border-color: var(--emp-n-200, #dbdee1); } .ds-insignia--rechazado { color: var(--emp-n-700, #4c5a68); background: var(--emp-blanco, #ffffff); border-color: var(--emp-n-300, #ccd0d4); } .ds-insignia--rechazado::before { background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }"
+      "css": ".ds-insignia { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.1875rem 0.5rem 0.1875rem 0.4375rem; font-size: 0.75rem; font-weight: 500; line-height: 1.25; white-space: nowrap; border-radius: 999px; border: 1px solid transparent; } .ds-insignia::before { content: ''; width: 0.4375rem; height: 0.4375rem; border-radius: 50%; background: currentColor; flex: none; } .ds-insignia--revision { color: var(--emp-cafe, #664300); background: var(--emp-cafe-50, #f6f4f0); border-color: var(--emp-cafe-200, #e7e1d6); } .ds-insignia--aprobado { color: var(--emp-azul, #001328); background: rgba(0, 19, 40, 0.06); border-color: rgba(0, 19, 40, 0.14); } .ds-insignia--rechazado { color: var(--emp-n-700, #4c5a68); background: var(--emp-blanco, #ffffff); border-color: var(--emp-n-300, #dad2c2); } .ds-insignia--rechazado::before { background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }"
     },
     {
-      "name": "Navegación lateral con contadores",
+      "name": "Encabezado global con secciones",
       "kind": "nav",
-      "refersTo": "nav-lateral-enlace",
-      "description": "Barra lateral del administrador: grupos, enlaces con ícono y contador de pendientes; el activo es una tarjeta blanca con ícono y contador café.",
-      "html": "<nav class=\"ds-lat\" aria-label=\"Secciones\"><p class=\"ds-lat__grupo\">Trabajo editorial</p><a class=\"ds-lat__enlace\" href=\"#\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z\"/></svg><span class=\"ds-lat__texto\">Pendientes</span></a><a class=\"ds-lat__enlace is-activo\" href=\"#\" aria-current=\"page\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5\"/><path d=\"M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z\"/></svg><span class=\"ds-lat__texto\">Artículos</span><span class=\"ds-cuenta\">4</span></a><a class=\"ds-lat__enlace\" href=\"#\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5\"/><path d=\"M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z\"/></svg><span class=\"ds-lat__texto\">Autores</span><span class=\"ds-cuenta\">2</span></a></nav>",
-      "css": ".ds-lat { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; width: 15.5rem; padding: 0.75rem; background: var(--emp-n-25, #fafafb); border-right: 1px solid var(--emp-n-150, #e6e7ea); font-size: 0.875rem; } .ds-lat__grupo { margin: 0 0 0.375rem; padding: 0 0.5rem; font-size: 0.75rem; font-weight: 500; color: var(--emp-n-600, #616d7a); } .ds-lat__enlace { display: flex; align-items: center; gap: 0.625rem; min-height: 2.125rem; padding: 0.375rem 0.5rem; margin-bottom: 0.125rem; border-radius: 0.375rem; color: var(--emp-n-700, #4c5a68); font-weight: 500; text-decoration: none; transition: background-color var(--emp-rapido, 160ms) ease, color var(--emp-rapido, 160ms) ease; } .ds-lat__enlace svg { flex: none; color: var(--emp-n-600, #616d7a); } .ds-lat__enlace:hover { background: var(--emp-n-100, #edeef0); color: var(--emp-azul, #001328); } .ds-lat__enlace:focus-visible { outline: 2px solid var(--emp-cafe, #664300); outline-offset: 2px; } .ds-lat__enlace.is-activo { background: var(--emp-blanco, #ffffff); color: var(--emp-azul, #001328); box-shadow: 0 0 0 1px var(--emp-n-150, #e6e7ea), 0 1px 2px rgba(0, 19, 40, 0.06); } .ds-lat__enlace.is-activo svg { color: var(--emp-cafe, #664300); } .ds-lat__texto { flex: 1; min-width: 0; } .ds-cuenta { display: inline-flex; align-items: center; justify-content: center; min-width: 1.375rem; height: 1.25rem; padding: 0 0.375rem; border-radius: 999px; background: var(--emp-n-150, #e6e7ea); color: var(--emp-azul, #001328); font-size: 0.6875rem; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; } .ds-lat__enlace.is-activo .ds-cuenta { background: var(--emp-cafe, #664300); color: var(--emp-blanco, #ffffff); }"
+      "refersTo": "cabecera",
+      "description": "Azul sólido: logotipos UNAM y FCA a la izquierda, secciones en píldoras con contadores y menú de la cuenta a la derecha.",
+      "html": "<header class=\"ds-cab\"><a class=\"ds-cab__marca\" href=\"#\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"34\" height=\"38\" viewBox=\"0 0 34 38\" aria-hidden=\"true\"><rect x=\"1\" y=\"1\" width=\"32\" height=\"36\" rx=\"3\" fill=\"none\" stroke=\"#ffffff\" stroke-width=\"1.5\"/></svg><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"34\" height=\"38\" viewBox=\"0 0 34 38\" aria-hidden=\"true\"><rect x=\"1\" y=\"1\" width=\"32\" height=\"36\" rx=\"3\" fill=\"none\" stroke=\"#ffffff\" stroke-width=\"1.5\"/></svg><span class=\"ds-cab__nombre\"><span class=\"ds-cab__revista\">Revista EmprendeUNAM</span><span class=\"ds-cab__leyenda\">Facultad de Contaduría y Administración</span></span></a><nav class=\"ds-cab__nav\" aria-label=\"Secciones\"><a class=\"ds-cab__enlace\" href=\"#\">Pendientes</a><a class=\"ds-cab__enlace is-activo\" href=\"#\" aria-current=\"page\">Artículos <span class=\"ds-cab__cuenta\">4</span></a><a class=\"ds-cab__enlace\" href=\"#\">Autores <span class=\"ds-cab__cuenta\">2</span></a><button type=\"button\" class=\"ds-cab__cuenta-boton\" aria-label=\"Menú de la cuenta\"><span class=\"ds-cab__avatar\">A</span></button></nav></header>",
+      "css": ".ds-cab { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4.5rem; padding: 0.625rem 1.5rem; color: var(--emp-blanco, #ffffff); background-color: var(--emp-azul, #001328); box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.06), 0 10px 30px -18px rgba(0, 19, 40, 0.7); } .ds-cab__marca { display: flex; align-items: center; gap: 0.875rem; color: inherit; text-decoration: none; } .ds-cab__nombre { display: flex; flex-direction: column; gap: 0.125rem; padding-left: 0.875rem; border-left: 1px solid rgba(255, 255, 255, 0.18); line-height: 1.2; white-space: nowrap; } .ds-cab__revista { font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.015em; } .ds-cab__leyenda { font-size: 0.6875rem; letter-spacing: 0.01em; color: rgba(255, 255, 255, 0.66); } .ds-cab__nav { display: flex; align-items: center; gap: 0.125rem; } .ds-cab__enlace { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.25rem; padding: 0 0.75rem; border-radius: 999px; font-size: 0.8125rem; font-weight: 500; color: rgba(255, 255, 255, 0.76); text-decoration: none; white-space: nowrap; transition: background-color var(--emp-rapido, 180ms) ease, color var(--emp-rapido, 180ms) ease, transform var(--emp-rapido, 180ms) var(--emp-ease-out, cubic-bezier(0.23, 1, 0.32, 1)); } .ds-cab__enlace:hover { color: #ffffff; background-color: rgba(255, 255, 255, 0.08); } .ds-cab__enlace:active { transform: scale(0.97); } .ds-cab__enlace:focus-visible, .ds-cab__cuenta-boton:focus-visible { outline: 2px solid #ffffff; outline-offset: 2px; } .ds-cab__enlace.is-activo { color: #ffffff; background-color: rgba(255, 255, 255, 0.13); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08); } .ds-cab__cuenta { display: inline-flex; align-items: center; justify-content: center; min-width: 1.375rem; height: 1.25rem; padding: 0 0.375rem; border-radius: 999px; background-color: rgba(255, 255, 255, 0.16); color: #ffffff; font-size: 0.6875rem; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; } .ds-cab__enlace.is-activo .ds-cab__cuenta { background-color: #ffffff; color: var(--emp-azul, #001328); } .ds-cab__cuenta-boton { display: inline-flex; align-items: center; height: 2.5rem; margin-left: 0.5rem; padding: 0 0.25rem; border: 0; border-radius: 999px; background: transparent; cursor: pointer; transition: background-color var(--emp-rapido, 180ms) ease; } .ds-cab__cuenta-boton:hover { background-color: rgba(255, 255, 255, 0.1); } .ds-cab__avatar { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background-color: rgba(255, 255, 255, 0.14); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22); color: #ffffff; font-size: 0.8125rem; font-weight: 600; }"
+    },
+    {
+      "name": "Métricas del panel",
+      "kind": "card",
+      "refersTo": "metrica",
+      "description": "Tarjeta de conteo: etiqueta con ícono café o punto de estado, cifra tabular grande y nota; enlazada, se levanta 2px en hover.",
+      "html": "<ul class=\"ds-metricas\"><li><a class=\"ds-metrica\" href=\"#\"><span class=\"ds-metrica__etiqueta\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z\"/></svg> Artículos en revisión</span><span class=\"ds-metrica__valor\">4</span><span class=\"ds-metrica__nota\">Esperan dictamen</span></a></li><li><div class=\"ds-metrica\"><span class=\"ds-metrica__etiqueta\"><span class=\"ds-punto ds-punto--aprobado\" aria-hidden=\"true\"></span> Aprobados</span><span class=\"ds-metrica__valor\">2</span><span class=\"ds-metrica__nota\">Con constancia</span></div></li></ul>",
+      "css": ".ds-metricas { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: grid; grid-template-columns: repeat(2, minmax(0, 13rem)); gap: 1rem; list-style: none; margin: 0; padding: 1.5rem; background: var(--emp-marfil, #f1eee8); } .ds-metrica { display: flex; flex-direction: column; height: 100%; box-sizing: border-box; padding: 1.125rem 1.25rem; border-radius: 1rem; background-color: var(--emp-blanco, #ffffff); box-shadow: var(--emp-sombra-tarjeta, 0 0 0 1px rgba(0, 19, 40, 0.05), 0 1px 2px rgba(0, 19, 40, 0.04), 0 8px 24px -12px rgba(0, 19, 40, 0.12)); color: var(--emp-azul, #001328); text-decoration: none; } a.ds-metrica { transition: box-shadow 220ms ease, transform 220ms var(--emp-ease-out, cubic-bezier(0.23, 1, 0.32, 1)); } a.ds-metrica:hover { box-shadow: var(--emp-sombra-tarjeta-alta, 0 0 0 1px rgba(0, 19, 40, 0.06), 0 2px 4px rgba(0, 19, 40, 0.04), 0 16px 32px -14px rgba(0, 19, 40, 0.2)); transform: translateY(-2px); } a.ds-metrica:active { transform: translateY(0) scale(0.99); } a.ds-metrica:focus-visible { outline: 2px solid var(--emp-cafe, #664300); outline-offset: 2px; } .ds-metrica__etiqueta { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; font-weight: 500; color: var(--emp-n-600, #616d7a); } .ds-metrica__etiqueta svg { color: var(--emp-cafe, #664300); flex: none; } .ds-metrica__valor { margin: 0.75rem 0 0.25rem; font-size: 2.125rem; font-weight: 600; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; } .ds-metrica__nota { font-size: 0.75rem; color: var(--emp-n-600, #616d7a); } .ds-punto { flex: none; width: 0.5rem; height: 0.5rem; border-radius: 50%; } .ds-punto--aprobado { background-color: var(--emp-azul, #001328); }"
     },
     {
       "name": "Bandeja de pendientes",
       "kind": "card",
-      "refersTo": "contenedor",
-      "description": "Contenedor de 12px con borde de 1px, cabecera con título y contador, y filas enlazadas con fecha tabular; lo más antiguo primero.",
-      "html": "<section class=\"ds-bandeja\"><header class=\"ds-bandeja__cabeza\"><h2 class=\"ds-bandeja__titulo\">Artículos en revisión <span class=\"ds-bandeja__cuenta\">2</span></h2><a class=\"ds-bandeja__todos\" href=\"#\">Ver todos</a></header><ul class=\"ds-bandeja__lista\"><li><a class=\"ds-fila\" href=\"#\"><span class=\"ds-fila__principal\"><span class=\"ds-fila__titulo\">Ecosistemas de emprendimiento universitario en México</span><span class=\"ds-fila__meta\">Ana López Ruiz · Innovación</span></span><span class=\"ds-fila__lado\"><time>hace 6 días</time><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill-rule=\"evenodd\" d=\"M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708\"/></svg></span></a></li><li><a class=\"ds-fila\" href=\"#\"><span class=\"ds-fila__principal\"><span class=\"ds-fila__titulo\">Financiamiento semilla para pymes de base tecnológica</span><span class=\"ds-fila__meta\">Luis Méndez · Finanzas</span></span><span class=\"ds-fila__lado\"><time>hace 2 días</time><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill-rule=\"evenodd\" d=\"M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708\"/></svg></span></a></li></ul></section>",
-      "css": ".ds-bandeja { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; max-width: 36rem; font-size: 0.875rem; color: var(--emp-azul, #001328); background: var(--emp-blanco, #ffffff); border: 1px solid var(--emp-n-150, #e6e7ea); border-radius: 0.75rem; overflow: hidden; } .ds-bandeja__cabeza { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.875rem 1.125rem; border-bottom: 1px solid var(--emp-n-150, #e6e7ea); } .ds-bandeja__titulo { margin: 0; font-size: 0.875rem; font-weight: 600; letter-spacing: -0.01em; } .ds-bandeja__cuenta { display: inline-flex; align-items: center; justify-content: center; min-width: 1.375rem; height: 1.25rem; padding: 0 0.375rem; margin-left: 0.25rem; border-radius: 999px; background: var(--emp-n-100, #edeef0); color: var(--emp-n-700, #4c5a68); font-size: 0.6875rem; font-weight: 600; font-variant-numeric: tabular-nums; vertical-align: 0.125em; } .ds-bandeja__todos { font-size: 0.8125rem; font-weight: 500; color: var(--emp-cafe, #664300); text-decoration: none; text-underline-offset: 0.2em; } .ds-bandeja__todos:hover { color: var(--emp-cafe-hover, #573900); text-decoration: underline; } .ds-bandeja__lista { list-style: none; margin: 0; padding: 0; } .ds-bandeja__lista > li + li { border-top: 1px solid var(--emp-n-100, #edeef0); } .ds-fila { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1.125rem; color: var(--emp-azul, #001328); text-decoration: none; transition: background-color var(--emp-rapido, 160ms) ease; } .ds-fila:hover { background: var(--emp-n-25, #fafafb); } .ds-fila:hover .ds-fila__titulo { color: var(--emp-cafe, #664300); } .ds-fila:focus-visible { outline: 2px solid var(--emp-cafe, #664300); outline-offset: -2px; } .ds-fila__principal { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.125rem; } .ds-fila__titulo { font-weight: 500; transition: color var(--emp-rapido, 160ms) ease; } .ds-fila__meta { font-size: 0.8125rem; color: var(--emp-n-600, #616d7a); } .ds-fila__lado { flex: none; display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.8125rem; color: var(--emp-n-600, #616d7a); font-variant-numeric: tabular-nums; }"
+      "refersTo": "tarjeta",
+      "description": "Tarjeta blanca de 16px sin borde sobre marfil, con sombra en capas, cabecera con título y contador, y filas enlazadas con fecha tabular.",
+      "html": "<div class=\"ds-fondo\"><section class=\"ds-bandeja\"><header class=\"ds-bandeja__cabeza\"><h2 class=\"ds-bandeja__titulo\">Artículos en revisión <span class=\"ds-bandeja__cuenta\">2</span></h2><a class=\"ds-bandeja__todos\" href=\"#\">Ver todos</a></header><ul class=\"ds-bandeja__lista\"><li><a class=\"ds-fila\" href=\"#\"><span class=\"ds-fila__principal\"><span class=\"ds-fila__titulo\">Ecosistemas de emprendimiento universitario en México</span><span class=\"ds-fila__meta\">Ana López Ruiz · Innovación</span></span><span class=\"ds-fila__lado\"><time>hace 6 días</time><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill-rule=\"evenodd\" d=\"M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708\"/></svg></span></a></li><li><a class=\"ds-fila\" href=\"#\"><span class=\"ds-fila__principal\"><span class=\"ds-fila__titulo\">Financiamiento semilla para pymes de base tecnológica</span><span class=\"ds-fila__meta\">Luis Méndez · Finanzas</span></span><span class=\"ds-fila__lado\"><time>hace 2 días</time><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill-rule=\"evenodd\" d=\"M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708\"/></svg></span></a></li></ul></section></div>",
+      "css": ".ds-fondo { padding: 1.5rem; background: var(--emp-marfil, #f1eee8); } .ds-bandeja { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; max-width: 36rem; font-size: 0.875rem; color: var(--emp-azul, #001328); background: var(--emp-blanco, #ffffff); border-radius: 1rem; box-shadow: var(--emp-sombra-tarjeta, 0 0 0 1px rgba(0, 19, 40, 0.05), 0 1px 2px rgba(0, 19, 40, 0.04), 0 8px 24px -12px rgba(0, 19, 40, 0.12)); overflow: hidden; } .ds-bandeja__cabeza { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--emp-n-150, #ede8e0); } .ds-bandeja__titulo { margin: 0; font-size: 0.875rem; font-weight: 600; letter-spacing: -0.01em; } .ds-bandeja__cuenta { display: inline-flex; align-items: center; justify-content: center; min-width: 1.375rem; height: 1.25rem; padding: 0 0.375rem; margin-left: 0.25rem; border-radius: 999px; background: var(--emp-n-100, #f3f0eb); color: var(--emp-n-700, #4c5a68); font-size: 0.6875rem; font-weight: 600; font-variant-numeric: tabular-nums; vertical-align: 0.125em; } .ds-bandeja__todos { font-size: 0.8125rem; font-weight: 500; color: var(--emp-cafe, #664300); text-decoration: none; text-underline-offset: 0.2em; } .ds-bandeja__todos:hover { color: var(--emp-cafe-hover, #573900); text-decoration: underline; } .ds-bandeja__lista { list-style: none; margin: 0; padding: 0; } .ds-bandeja__lista > li + li { border-top: 1px solid var(--emp-n-100, #f3f0eb); } .ds-fila { display: flex; align-items: center; gap: 1rem; padding: 0.875rem 1.25rem; color: var(--emp-azul, #001328); text-decoration: none; transition: background-color var(--emp-rapido, 180ms) ease; } .ds-fila:hover { background: var(--emp-n-25, #faf8f6); } .ds-fila:hover .ds-fila__titulo { color: var(--emp-cafe, #664300); } .ds-fila:focus-visible { outline: 2px solid var(--emp-cafe, #664300); outline-offset: -2px; } .ds-fila__principal { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.125rem; } .ds-fila__titulo { font-weight: 500; transition: color var(--emp-rapido, 180ms) ease; } .ds-fila__meta { font-size: 0.8125rem; color: var(--emp-n-600, #616d7a); } .ds-fila__lado { flex: none; display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.8125rem; color: var(--emp-n-600, #616d7a); font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Tarjeta de acceso",
+      "kind": "custom",
+      "refersTo": "tarjeta-acceso",
+      "description": "Formulario de inicio de sesión en una tarjeta blanca de 20px con sombra elevada, centrada sobre el marfil con halos tenues.",
+      "html": "<div class=\"ds-acceso\"><div class=\"ds-tarjeta-acceso\"><h1 class=\"ds-tarjeta-acceso__titulo\">Inicia sesión</h1><p class=\"ds-tarjeta-acceso__sub\">Entra a tu panel de autor o de administración.</p><label class=\"ds-tarjeta-acceso__etiqueta\" for=\"ds-a1\">Correo o nombre de usuario</label><input id=\"ds-a1\" class=\"ds-tarjeta-acceso__campo\" type=\"text\"><button type=\"button\" class=\"ds-tarjeta-acceso__boton\">Entrar</button></div></div>",
+      "css": ".ds-acceso { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: grid; place-items: center; padding: 2.5rem 1rem; background-color: var(--emp-marfil, #f1eee8); background-image: radial-gradient(64rem 28rem at 50% -6rem, rgba(102, 67, 0, 0.09), transparent 70%), radial-gradient(40rem 30rem at 100% 100%, rgba(0, 19, 40, 0.05), transparent 70%); color: var(--emp-azul, #001328); } .ds-tarjeta-acceso { width: 100%; max-width: 27rem; box-sizing: border-box; padding: 2.5rem 2.5rem 2.25rem; border-radius: 1.25rem; background: var(--emp-blanco, #ffffff); box-shadow: var(--emp-sombra-elevada, 0 0 0 1px rgba(0, 19, 40, 0.05), 0 2px 4px rgba(0, 19, 40, 0.04), 0 16px 32px -16px rgba(0, 19, 40, 0.14), 0 40px 80px -40px rgba(0, 19, 40, 0.22)); } .ds-tarjeta-acceso__titulo { margin: 0; font-size: 1.625rem; font-weight: 600; line-height: 1.25; letter-spacing: -0.03em; } .ds-tarjeta-acceso__sub { margin: 0.375rem 0 1.75rem; font-size: 0.875rem; color: var(--emp-n-600, #616d7a); } .ds-tarjeta-acceso__etiqueta { display: block; margin-bottom: 0.375rem; font-size: 0.8125rem; font-weight: 500; } .ds-tarjeta-acceso__campo { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: block; width: 100%; box-sizing: border-box; min-height: 2.75rem; padding: 0.5rem 0.75rem; font-size: 0.9375rem; color: var(--emp-azul, #001328); background: var(--emp-n-25, #faf8f6); border: 1px solid #d6cdbd; border-radius: 0.625rem; box-shadow: inset 0 1px 2px rgba(0, 19, 40, 0.04); transition: border-color var(--emp-rapido, 180ms) ease, box-shadow var(--emp-rapido, 180ms) ease, background-color var(--emp-rapido, 180ms) ease; } .ds-tarjeta-acceso__campo:focus { outline: none; border-color: var(--emp-cafe, #664300); background: var(--emp-blanco, #ffffff); box-shadow: var(--emp-anillo, 0 0 0 4px rgba(102, 67, 0, 0.14)); } .ds-tarjeta-acceso__boton { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: block; width: 100%; min-height: 3rem; margin-top: 1.5rem; border: 1px solid var(--emp-cafe, #664300); border-radius: 0.75rem; font-size: 0.9375rem; font-weight: 600; color: #ffffff; background-color: var(--emp-cafe, #664300); background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 60%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 1px 2px rgba(0, 19, 40, 0.16), 0 6px 16px -8px rgba(102, 67, 0, 0.55); cursor: pointer; transition: background-color var(--emp-rapido, 180ms) ease, box-shadow var(--emp-rapido, 180ms) ease, transform var(--emp-rapido, 180ms) var(--emp-ease-out, cubic-bezier(0.23, 1, 0.32, 1)); } .ds-tarjeta-acceso__boton:hover { background-color: var(--emp-cafe-hover, #573900); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 1px 2px rgba(0, 19, 40, 0.16), 0 10px 22px -10px rgba(102, 67, 0, 0.6); } .ds-tarjeta-acceso__boton:focus-visible { outline: none; box-shadow: var(--emp-anillo, 0 0 0 4px rgba(102, 67, 0, 0.14)); } .ds-tarjeta-acceso__boton:active { transform: scale(0.98); }"
     },
     {
       "name": "Aviso",
       "kind": "custom",
       "refersTo": "aviso",
-      "description": "Mensaje de la sesión o de validación: caja de 8px con ícono SVG; neutro para éxito, café papel para atención y error.",
+      "description": "Mensaje de la sesión o de validación: caja de 8px con ícono SVG; neutro cálido para éxito, café papel para atención y error.",
       "html": "<div class=\"ds-aviso ds-aviso--atencion\" role=\"alert\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm0 3.25a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0V5A.75.75 0 0 1 8 4.25Zm0 7.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z\"/></svg><span class=\"ds-aviso__texto\">Revisa los 2 campos marcados.</span></div>",
-      "css": ".ds-aviso { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: flex; gap: 0.625rem; align-items: flex-start; max-width: 28rem; padding: 0.75rem 0.875rem; font-size: 0.875rem; color: var(--emp-azul, #001328); background: var(--emp-n-50, #f6f7f7); border: 1px solid var(--emp-n-200, #dbdee1); border-radius: 0.5rem; } .ds-aviso svg { flex: none; margin-top: 0.125rem; } .ds-aviso--atencion { color: var(--emp-cafe, #664300); background: var(--emp-cafe-50, #f6f4f0); border-color: var(--emp-cafe-200, #e7e1d6); } .ds-aviso__texto { flex: 1; color: var(--emp-azul, #001328); }"
+      "css": ".ds-aviso { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; display: flex; gap: 0.625rem; align-items: flex-start; max-width: 28rem; padding: 0.75rem 0.875rem; font-size: 0.875rem; color: var(--emp-azul, #001328); background: var(--emp-n-50, #f7f6f2); border: 1px solid var(--emp-n-200, #e5dfd4); border-radius: 0.5rem; } .ds-aviso svg { flex: none; margin-top: 0.125rem; } .ds-aviso--atencion { color: var(--emp-cafe, #664300); background: var(--emp-cafe-50, #f6f4f0); border-color: var(--emp-cafe-200, #e7e1d6); } .ds-aviso__texto { flex: 1; color: var(--emp-azul, #001328); }"
     }
   ],
   "narrative": {
-    "northStar": "La mesa de redacción ordenada",
-    "overview": "El sistema es un panel de trabajo sobrio y preciso: un escritorio editorial limpio donde lo que espera acción está arriba y contado, y todo lo demás guarda silencio. La dirección es el estándar de la categoría ejecutado con el acabado de Linear, Stripe Dashboard y Vercel: retícula alineada, escala tipográfica corta y real, bordes de un píxel, estados claros y movimiento mínimo. No hay mundo temático ni guiños decorativos; la seriedad institucional de la UNAM se transmite con orden, no con ornamento.\n\nLa densidad es de herramienta de uso diario: cuerpo de 14px, filas de 12px de alto de relleno, contenedores con borde fino sobre fondo blanco. El color trabaja por exclusión: la tinta es azul, los neutros salen del azul mezclado con blanco y el café aparece solo donde algo pide acción o atención. La única superficie azul grande es el panel de las páginas de acceso, que muestra el proceso de publicación y una constancia de ejemplo.\n\nRechazos confirmados por la dirección: la plantilla de Bootstrap con barra de navegación azul pesada, los títulos serif decorativos y las filas de tarjetas de cifra iguales.\n\nEl movimiento es casi invisible: transiciones de 160ms con salida exponencial, botones que ceden a escala 0.98 al presionarse, avisos que entran desde 4px arriba. Hay un solo momento con movimiento propio: la pantalla de artículo aprobado, donde el sello y la constancia aparecen una vez. Todo se apaga con `prefers-reduced-motion`.",
+    "northStar": "La sala editorial cálida",
+    "overview": "El sistema es un área de trabajo moderna, cálida y estrictamente profesional, con el acabado sereno de Apple y la sobriedad material de Nespresso: un encabezado azul marino sólido que da el marco institucional, un fondo marfil que quita la frialdad del blanco puro, y tarjetas blancas que flotan apenas sobre él con sombras en capas. La profundidad es sutil y física, nunca decorativa: se nota que una tarjeta está encima del fondo, no se ve la sombra.\n\nLa densidad sigue siendo de herramienta de uso diario (cuerpo de 14px, filas compactas, cifras tabulares), pero con más aire que antes: tarjetas de 16px de radio, relleno de 1.25 a 1.5rem, controles de 10px. El color trabaja por exclusión y por temperatura: superficies y líneas son blanco mezclado con café (cálidas), los textos son azul mezclado con blanco (la tinta), el azul sólido es la superficie del encabezado y de su panel móvil, y el café aparece donde algo pide acción o atención.\n\nLa identidad institucional la llevan los logotipos reales de la UNAM y de la FCA, en blanco sobre el azul del encabezado, pegados a la izquierda en toda pantalla del sistema. Rechazos confirmados por la dirección: el sistema excesivamente blanco y plano de la etapa anterior, la plantilla de Bootstrap sin trabajar, los títulos serif decorativos y la ornamentación sin función.\n\nEl movimiento es breve y discreto: transiciones de 180ms con salida exponencial, botones que ceden a escala 0.98, métricas enlazadas que suben 2px en hover, la tarjeta de acceso y los avisos que entran una vez desde unos píxeles abajo o arriba, y el menú de la cuenta que crece desde 0.96. El único momento con movimiento propio es la pantalla de artículo aprobado. Todo se apaga con `prefers-reduced-motion`.",
     "keyCharacteristics": [
-      "Fondo blanco, tinta azul `#001328`, neutros mezclados del azul; café `#664300` escaso y con propósito.",
-      "Inter en tres pesos (400/500/600), números tabulares en todo dato.",
-      "Elevación por borde de 1px; sombras de un píxel solo en controles.",
-      "Radios de 6px en controles y 12px en contenedores; píldora solo para estados y contadores.",
-      "Estados como píldora con punto y texto, nunca solo color; sin verdes ni rojos.",
-      "Contadores de pendientes en la navegación como firma del sistema."
+      "Encabezado global azul `#001328` sólido con logotipos UNAM y FCA a la izquierda y navegación en píldoras a la derecha.",
+      "Fondo marfil cálido; tarjetas blancas sin borde con sombra en capas (anillo de 1px + sombras teñidas de azul).",
+      "Superficies y líneas cálidas (blanco con café), textos azulados (azul con blanco); café `#664300` para la acción.",
+      "Inter local en tres pesos (400/500/600), números tabulares en todo dato.",
+      "Radios de 10px en controles, 16px en contenedores y 20px en la tarjeta de acceso; píldora para estados, contadores y navegación del encabezado.",
+      "Estados siempre con texto (insignia con punto o punto junto a una etiqueta); sin verdes ni rojos.",
+      "Métricas en tarjetas al inicio de ambos paneles y contadores de pendientes en la navegación."
     ],
     "rules": [
       {
         "name": "La Regla del No Cruce",
-        "body": "Nunca texto café sobre azul ni azul sobre café. Sobre la superficie azul solo va blanco o `emp-sobre-azul-2`; si un estado debe aparecer ahí, va dentro de una tarjeta blanca (como la constancia de ejemplo).",
+        "body": "Nunca texto café sobre azul ni azul sobre café. Sobre el azul solo va blanco o blanco translúcido; por eso el contador y el enlace activo del encabezado son blancos, y el foco dentro del encabezado cambia su contorno café por blanco.",
+        "section": "colors"
+      },
+      {
+        "name": "La Regla de la Temperatura Dividida",
+        "body": "Superficies y líneas se mezclan con café (marfil, `emp-n-25` a `emp-n-300`); textos se mezclan con azul (`emp-n-500` a `emp-n-700`). No se usan grises neutros ni neutros azulados como superficie.",
         "section": "colors"
       },
       {
         "name": "La Regla del Café Escaso",
-        "body": "El café marca lo que pide acción o atención: la acción principal, el foco, lo activo, lo pendiente y el error. Una vista tiene un solo botón primario por zona de acción; lo demás es secundario o quieto.",
+        "body": "El café marca lo que pide acción o atención: la acción principal, el foco, lo pendiente y el error. Una zona de acción tiene un solo botón primario; lo demás es secundario o quieto.",
         "section": "colors"
       },
       {
@@ -491,17 +636,22 @@
       },
       {
         "name": "La Regla de los Tres Pesos",
-        "body": "Solo 400, 500 y 600. El 600 es para títulos y cifras, el 500 para controles y etiquetas, el 400 para leer.",
+        "body": "Solo 400, 500 y 600. El 600 es para títulos, cifras y el botón grande; el 500 para controles y etiquetas; el 400 para leer.",
         "section": "typography"
       },
       {
         "name": "La Regla de la Cifra Tabular",
-        "body": "Toda tabla, fecha, folio, contador y conteo de caracteres usa `font-variant-numeric: tabular-nums` (clase `emp-num`), para que las columnas de datos no bailen.",
+        "body": "Toda tabla, fecha, folio, contador, métrica y conteo de caracteres usa `font-variant-numeric: tabular-nums` (clase `emp-num`), para que las columnas de datos no bailen.",
         "section": "typography"
       },
       {
-        "name": "La Regla del Borde Primero",
-        "body": "Un contenedor se separa con borde `emp-n-150` de 1px y radio de 12px; nunca con sombra. Si algo necesita más presencia, sube de tono (`emp-n-25`), no de sombra.",
+        "name": "La Regla de la Tarjeta sobre Marfil",
+        "body": "Un contenedor principal es blanco, sin borde, con radio de 16px y `--emp-sombra-tarjeta`, sobre el fondo marfil. Nunca se combina un borde visible con una sombra amplia, y la sombra nunca es negra ni gris: siempre teñida de azul (o de café en el botón primario).",
+        "section": "elevation"
+      },
+      {
+        "name": "La Regla del Encabezado Sólido",
+        "body": "El encabezado es azul sólido, sin translucidez ni `backdrop-filter`: un filtro volvería al encabezado el bloque contenedor del panel offcanvas (`position: fixed`) y lo recortaría.",
         "section": "elevation"
       },
       {
@@ -511,25 +661,29 @@
       }
     ],
     "dos": [
-      "Do escribir todo texto en azul `#001328` o en un neutro mezclado del azul (`emp-n-600` para secundario, `emp-n-700` para navegación); el `emp-n-500` solo para lo deshabilitado.",
-      "Do separar contenedores con borde de 1px `emp-n-150` y radio de 12px, y los controles con radio de 6px.",
-      "Do mostrar cada estado como insignia con punto y texto: café para «En revisión / Pendiente», azul para «Aprobado / Contestado», grafito con punto hueco para «Rechazado».",
+      "Do poner el fondo de página en marfil `emp-marfil` y apoyar el contenido en tarjetas blancas de 16px con `--emp-sombra-tarjeta`, sin borde.",
+      "Do escribir todo texto en azul `#001328` o en un neutro mezclado del azul (`emp-n-600` para secundario, `emp-n-700` para notas); el `emp-n-500` solo para lo deshabilitado.",
+      "Do usar neutros cálidos (blanco con café) para superficies, líneas y fondos de campo.",
+      "Do mantener el encabezado azul sólido con los logotipos de la UNAM y la FCA a la izquierda y la navegación a la derecha, y mandar la navegación a un offcanvas azul por la derecha debajo de 992px.",
+      "Do mostrar cada estado con texto: insignia con punto (café «En revisión / Pendiente», azul «Aprobado / Contestado», grafito con punto hueco «Rechazado») o punto junto a una etiqueta.",
       "Do dejar un solo botón primario café por zona de acción; las alternativas van como secundario o quieto.",
+      "Do dar a cada métrica etiqueta, cifra tabular y una nota que explique el número; en el administrador, enlazarla a la lista filtrada.",
       "Do poner las cifras, fechas y folios en números tabulares.",
-      "Do mantener las transiciones en 160ms con `cubic-bezier(0.23, 1, 0.32, 1)` y la presión de botón en `scale(0.98)`; reservar el movimiento propio al momento de artículo aprobado.",
+      "Do mantener las transiciones en 180ms con `cubic-bezier(0.23, 1, 0.32, 1)` y la presión de botón en `scale(0.98)`; reservar el movimiento propio al momento de artículo aprobado.",
       "Do tematizar las superficies del navegador con la paleta: selección en café bruma, cursor café, barra de desplazamiento `emp-n-300`, subrayado con 0.2em de separación.",
       "Do contar lo pendiente en la navegación y en las cabeceras de bandeja, y ordenar las bandejas con lo más antiguo primero."
     ],
     "donts": [
-      "Don't poner texto café sobre azul ni azul sobre café; sobre el panel azul solo va blanco o `emp-sobre-azul-2`.",
+      "Don't poner texto café sobre azul ni azul sobre café; dentro del azul solo va blanco o blanco translúcido.",
       "Don't usar verde, rojo ni ningún color fuera de café, azul, blanco, negro y sus mezclas, ni siquiera para éxito o error.",
       "Don't comunicar un estado solo con color o solo con un ícono.",
-      "Don't pintar la barra de navegación de azul sólido; el azul como superficie se reserva al panel de acceso.",
+      "Don't volver al blanco plano: ni fondo de página blanco ni contenedores separados solo por un borde de 1px.",
+      "Don't combinar un borde visible con una sombra amplia, ni usar sombras negras o grises.",
+      "Don't dar translucidez ni `backdrop-filter` al encabezado.",
       "Don't usar títulos serif decorativos ni una segunda familia tipográfica, ni pesos fuera de 400/500/600.",
-      "Don't armar páginas con filas de tarjetas de cifra iguales; los totales van en línea, como lista de datos.",
       "Don't poner una etiqueta pequeña (kicker) encima de un título, ni etiquetas en mayúsculas espaciadas.",
-      "Don't dar sombra a los contenedores ni combinar borde con una sombra amplia.",
-      "Don't usar la píldora para nada que no sea un estado o un contador."
+      "Don't agregar filas de cifras fuera de la franja de métricas de los paneles, ni métricas sin nota que explique el número.",
+      "Don't usar la píldora para nada que no sea un estado, un contador o la navegación del encabezado."
     ]
   }
 }
