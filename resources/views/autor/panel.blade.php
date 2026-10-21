@@ -2,49 +2,34 @@
 
 @section('titulo', 'Mis artículos')
 
-@php($Estatus = \App\Enums\EstatusArticulo::class)
+@php $Estatus = \App\Enums\EstatusArticulo::class; @endphp
 
 @section('contenido')
-    <x-encabezado titulo="Mis artículos" descripcion="El estado de cada envío y tus constancias. Te avisamos por correo cada cambio.">
+    @php
+        $partes = \App\Support\Texto::lista([
+            $resumen['en_revision'] > 0 ? \App\Support\Texto::cantidad($resumen['en_revision'], 'artículo en revisión', 'artículos en revisión') : null,
+            $resumen['aprobados'] > 0 ? \App\Support\Texto::cantidad($resumen['aprobados'], 'aprobado', 'aprobados') : null,
+            $resumen['rechazados'] > 0 ? \App\Support\Texto::cantidad($resumen['rechazados'], 'no aprobado', 'no aprobados') : null,
+        ]);
+    @endphp
+    <header class="emp-saludo">
+        <div class="emp-saludo__texto">
+            <p class="emp-saludo__fecha">{{ \App\Support\Fecha::hoyLargo() }}</p>
+            <h1 class="emp-saludo__titulo">{{ $nombre ? 'Hola, '.$nombre : 'Mis artículos' }}</h1>
+            <p class="emp-saludo__resumen">
+                @if ($resumen['total'] > 0)
+                    Tienes {{ $partes }}. Te avisamos por correo cada cambio.
+                @else
+                    Aquí verás el estado de tus envíos y, cuando se aprueben, tus constancias.
+                @endif
+            </p>
+        </div>
         @if ($articulos->isNotEmpty())
-            <x-slot:acciones>
+            <div class="emp-saludo__acciones">
                 <a href="{{ route('autor.articulos.create') }}" class="btn btn-primary"><x-icono nombre="mas" :tamano="14" /> Enviar nuevo artículo</a>
-            </x-slot:acciones>
+            </div>
         @endif
-    </x-encabezado>
-
-    @if ($resumen['total'] > 0)
-        <ul class="emp-metricas emp-metricas--cuatro" aria-label="Resumen de tus envíos">
-            <li>
-                <div class="emp-metrica">
-                    <span class="emp-metrica__etiqueta"><x-icono nombre="articulos" :tamano="14" /> Enviados</span>
-                    <span class="emp-metrica__valor emp-num">{{ $resumen['total'] }}</span>
-                    <span class="emp-metrica__nota">En total</span>
-                </div>
-            </li>
-            <li>
-                <div class="emp-metrica">
-                    <span class="emp-metrica__etiqueta"><span class="emp-punto emp-punto--revision" aria-hidden="true"></span> En revisión</span>
-                    <span class="emp-metrica__valor emp-num">{{ $resumen['en_revision'] }}</span>
-                    <span class="emp-metrica__nota">Esperan dictamen</span>
-                </div>
-            </li>
-            <li>
-                <div class="emp-metrica">
-                    <span class="emp-metrica__etiqueta"><span class="emp-punto emp-punto--aprobado" aria-hidden="true"></span> Aprobados</span>
-                    <span class="emp-metrica__valor emp-num">{{ $resumen['aprobados'] }}</span>
-                    <span class="emp-metrica__nota">Con constancia</span>
-                </div>
-            </li>
-            <li>
-                <div class="emp-metrica">
-                    <span class="emp-metrica__etiqueta"><span class="emp-punto emp-punto--rechazado" aria-hidden="true"></span> No aprobados</span>
-                    <span class="emp-metrica__valor emp-num">{{ $resumen['rechazados'] }}</span>
-                    <span class="emp-metrica__nota">Con motivo del dictamen</span>
-                </div>
-            </li>
-        </ul>
-    @endif
+    </header>
 
     @if ($articulos->isEmpty())
         <div class="emp-vacio-grande">
@@ -57,11 +42,12 @@
             <a href="{{ route('autor.articulos.create') }}" class="btn btn-primary"><x-icono nombre="mas" :tamano="14" /> Enviar mi primer artículo</a>
         </div>
     @else
-        <h2 class="emp-historial__titulo">Historial de envíos</h2>
-        <div class="emp-marco-tabla">
+        <section aria-labelledby="titulo-historial">
+            <h2 id="titulo-historial" class="emp-seccion__titulo">Historial de envíos</h2>
+            <div class="emp-lista">
             <ul class="emp-envios">
                 @foreach ($articulos as $articulo)
-                    @php($esPrincipal = (bool) $articulo->autores->first()?->pivot->auar_principal)
+                    @php $esPrincipal = (bool) $articulo->autores->first()?->pivot->auar_principal; @endphp
                     <li class="emp-envio">
                         <div class="emp-envio__principal">
                             <h2 class="emp-envio__titulo">{{ $articulo->arti_titulo }}</h2>
@@ -102,6 +88,7 @@
             @if ($articulos->hasPages())
                 <div class="emp-marco-tabla__pie">{{ $articulos->links() }}</div>
             @endif
-        </div>
+            </div>
+        </section>
     @endif
 @endsection

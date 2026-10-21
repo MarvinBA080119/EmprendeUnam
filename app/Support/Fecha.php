@@ -10,6 +10,24 @@ use Carbon\CarbonInterface;
  */
 class Fecha
 {
+    /** Saludo según la hora: «Buenos días» hasta las 11:59, «Buenas tardes» hasta las 18:59 y «Buenas noches». */
+    public static function saludo(?CarbonInterface $momento = null): string
+    {
+        $hora = ($momento ?? now())->hour;
+
+        return match (true) {
+            $hora < 12 => 'Buenos días',
+            $hora < 19 => 'Buenas tardes',
+            default => 'Buenas noches',
+        };
+    }
+
+    /** Fecha larga del día en minúsculas: «martes 20 de octubre». */
+    public static function hoyLargo(?CarbonInterface $momento = null): string
+    {
+        return ($momento ?? now())->locale('es')->translatedFormat('l j \d\e F');
+    }
+
     /** Para columnas de solo fecha (sin hora). */
     public static function dias(CarbonInterface $fecha): string
     {

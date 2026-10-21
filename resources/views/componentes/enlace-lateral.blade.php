@@ -1,5 +1,5 @@
-{{-- Enlace de la navegación del encabezado, con ícono opcional y, si hay
-     pendientes, su número (el texto oculto lo lee el lector de pantalla). --}}
+{{-- Enlace de la barra lateral con ícono y, si hay pendientes, su número
+     (el texto oculto lo lee el lector de pantalla). --}}
 @props(['ruta', 'activa', 'icono' => null, 'cuenta' => 0, 'cuentaTexto' => 'pendientes'])
 @if (Route::has($ruta))
     @php($esActiva = request()->routeIs($activa))

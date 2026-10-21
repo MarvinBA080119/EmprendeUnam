@@ -17,6 +17,7 @@ class PanelController extends Controller
         return view('autor.panel', [
             'articulos' => $this->articulos->historialDe($request->user(), config('emprende.por_pagina')),
             'resumen' => $this->articulos->resumenDe($request->user()),
+            'nombre' => $request->user()->loadMissing('persona')->persona?->pers_nombre,
         ]);
     }
 }

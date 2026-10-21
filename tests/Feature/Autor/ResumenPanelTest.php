@@ -31,7 +31,7 @@ class ResumenPanelTest extends TestCase
         $this->actingAs($autor)->get('/autor')
             ->assertOk()
             ->assertSee('Historial de envíos')
-            ->assertSee('No aprobados');
+            ->assertSee('Tienes 1 artículo en revisión y 1 no aprobado.');
     }
 
     public function test_sin_envios_no_muestra_el_resumen(): void

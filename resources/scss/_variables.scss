@@ -6,23 +6,23 @@
 // Se define ANTES de importar Bootstrap para sobrescribir sus valores.
 // ---------------------------------------------------------------------------
 $emp-cafe: #664300;
-$emp-cafe-hover: #573900;
+$emp-cafe-hover: #553800;
 $emp-azul: #001328;
 $emp-blanco: #ffffff;
 $emp-negro: #000000;
 
 // Superficies y líneas: blanco con café (cálidos).
-$emp-marfil: #f1eee8;
+$emp-hueso: #f5f2ec;
 $emp-n-25: #faf8f6;
-$emp-n-50: #f7f6f2;
-$emp-n-100: #f3f0eb;
-$emp-n-150: #ede8e0;
-$emp-n-200: #e5dfd4;
-$emp-n-300: #dad2c2;
+$emp-n-50: #f7f5f1;
+$emp-n-100: #f1eee8;
+$emp-n-150: #ebe6de;
+$emp-n-200: #e2dcd2;
+$emp-n-300: #d6cec1;
 // Textos: azul mezclado con blanco (contraste sobre blanco entre paréntesis).
 $emp-n-500: #8c959e; // (3.0) solo para texto deshabilitado
-$emp-n-600: #616d7a; // (5.3) texto secundario
-$emp-n-700: #4c5a68; // (7.1)
+$emp-n-600: #5f6b77; // (5.4) texto secundario
+$emp-n-700: #46535f; // (7.6)
 
 $primary: $emp-cafe;
 $secondary: $emp-azul;
@@ -44,9 +44,10 @@ $link-hover-color: $emp-cafe-hover;
 $link-decoration: none;
 $link-hover-decoration: underline;
 
-// Tipografía: Inter como cara de interfaz, sin cara decorativa.
-$font-family-sans-serif: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-$font-size-base: 0.875rem; // 14px
+// Tipografía: Geist para la interfaz; la serif editorial (Newsreader) solo en
+// títulos grandes, desde emprende.css.
+$font-family-sans-serif: 'Geist Variable', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+$font-size-base: 0.9375rem; // 15px
 $line-height-base: 1.5;
 $headings-font-family: null;
 $headings-font-weight: 600;
@@ -63,19 +64,19 @@ $small-font-size: 0.8125rem;
 // Formas: 10px en controles, 16px en contenedores.
 $border-radius: 0.625rem;
 $border-radius-sm: 0.375rem;
-$border-radius-lg: 1rem;
+$border-radius-lg: 0.875rem;
 $border-radius-xl: 1.25rem;
 $enable-shadows: false;
 
 // Foco: anillo café translúcido.
 $focus-ring-color: rgba($emp-cafe, 0.14);
-$focus-ring-width: 4px;
+$focus-ring-width: 3px;
 
 // Botones y campos.
 $input-btn-padding-y: 0.5rem;
 $input-btn-padding-x: 0.75rem;
 $input-btn-font-size: 0.875rem;
-$input-btn-focus-width: 4px;
+$input-btn-focus-width: 3px;
 $input-btn-focus-color: rgba($emp-cafe, 0.14);
 $btn-padding-x: 0.875rem;
 $btn-font-weight: 500;
@@ -88,7 +89,7 @@ $btn-border-radius-lg: $border-radius;
 $btn-disabled-opacity: 0.5;
 
 $input-color: $emp-azul;
-$input-border-color: #d6cdbd;
+$input-border-color: $emp-n-300;
 $input-placeholder-color: $emp-n-600;
 $input-focus-border-color: $emp-cafe;
 $input-disabled-bg: $emp-n-50;
