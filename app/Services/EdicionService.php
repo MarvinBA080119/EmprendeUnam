@@ -330,8 +330,9 @@ class EdicionService
     }
 
     /**
-     * Datos del número en portada para el inicio del sitio, o null si no hay
-     * número en portada con artículos en el índice.
+     * Número principal (en portada) para el inicio del sitio, con sus
+     * destacados en orden; principal y resto quedan vacíos mientras no se
+     * elijan. Null si ningún número está en portada.
      *
      * @return array{revista: Revista, principal: ?ArticuloRevista, resto: Collection<int, ArticuloRevista>}|null
      */
@@ -347,11 +348,21 @@ class EdicionService
             ->orderBy('arre_posicion_index')
             ->get();
 
-        if ($indice->isEmpty()) {
-            return null;
-        }
-
         return ['revista' => $revista, 'principal' => $indice->first(), 'resto' => $indice->slice(1)->values()];
+    }
+
+    /**
+     * Números visibles que ya no son el principal: pasan al histórico con su
+     * portada, su PDF completo y su eBook. El más reciente primero.
+     *
+     * @return Collection<int, Revista>
+     */
+    public function historicos(): Collection
+    {
+        return Revista::visibles()->where('revi_en_portada', false)
+            ->orderByDesc('revi_fecha_publicacion')
+            ->orderByDesc('revi_id_revista')
+            ->get();
     }
 
     /** «Nombre Apellido, Otra Persona» del artículo del sistema (el inicio pone una por renglón). */

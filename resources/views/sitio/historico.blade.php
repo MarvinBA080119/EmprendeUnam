@@ -77,9 +77,11 @@
                                class="btn-capa" target="_blank" rel="noopener"
                                aria-label="Abrir el número {{ $ed['numero'] }} en PDF">Abrir PDF</a>
 
+                            @if ($ed['ebook'])
                             <a href="{{ $ed['ebook'] }}"
                                class="btn-capa" target="_blank" rel="noopener"
                                aria-label="Abrir el número {{ $ed['numero'] }} en eBook">Abrir eBook</a>
+                            @endif
                         </div>
 
                     </div>
@@ -104,7 +106,9 @@
                     {{-- Accesos permanentes: no dependen del hover (táctil y teclado) --}}
                     <p class="edicion__accesos">
                         <a href="{{ asset($ed['pdf']) }}" class="edicion__acceso" target="_blank" rel="noopener">PDF</a>
-                        <a href="{{ $ed['ebook'] }}" class="edicion__acceso" target="_blank" rel="noopener">eBook</a>
+                        @if ($ed['ebook'])
+                            <a href="{{ $ed['ebook'] }}" class="edicion__acceso" target="_blank" rel="noopener">eBook</a>
+                        @endif
                     </p>
 
                 </div>

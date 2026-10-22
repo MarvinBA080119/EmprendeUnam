@@ -243,6 +243,37 @@ class EdicionTest extends TestCase
             ->assertDontSee('Artículo 6');
     }
 
+    public function test_al_ponerlo_como_principal_el_inicio_cambia_portada_pdf_y_ebook_aunque_falten_destacados(): void
+    {
+        $revista = $this->crearNumero();
+        $this->post("/admin/ediciones/{$revista->revi_id_revista}/portada")->assertRedirect();
+        auth()->logout();
+
+        $this->get('/')->assertOk()
+            ->assertSee('No. 220')
+            ->assertSee('Diferenciación para generar ventajas')
+            ->assertSee(route('edicion.portada', $revista), false)
+            ->assertSee(route('edicion.numero', $revista), false)
+            ->assertSee('https://flipbook.ejemplo.mx/220', false)
+            ->assertDontSee('Artículo principal');
+    }
+
+    public function test_el_numero_que_deja_de_ser_principal_pasa_al_historico(): void
+    {
+        $anterior = $this->crearNumero(['titulo' => 'Número anterior']);
+        $nuevo = $this->crearNumero(['numero' => '221', 'periodo' => 'septiembre-octubre', 'titulo' => 'Número nuevo']);
+        $this->post("/admin/ediciones/{$anterior->revi_id_revista}/portada");
+        $this->post("/admin/ediciones/{$nuevo->revi_id_revista}/portada");
+        auth()->logout();
+
+        $this->get('/historico')->assertOk()
+            ->assertSee('Número anterior')
+            ->assertSee(route('edicion.portada', $anterior), false)
+            ->assertSee(route('edicion.numero', $anterior), false)
+            ->assertDontSee('Número nuevo');
+        $this->get('/')->assertSee('Número nuevo');
+    }
+
     public function test_eliminar_un_numero_borra_sus_articulos_y_archivos(): void
     {
         $revista = $this->crearNumero();

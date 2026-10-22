@@ -38,9 +38,9 @@ class SitioService
     }
 
     /**
-     * Número en portada (gestor de portada): sus 5 artículos del índice en
-     * orden; el de la posición 1 es el principal. Null si aún no hay número en
-     * portada con artículos en el índice.
+     * Número principal (gestor de portada): su portada, PDF completo, eBook y
+     * título siempre; sus 5 destacados en orden (el de la posición 1 es el
+     * principal) cuando ya se eligieron. Null si ningún número está en portada.
      *
      * @return array<string, mixed>|null
      */
@@ -64,9 +64,8 @@ class SitioService
             'portada' => $imagenPortada,
             'pdf_completo' => $pdfNumero,
         ]);
-        if ($revista->revi_url_flipbook) {
-            $general['config']['ebook_url'] = $revista->revi_url_flipbook;
-        }
+        // El botón «Ver en eBook» lleva al Flipbook del número; sin él, no se muestra.
+        $general['config']['ebook_url'] = $revista->revi_url_flipbook;
 
         $articulo = function (ArticuloRevista $entrada) use ($pdfNumero, $imagenPortada) {
             $pdf = $entrada->arre_url_pdf ? route('edicion.articulo.pdf', $entrada) : $pdfNumero;
@@ -87,7 +86,7 @@ class SitioService
         };
 
         return $general + [
-            'articulo_principal' => $articulo($portada['principal']),
+            'articulo_principal' => $portada['principal'] ? $articulo($portada['principal']) : null,
             'tabla_contenidos' => $portada['resto']->map($articulo)->all(),
             'revelar_portada' => (int) $revista->revi_num_edicion === 0,
         ];
@@ -160,6 +159,26 @@ class SitioService
                 'nombres_temas' => $nombres,
             ];
         }, $historico);
+
+        // Números del gestor que dejaron de ser el principal (los más recientes primero);
+        // si alguno repite un número del acervo anterior, se usa el de la base.
+        $deLaBase = $this->ediciones->historicos()->map(fn ($r) => [
+            'numero' => (int) $r->revi_num_edicion,
+            'anio' => (int) $r->revi_anio,
+            'periodo' => ucfirst($r->revi_mes).' '.$r->revi_anio,
+            'titulo' => $r->revi_titulo,
+            'tiene_titulo' => true,
+            'portada' => route('edicion.portada', $r),
+            'remoto' => '',
+            'pdf' => route('edicion.numero', $r),
+            'ebook' => $r->revi_url_flipbook,
+            'attr_temas' => '',
+            'nombres_temas' => [],
+        ])->all();
+        $numeros = array_column($deLaBase, 'numero');
+        $ediciones = [...$deLaBase, ...array_values(array_filter($ediciones, fn ($e) => ! in_array($e['numero'], $numeros, true)))];
+        $anios = array_values(array_unique([...array_column($deLaBase, 'anio'), ...$anios]));
+        rsort($anios);
 
         return compact('anios', 'temas', 'ediciones');
     }
