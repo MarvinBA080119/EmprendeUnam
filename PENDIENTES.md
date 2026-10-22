@@ -1,22 +1,20 @@
 # Pendientes y decisiones
 
-## Por aprobar: cambios a la base (propuesta del 2026-10-22)
+## Por aprobar: cambios a la base (propuesta del 2026-10-22, versión 3)
 
 SQL exacto en `database/propuestas/2026-10-22_perfil_cesion_edicion.sql` (no
-aplicado; probado en una copia dentro de una transacción revertida). Sin esta
-aprobación no se implementan las funciones que dependen de él.
+aplicado; probado en una base nueva creada desde cero). No toca `autor` ni
+`articulo`.
 
-- [ ] `autor.auto_tipo_perfil` (Alumno, Académico, Emprendedor, Otro) y `autor.auto_tipo_perfil_otro` con dos `CHECK`: el campo «Tipo de perfil» del registro.
-- [ ] `articulo.arti_url_carta_cesion`: la carta de cesión firmada como requisito para enviar el artículo.
-- [ ] `revista`: rutas de 256 caracteres, `revi_url_flipbook`, `revi_periodo` («julio-agosto 2026»), `revi_en_portada` (una sola, visible) y portada/PDF opcionales mientras la edición no sea visible.
-- [ ] Tabla nueva `articulo_revista`: contenido de cada edición (sección, título, descripción, autores, páginas, PDF, imagen, orden, principal), ligada opcionalmente a un artículo **aprobado** (trigger).
-- [ ] Tabla nueva `articulo_curso`: lo que el administrador agrega o quita de la relación artículo ↔ curso; tiene prioridad sobre las sugerencias automáticas.
+- [ ] `constancia.cons_tipo` (`CONSTANCIA`, `AGRADECIMIENTO`, `CESION`) y `cons_folio` nulo: la carta de cesión no lleva folio; la constancia y la carta de agradecimiento sí. Un documento de cada tipo por artículo.
+- [ ] `revista.revi_url_flipbook` y `revista.revi_en_portada` (un solo número en portada, visible). `revi_mes` guarda el periodo («julio-agosto», se amplía a 20); la portada es `revi_url_portada`.
+- [ ] Tabla nueva `articulo_revista`: todos los artículos del número; `arre_posicion_index` (1 a 5) marca los 5 que se ven en el índice y `arre_fecha_index` cuándo se mostraron, para rotarlos hasta mostrar todos.
+- [ ] Tabla nueva `articulo_curso`: cursos que el administrador elige (o descarta) para cada artículo del índice.
 
 ### Preguntas abiertas de esa propuesta
 
-- [ ] **«La opción del reconocimiento»**: ¿es la *Carta de agradecimiento* (se genera cuando el artículo sale en un número, con número y bimestre, firmada por la directora editorial)? ¿La descarga el autor desde su panel? ¿Firma fija (Dra. Clotilde Hernández Garnica) y fecha de emisión?
-- [ ] **Carta de cesión**: ¿se descarga la plantilla en blanco o prellenada con el nombre del autor y el título? El número y el bimestre aún no se conocen al enviar: ¿se dejan en blanco?
-- [ ] **Contenido de la edición**: ¿cada entrada del índice debe ser un artículo aprobado del sistema, o también entradas editoriales que no pasaron por el sistema (como las de hoy en `config/sitio/edicion.php`)? La propuesta permite ambas.
+- [ ] **Carta de agradecimiento**: ¿la descarga el autor desde su panel cuando su artículo sale en el número? ¿Firma fija (Dra. Clotilde Hernández Garnica) y fecha de emisión?
+- [ ] **Carta de cesión**: ¿se descarga en blanco o prellenada con el nombre y el título? El número y el bimestre aún no se conocen al enviar.
 
 ## Pendientes de definir
 
