@@ -146,12 +146,14 @@ LOG_LEVEL=warning
 MAIL_MAILER=smtp
 MAIL_HOST=<servidor-smtp-institucional>
 MAIL_PORT=587
-MAIL_SCHEME=null
+MAIL_SCHEME=smtp
 MAIL_USERNAME=<usuario-smtp>
 MAIL_PASSWORD=<contraseña-smtp>
 MAIL_FROM_ADDRESS=<correo-remitente>
 MAIL_FROM_NAME="Revista EmprendeUNAM"
 ```
+
+Ver «Correo (SMTP)» para Gmail, Microsoft 365 y la prueba de envío.
 
 `APP_DEBUG` **siempre** en `false` en producción: con `true` las páginas de
 error muestran la configuración y el código.
@@ -194,6 +196,9 @@ sudo restorecon -Rv /var/www/emprendeunam
 
 # PHP-FPM se conecta a PostgreSQL por 127.0.0.1
 sudo setsebool -P httpd_can_network_connect_db on
+
+# PHP-FPM puede conectarse a los puertos de correo (ver «Correo (SMTP)»)
+sudo setsebool -P httpd_can_sendmail on
 ```
 
 Los PDF de los artículos y las constancias se guardan en
@@ -441,6 +446,77 @@ psql -h 127.0.0.1 -U emprende -d emprendeunam -f database/cambios/2026-10-15_art
 
 Una base creada con `scripts/crear_bd.sh` después de la fecha de un script ya
 incluye ese cambio.
+
+## Correo (SMTP)
+
+Todos los correos salen por SMTP cifrado (Symfony Mailer, incluido en
+Laravel) y en cola. Si «no llegan», casi siempre es una de estas tres cosas:
+
+1. **`MAIL_MAILER=log`** en `.env`: los correos solo se escriben en
+   `storage/logs/laravel.log`. Debe decir `smtp`.
+2. **El trabajador de la cola no está corriendo** (o no se reinició después de
+   cambiar `.env`: guarda la configuración en memoria).
+3. **Credenciales o puerto**: Gmail y Microsoft 365 exigen una *contraseña de
+   aplicación*; 587 va con STARTTLS y 465 con TLS directo.
+
+### Datos en `.env`
+
+```ini
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com          # o smtp.office365.com, o el servidor institucional
+MAIL_PORT=587
+MAIL_SCHEME=smtp                  # 587: STARTTLS automático · 465: smtps (TLS directo)
+MAIL_USERNAME=cuenta@dominio.mx
+MAIL_PASSWORD="contraseña de aplicación"
+MAIL_FROM_ADDRESS=cuenta@dominio.mx   # la misma cuenta o un alias autorizado
+MAIL_FROM_NAME="Revista EmprendeUNAM"
+```
+
+Las credenciales viven solo en `.env` (que no está en git y debe tener
+permisos `600` o `640` del usuario de la aplicación).
+
+### Después de cambiar `.env`
+
+```bash
+php artisan optimize                       # o php artisan config:clear
+sudo systemctl restart emprendeunam-cola   # el trabajador vuelve a leer .env
+php artisan emprende:probar-correo tu@correo.com
+php artisan emprende:probar-correo tu@correo.com --cola   # prueba también el trabajador
+```
+
+`emprende:probar-correo` muestra la configuración que está usando la
+aplicación (sin la contraseña), avisa si hay correos atorados en la cola o
+fallidos, envía la prueba en el momento y, si falla, dice la causa probable.
+
+### SELinux y firewall
+
+El trabajador de la cola corre como servicio de systemd y SELinux no lo
+limita. Si algún correo se envía directamente desde PHP-FPM (por ejemplo con
+`QUEUE_CONNECTION=sync`), hay que permitir a Apache/Nginx conectarse a los
+puertos de correo (25, 465 y 587 ya están etiquetados como `smtp_port_t`):
+
+```bash
+getsebool httpd_can_sendmail               # ¿está en on?
+sudo setsebool -P httpd_can_sendmail on
+```
+
+firewalld solo filtra lo que entra; la salida a 587/465 está permitida. Para
+comprobar que la red llega al servidor de correo:
+
+```bash
+curl -v telnet://smtp.gmail.com:587        # «Connected to …» = hay red (Ctrl+C para salir)
+openssl s_client -starttls smtp -connect smtp.gmail.com:587 -quiet   # prueba TLS (si hay openssl)
+sudo ausearch -m avc -ts recent | grep -i smtp                       # bloqueos de SELinux recientes
+```
+
+### Revisar la cola
+
+```bash
+sudo systemctl status emprendeunam-cola
+journalctl -u emprendeunam-cola -n 50
+php artisan queue:failed                   # correos que fallaron 3 veces
+php artisan queue:retry all                # reintentarlos ya corregido el problema
+```
 
 ## Sitio público
 

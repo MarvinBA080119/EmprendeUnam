@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
@@ -44,6 +45,16 @@ class ArticuloController extends Controller
         Gate::authorize('descargar', $articulo);
 
         return $this->descargar($articulo->arti_url_pdf, "articulo-{$articulo->arti_id_autor}.pdf");
+    }
+
+    /** Plantilla en Word de la carta de cesión de derechos, para llenarla y firmarla. */
+    public function cartaCesion(): BinaryFileResponse
+    {
+        return response()->download(
+            resource_path('plantillas/carta_cesion_derechos.docx'),
+            'Carta de cesion de derechos - EmprendeUNAM.docx',
+            ['Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+        );
     }
 
     /** Pantalla de agradecimiento de un artículo aprobado. */

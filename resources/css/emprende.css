@@ -2155,6 +2155,16 @@ td.emp-vacio {
     max-width: 34ch;
 }
 
+.emp-bloque__texto .emp-bloque__nota {
+    margin-top: 0.75rem;
+}
+
+.emp-bloque__nota a {
+    display: inline-block;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
 .emp-bloque__campos {
     max-width: 40rem;
 }

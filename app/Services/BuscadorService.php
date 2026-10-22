@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Buscador público (6.9): artículos APROBADOS (título, palabras clave, autores,
- * coautores y tema) y cursos vigentes (nombre, institución y palabras clave).
+ * coautores, tema y resumen) y cursos vigentes (nombre, institución y palabras
+ * clave).
  *
  * Usa búsqueda de texto completo de PostgreSQL con la configuración "spanish".
  * Mientras no se autorice la extensión unaccent, los acentos se quitan con
@@ -85,7 +86,8 @@ class BuscadorService
                               join persona pe on pe.pers_id_persona = au.pers_id_persona
                              where aa.arti_id_autor = a.arti_id_autor) as autores,
                            null::text as institucion,
-                           null::text as url
+                           null::text as url,
+                           a.arti_resumen::text as resumen
                       from articulo a
                       join tema t on t.tema_id_tema = a.tema_id_tema
                      where a.arti_status = 'APROBADO'";
@@ -112,7 +114,8 @@ class BuscadorService
                              where pc.curs_id_curso = c.curs_id_curso) as palabras,
                            null::text as autores,
                            c.curs_institucion::text as institucion,
-                           c.curs_url::text as url
+                           c.curs_url::text as url,
+                           null::text as resumen
                       from curso c
                      where c.curs_fecha >= current_date";
             if ($anio) {
@@ -128,7 +131,8 @@ class BuscadorService
             $documento = "setweight(to_tsvector('spanish', ".self::sinAcentos('titulo')."), 'A')"
                 ." || setweight(to_tsvector('spanish', ".self::sinAcentos("coalesce(palabras, '')")."), 'B')"
                 ." || setweight(to_tsvector('spanish', ".self::sinAcentos("concat_ws(' ', autores, institucion)")."), 'B')"
-                ." || setweight(to_tsvector('spanish', ".self::sinAcentos("coalesce(tema, '')")."), 'C')";
+                ." || setweight(to_tsvector('spanish', ".self::sinAcentos("coalesce(tema, '')")."), 'C')"
+                ." || setweight(to_tsvector('spanish', ".self::sinAcentos("coalesce(resumen, '')")."), 'D')";
             $base = "select r.*, ts_rank_cd(r.documento, q.consulta) as rango
                        from (select u.*, {$documento} as documento from ({$union}) u) r,
                             to_tsquery('spanish', ?) q(consulta)
@@ -143,7 +147,7 @@ class BuscadorService
 
         $total = (int) DB::scalar("select count(*) from ({$base}) x", $bindings);
         $filas = DB::select(
-            "select tipo, id, titulo, tema, anio, fecha, palabras, autores, institucion, url
+            "select tipo, id, titulo, tema, anio, fecha, palabras, autores, institucion, url, resumen
                from ({$base}) x order by {$orden} limit ? offset ?",
             [...$bindings, $porPagina, ($pagina - 1) * $porPagina],
         );
@@ -158,6 +162,7 @@ class BuscadorService
             'autores' => $this->resaltar($f->autores, $terminos),
             'palabras' => $this->resaltar($f->palabras, $terminos),
             'institucion' => $this->resaltar($f->institucion, $terminos),
+            'resumen' => $this->resaltar($f->resumen, $terminos),
         ], $filas);
 
         return new Paginador($resultados, $total, $porPagina, $pagina);

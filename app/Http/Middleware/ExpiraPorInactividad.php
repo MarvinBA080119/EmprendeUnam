@@ -37,11 +37,15 @@ class ExpiraPorInactividad
             $sesion->invalidate();
             $sesion->regenerateToken();
 
-            if ($request->expectsJson()) {
-                return response()->json(['message' => self::MENSAJE], 401);
+            // En una página pública se sigue como visitante; solo las rutas que
+            // piden sesión mandan al login con el aviso.
+            if (in_array('auth', $request->route()?->gatherMiddleware() ?? [], true)) {
+                return $request->expectsJson()
+                    ? response()->json(['message' => self::MENSAJE], 401)
+                    : redirect()->route('login')->with('aviso', self::MENSAJE);
             }
 
-            return redirect()->route('login')->with('aviso', self::MENSAJE);
+            return $next($request);
         }
 
         $sesion->put(self::CLAVE_SESION, now()->getTimestamp());

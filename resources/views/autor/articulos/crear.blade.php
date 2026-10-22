@@ -25,6 +25,7 @@
                 'maxCoautores' => \App\Http\Requests\Autor\EnviarArticuloRequest::MAX_COAUTORES,
                 'maxPalabrasResumen' => \App\Http\Requests\Autor\EnviarArticuloRequest::MAX_PALABRAS_RESUMEN,
                 'urlCancelar' => route('autor.panel'),
+                'urlCartaCesion' => route('autor.carta-cesion'),
             ])
             <div id="formulario-articulo" data-props='@json($props)'>
                 <noscript>

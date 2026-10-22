@@ -77,6 +77,16 @@ class BuscadorTest extends TestCase
         $this->assertContains('Con tema', $this->titulos('q=internacionales'));
     }
 
+    public function test_busca_tambien_en_el_resumen(): void
+    {
+        $this->aprobado(['articulo' => ['titulo' => 'Cadenas de suministro', 'resumen' => 'Analiza la logística inversa en talleres de calzado de León.']]);
+
+        $this->assertSame(['Cadenas de suministro'], $this->titulos('q=calzado'));
+
+        $resumen = collect($this->getJson('/buscar/resultados?q=calzado')->json('datos.0.resumen'));
+        $this->assertTrue($resumen->contains(fn ($s) => $s['marca'] && $s['texto'] === 'calzado'));
+    }
+
     public function test_resalta_el_termino_encontrado(): void
     {
         $this->aprobado(['articulo' => ['titulo' => 'Innovación abierta']]);

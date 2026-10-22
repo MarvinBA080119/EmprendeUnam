@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\Autor;
 use App\Services\RegistroAutorService;
 use Closure;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RegistroAutorRequest extends FormRequest
 {
@@ -33,7 +35,7 @@ class RegistroAutorRequest extends FormRequest
             // bcrypt solo toma en cuenta los primeros 72 bytes.
             'clave' => ['required', 'string', 'min:8', 'max:72', 'confirmed'],
             'institucion' => ['required', 'string', 'max:100'],
-            'grado_academico' => ['nullable', 'string', 'max:100'],
+            'grado_academico' => ['nullable', 'string', Rule::in(Autor::GRADOS)],
             'nombre_usuario' => [
                 'nullable', 'string', 'min:3', 'max:50', 'regex:/^[A-Za-z0-9._-]+$/',
                 function (string $atributo, mixed $valor, Closure $falla) use ($servicio) {
@@ -52,6 +54,7 @@ class RegistroAutorRequest extends FormRequest
             'nombre.required' => 'Escribe tu nombre.',
             'primer_apellido.required' => 'Escribe tu primer apellido.',
             'institucion.required' => 'Escribe la institución donde trabajas o estudias.',
+            'grado_academico.in' => 'Elige un grado académico de la lista.',
             'correo.required' => 'Escribe tu correo electrónico.',
             'correo.email' => 'Escribe un correo válido, por ejemplo nombre@unam.mx.',
             'clave.required' => 'Escribe una contraseña.',

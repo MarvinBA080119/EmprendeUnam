@@ -11,6 +11,7 @@ const props = defineProps({
     maxCoautores: { type: Number, default: 1 },
     maxPalabrasResumen: { type: Number, default: 50 },
     urlCancelar: { type: String, default: '' },
+    urlCartaCesion: { type: String, default: '' },
 });
 
 const TOTAL_PALABRAS = 5;
@@ -285,6 +286,10 @@ async function enviar(evento) {
             <div class="emp-bloque__texto">
                 <h2 id="bloque-archivo" class="emp-bloque__titulo">Archivo</h2>
                 <p>El artículo completo en PDF, de máximo {{ pdfMaxMb }} MB.</p>
+                <p v-if="urlCartaCesion" class="emp-bloque__nota">
+                    Para publicarlo necesitarás la carta de cesión de derechos firmada.
+                    <a :href="urlCartaCesion" download>Descargar la carta (Word)</a>
+                </p>
             </div>
             <div class="emp-bloque__campos">
                 <div class="emp-archivo"

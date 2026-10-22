@@ -43,6 +43,37 @@ class EnviarArticuloTest extends TestCase
             ->assertSee('Emprendimiento social');
     }
 
+    public function test_el_autor_descarga_la_plantilla_de_la_carta_de_cesion(): void
+    {
+        $this->actingAs($this->crearAutor())
+            ->get('/autor/articulos/nuevo')
+            ->assertSee('autor\\/carta-cesion', false);
+
+        $respuesta = $this->get('/autor/carta-cesion')->assertOk();
+        $this->assertStringContainsString('attachment', $respuesta->headers->get('Content-Disposition'));
+        $this->assertStringContainsString('wordprocessingml', $respuesta->headers->get('Content-Type'));
+    }
+
+    public function test_la_plantilla_no_lleva_datos_de_personas_ni_combinacion_de_correspondencia(): void
+    {
+        $zip = new \ZipArchive;
+        $this->assertTrue($zip->open(resource_path('plantillas/carta_cesion_derechos.docx')) === true);
+        $contenido = '';
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $contenido .= $zip->getFromIndex($i);
+        }
+        $zip->close();
+
+        $this->assertStringNotContainsString('mailMerge', $contenido);
+        $this->assertStringNotContainsString('recipientData', $contenido);
+        $this->assertStringContainsString('cesión', $contenido);
+    }
+
+    public function test_un_invitado_no_descarga_la_plantilla(): void
+    {
+        $this->get('/autor/carta-cesion')->assertRedirect('/iniciar-sesion');
+    }
+
     public function test_envia_un_articulo_con_5_palabras_clave(): void
     {
         $autor = $this->crearAutor();

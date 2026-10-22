@@ -1,5 +1,23 @@
 # Pendientes y decisiones
 
+## Por aprobar: cambios a la base (propuesta del 2026-10-22)
+
+SQL exacto en `database/propuestas/2026-10-22_perfil_cesion_edicion.sql` (no
+aplicado; probado en una copia dentro de una transacción revertida). Sin esta
+aprobación no se implementan las funciones que dependen de él.
+
+- [ ] `autor.auto_tipo_perfil` (Alumno, Académico, Emprendedor, Otro) y `autor.auto_tipo_perfil_otro` con dos `CHECK`: el campo «Tipo de perfil» del registro.
+- [ ] `articulo.arti_url_carta_cesion`: la carta de cesión firmada como requisito para enviar el artículo.
+- [ ] `revista`: rutas de 256 caracteres, `revi_url_flipbook`, `revi_periodo` («julio-agosto 2026»), `revi_en_portada` (una sola, visible) y portada/PDF opcionales mientras la edición no sea visible.
+- [ ] Tabla nueva `articulo_revista`: contenido de cada edición (sección, título, descripción, autores, páginas, PDF, imagen, orden, principal), ligada opcionalmente a un artículo **aprobado** (trigger).
+- [ ] Tabla nueva `articulo_curso`: lo que el administrador agrega o quita de la relación artículo ↔ curso; tiene prioridad sobre las sugerencias automáticas.
+
+### Preguntas abiertas de esa propuesta
+
+- [ ] **«La opción del reconocimiento»**: ¿es la *Carta de agradecimiento* (se genera cuando el artículo sale en un número, con número y bimestre, firmada por la directora editorial)? ¿La descarga el autor desde su panel? ¿Firma fija (Dra. Clotilde Hernández Garnica) y fecha de emisión?
+- [ ] **Carta de cesión**: ¿se descarga la plantilla en blanco o prellenada con el nombre del autor y el título? El número y el bimestre aún no se conocen al enviar: ¿se dejan en blanco?
+- [ ] **Contenido de la edición**: ¿cada entrada del índice debe ser un artículo aprobado del sistema, o también entradas editoriales que no pasaron por el sistema (como las de hoy en `config/sitio/edicion.php`)? La propuesta permite ambas.
+
 ## Pendientes de definir
 
 - [ ] Formato y firma de la constancia (por ahora, ejemplo provisional con la tipografía DejaVu de dompdf).
@@ -7,7 +25,7 @@
 - [ ] Captcha del consultorio y del newsletter (por ahora honeypot + límite por IP).
 - [ ] Correo real del administrador (por ahora `admin@emprendeunam.invalid` en `comunicacion`).
 - [ ] Uso de la extensión `unaccent` en PostgreSQL (por ahora el buscador quita acentos con `translate()` en ambos lados).
-- [ ] Servidor SMTP institucional (por ahora `MAIL_MAILER=log`).
+- [ ] Servidor SMTP institucional (por ahora `MAIL_MAILER=log`). Al tenerlo: datos en `.env` y `php artisan emprende:probar-correo` (ver README, «Correo (SMTP)»).
 - [ ] Exportación de metadatos para Latindex (RNF-05 del anexo; no está en las secciones 1–11).
 - [ ] Fecha de fin de los cursos (la menciona el anexo, pero `curso` no tiene columna para ella).
 - [ ] Respaldo diario de la base y de los PDF (RNF-06; tarea de infraestructura).
@@ -71,3 +89,9 @@
 | 2026-10-16 | Seguridad — contraseña del administrador: se cambia al instalar con `php artisan emprende:clave-admin` (la pide oculta dos veces, 12 a 72 caracteres, guarda solo el hash, cierra sus sesiones y lo anota en el registro de acciones). No se escribe en ningún archivo. |
 | 2026-10-21 | **Segundo rediseño** (acceso, panel del autor y panel del administrador), inspirado en Apple y Nespresso: encabezado global azul marino con los logotipos de la UNAM y la FCA a la izquierda y la navegación a la derecha (la barra lateral del administrador se sustituye por secciones en el encabezado y un panel desplegable en pantallas angostas); fondo marfil cálido, tarjetas blancas con sombras en capas, métricas en ambos paneles (el del autor cuenta sus artículos por estatus) y campos con transiciones suaves. Misma paleta cerrada y mismas reglas de contraste. |
 | 2026-10-21 | **Tercer rediseño** (sustituye al segundo, que no convenció): encabezado azul que solo lleva los logotipos de la UNAM y la FCA a la izquierda; navegación del autor y del administrador en una barra lateral sobre fondo hueso (en pantallas angostas, franja horizontal desplazable) y el trabajo en una hoja blanca; contenido sin cajas, ordenado por el aire, hilos finos y tipografía (Geist para la interfaz y Newsreader en títulos grandes); los paneles abren con un saludo y una frase con lo pendiente; acceso en dos mitades (nota editorial y formulario). Misma paleta cerrada. |
+| 2026-10-22 | **Sesiones**: el login no lleva `guest`; con sesión abierta avisa con qué cuenta y, al entrar con otras credenciales, cierra e invalida la anterior antes de validar. Cerrar sesión lleva al login. `Cache-Control: no-store` en páginas con sesión y de acceso. Cierre por inactividad a los **30 minutos** (`SESSION_INACTIVIDAD`), con aviso dos minutos antes en el navegador y renovación mientras haya actividad. |
+| 2026-10-22 | **Avisos**: mensajes flash como notificaciones y diálogo de confirmación propio en lugar de `window.confirm`; botones con estado «Enviando…» que evitan envíos duplicados. En el sitio público, ventana de confirmación con el diseño del sitio tras enviar el consultorio o la suscripción. |
+| 2026-10-22 | **Newsletter**: el enlace de confirmación vence a las 48 horas (`EMPRENDE_NEWSLETTER_HORAS`, sin cambio en la base); la suscripción queda «Pendiente de confirmación» y al suscribirse otra vez llega un enlace nuevo. Sustituye la decisión del 2026-10-16 de dejar el token sin vencimiento. El enlace de baja no vence. |
+| 2026-10-22 | **Registro**: el grado académico se elige de una lista (Licenciatura, Especialidad, Maestría, Doctorado, Posdoctorado, Estudiante / Sin grado, Otro), sigue siendo opcional y se valida en el servidor. |
+| 2026-10-22 | **Buscador**: también busca en el resumen del artículo y lo muestra con las coincidencias resaltadas. El buscador del inicio del sitio ya envía la búsqueda. |
+| 2026-10-22 | **Correo**: `php artisan emprende:probar-correo` (configuración, cola, envío de prueba y causa probable si falla). SELinux: `httpd_can_sendmail` para envíos desde PHP-FPM. |

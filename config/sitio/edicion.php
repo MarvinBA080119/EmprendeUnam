@@ -68,7 +68,7 @@ return [
             'categoria' => 'TECNOLOGÍA, INNOVACIÓN Y COMPETITIVIDAD',
             'titulo' => 'ACOSDEC: supervisión para cimentar proyectos duraderos',
             'descripcion' => 'Iniciativa que redefine la gestión de proyectos en la construcción, fortaleciendo calidad y eficiencia mediante propuestas especializadas.',
-            'autores' => 'Norma Tadeo Márquez<br>Julio César Olvera Hernández',
+            'autores' => ['Norma Tadeo Márquez', 'Julio César Olvera Hernández'],
             'paginas' => '18-22',
             'pdf' => 'pdf/acosdec-supervision-para-cimentar-proyectos-duraderos.pdf',   // sólo este artículo, separado del número 219
             'imagen' => 'img/supervision.jpeg',

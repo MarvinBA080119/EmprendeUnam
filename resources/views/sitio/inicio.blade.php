@@ -16,7 +16,7 @@
             <div class="col-lg-7 order-2 order-lg-1">
 
                 <p class="eyebrow mb-0">
-                    No. {!! $revista_actual['edicion'] !!} &nbsp;·&nbsp;
+                    No. {{ $revista_actual['edicion'] }} &nbsp;·&nbsp;
                     {{ $revista_actual['periodo'] }}
                 </p>
 
@@ -68,7 +68,7 @@
                              no al contenedor de la columna. --}}
                     <span class="hero__portada-marco">
                         <img src="{{ asset($revista_actual['portada']) }}"
-                             alt="Portada de la edición No. {!! $revista_actual['edicion'] !!}"
+                             alt="Portada de la edición No. {{ $revista_actual['edicion'] }}"
                              class="hero__portada"
                              data-respaldo="{{ asset('img/portada_emprende_unam_0.jpg') }}"
                              onerror="if(this.dataset.respaldo){this.src=this.dataset.respaldo;this.removeAttribute('data-respaldo');}else{this.onerror=null;this.src='https://placehold.co/700x910/F8F9FA/0A0A0A?text=Portada';}">
@@ -116,7 +116,7 @@
 
                             <p class="post__excerpt">{{ $articulo_principal['descripcion'] }}</p>
 
-                            <p class="post__meta"><strong>{!! $articulo_principal['autores'] !!}</strong></p>
+                            <p class="post__meta"><strong>@foreach ((array) $articulo_principal['autores'] as $autor){{ $autor }}@unless ($loop->last)<br>@endunless @endforeach</strong></p>
 
                             <a href="{{ asset($articulo_principal['pdf']) }}"
                                class="post__more" target="_blank" rel="noopener">Leer artículo</a>
@@ -161,7 +161,7 @@
                                 <p class="post__excerpt">{{ $art['descripcion'] }}</p>
 
                                 <p class="post__meta">
-                                    <strong>{!! $art['autores'] !!}</strong>
+                                    <strong>@foreach ((array) $art['autores'] as $autor){{ $autor }}@unless ($loop->last)<br>@endunless @endforeach</strong>
                                     &nbsp;·&nbsp; pp. {{ $art['paginas'] }}
                                 </p>
 
@@ -184,7 +184,7 @@
                                     @foreach ($art['cursos_fca'] as $n => $curso)
                                         <li>
                                             <a href="{{ asset($curso['url']) }}" target="_blank" rel="noopener">
-                                                <span class="curso-vip__num" aria-hidden="true">{!! str_pad($n + 1, 2, '0', STR_PAD_LEFT) !!}</span>
+                                                <span class="curso-vip__num" aria-hidden="true">{{ str_pad($n + 1, 2, '0', STR_PAD_LEFT) }}</span>
                                                 <span class="curso-vip__nombre">{{ $curso['texto'] }}</span>
                                                 <span class="curso-vip__flecha" aria-hidden="true">&rarr;</span>
                                             </a>

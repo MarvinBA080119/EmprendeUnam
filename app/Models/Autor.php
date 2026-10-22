@@ -14,6 +14,17 @@ class Autor extends Model
 
     public $timestamps = false;
 
+    /** Opciones del grado académico en el registro (auto_grado_academico, opcional). */
+    public const GRADOS = [
+        'Licenciatura',
+        'Especialidad',
+        'Maestría',
+        'Doctorado',
+        'Posdoctorado',
+        'Estudiante / Sin grado',
+        'Otro',
+    ];
+
     // auto_id_coautor se deja en NULL: los coautores se ligan por autor_articulo.
     protected $fillable = [
         'pers_id_persona',

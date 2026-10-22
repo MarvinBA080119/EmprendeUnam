@@ -133,6 +133,17 @@ class SesionTest extends TestCase
         $this->get('/autor')->assertOk();
     }
 
+    public function test_tras_la_inactividad_una_pagina_publica_se_ve_como_visitante(): void
+    {
+        $this->actingAs($this->crearAutor())->get('/autor')->assertOk();
+
+        $this->travel(31)->minutes();
+
+        $this->get('/consultorio')->assertOk();
+        $this->assertGuest();
+        $this->getJson('/buscar/resultados?q=pymes')->assertOk();
+    }
+
     public function test_una_peticion_json_vencida_recibe_401(): void
     {
         $this->actingAs($this->administrador())->get('/admin')->assertOk();

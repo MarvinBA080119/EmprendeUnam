@@ -85,6 +85,7 @@ watch(() => filtros.tipo, (tipo) => {
                 </h2>
                 <p v-if="r.autores.length" class="post__meta"><strong><Resaltado :segmentos="r.autores" /></strong></p>
                 <p v-if="r.institucion.length" class="post__meta"><strong><Resaltado :segmentos="r.institucion" /></strong></p>
+                <p v-if="r.resumen?.length" class="post__excerpt"><Resaltado :segmentos="r.resumen" /></p>
                 <p v-if="r.palabras.length" class="post__excerpt">Palabras clave: <Resaltado :segmentos="r.palabras" /></p>
             </article>
 
