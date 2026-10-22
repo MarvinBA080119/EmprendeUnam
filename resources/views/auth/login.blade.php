@@ -8,6 +8,15 @@
         <p class="emp-subtitulo">Entra a tu panel de autor o de administración.</p>
     </div>
 
+    @if ($sesionAbierta)
+        <div class="alert alert-info" role="status">
+            <span class="alert-texto">
+                Tienes una sesión abierta como <strong>{{ $sesionAbierta->usua_nombre_usuario }}</strong>.
+                Si entras con otra cuenta, esa sesión se cerrará.
+            </span>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('login.store') }}" novalidate>
         @csrf
         <x-campo nombre="acceso" etiqueta="Correo o nombre de usuario" requerido

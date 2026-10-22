@@ -1,5 +1,6 @@
 <script setup>
 import { computed, nextTick, reactive, ref } from 'vue';
+import CampoPdf from './CampoPdf.vue';
 
 const props = defineProps({
     accion: { type: String, required: true },
@@ -11,6 +12,7 @@ const props = defineProps({
     maxCoautores: { type: Number, default: 1 },
     maxPalabrasResumen: { type: Number, default: 50 },
     urlCancelar: { type: String, default: '' },
+    urlCartaCesion: { type: String, default: '' },
 });
 
 const TOTAL_PALABRAS = 5;
@@ -33,10 +35,9 @@ const erroresLocales = ref({});
 const palabrasFaltantes = ref(new Set());
 const totalErroresLocales = ref(0);
 const enviando = ref(false);
-const pdfSeleccionado = ref(null);
 const formulario = ref(null);
-const campoPdf = ref(null);
-const arrastrando = ref(false);
+// Los dos PDF: el artículo y la carta de cesión firmada.
+const archivos = reactive({ pdf: null, carta_cesion: null });
 
 const hayErroresServidor = Object.keys(props.errores).length > 0;
 
@@ -67,10 +68,11 @@ const palabrasResumen = computed(() => {
 
 const pdfMaxMb = computed(() => Math.round(props.pdfMaxKb / 1024));
 
-const pesoPdf = computed(() => {
-    const bytes = pdfSeleccionado.value?.size ?? 0;
-    return bytes >= 1024 * 1024 ? `${(bytes / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;
-});
+function alElegirArchivo(clave, { archivo, error: mensaje }) {
+    archivos[clave] = archivo;
+    if (mensaje) erroresLocales.value[clave] = mensaje;
+    else delete erroresLocales.value[clave];
+}
 
 function agregarCoautor() {
     if (form.coautores.length < props.maxCoautores) {
@@ -83,31 +85,6 @@ function quitarCoautor(indice) {
     if (form.coautores.length === 0) {
         form.coautores.push(coautorVacio());
     }
-}
-
-async function alElegirPdf(evento) {
-    const archivo = evento.target.files?.[0] ?? null;
-    pdfSeleccionado.value = archivo;
-    delete erroresLocales.value.pdf;
-    if (!archivo) return;
-
-    if (archivo.size > props.pdfMaxKb * 1024) {
-        erroresLocales.value.pdf = `El PDF no debe pesar más de ${pdfMaxMb.value} MB.`;
-        return;
-    }
-    const inicio = await archivo.slice(0, 4).text();
-    if (inicio !== '%PDF') {
-        erroresLocales.value.pdf = 'El archivo no es un PDF válido.';
-    }
-}
-
-// Arrastrar y soltar: el archivo pasa al mismo campo name="pdf" del formulario.
-function alSoltar(evento) {
-    arrastrando.value = false;
-    const archivos = evento.dataTransfer?.files;
-    if (!archivos?.length || !campoPdf.value) return;
-    campoPdf.value.files = archivos;
-    alElegirPdf({ target: campoPdf.value });
 }
 
 function validar() {
@@ -136,8 +113,10 @@ function validar() {
             }
         });
     }
-    if (!pdfSeleccionado.value) e.pdf = 'Selecciona el archivo PDF del artículo.';
+    if (!archivos.pdf) e.pdf = 'Selecciona el archivo PDF del artículo.';
     else if (erroresLocales.value.pdf) e.pdf = erroresLocales.value.pdf;
+    if (!archivos.carta_cesion) e.carta_cesion = 'Sube la carta de cesión de derechos firmada, en PDF.';
+    else if (erroresLocales.value.carta_cesion) e.carta_cesion = erroresLocales.value.carta_cesion;
     erroresLocales.value = e;
     totalErroresLocales.value = Object.keys(e).length - (e.palabras ? 1 : 0) + palabrasFaltantes.value.size
         + (e.palabras && palabrasFaltantes.value.size === 0 ? 1 : 0);
@@ -160,7 +139,7 @@ async function enviar(evento) {
 </script>
 
 <template>
-    <form ref="formulario" class="emp-envio-form" :action="accion" method="POST" enctype="multipart/form-data" novalidate @submit="enviar">
+    <form ref="formulario" class="emp-envio-form" :action="accion" method="POST" enctype="multipart/form-data" novalidate data-sin-carga @submit="enviar">
         <input type="hidden" name="_token" :value="csrf" />
 
         <div v-if="totalErroresLocales > 0" class="alert alert-danger" role="alert">
@@ -169,7 +148,7 @@ async function enviar(evento) {
             </span>
         </div>
         <div v-else-if="hayErroresServidor" class="alert alert-danger" role="alert">
-            <span class="alert-texto">Revisa los datos marcados. Por seguridad, vuelve a seleccionar el archivo PDF.</span>
+            <span class="alert-texto">Revisa los datos marcados. Por seguridad, vuelve a seleccionar los archivos PDF.</span>
         </div>
 
         <section class="emp-bloque" aria-labelledby="bloque-datos">
@@ -283,34 +262,20 @@ async function enviar(evento) {
 
         <section class="emp-bloque" aria-labelledby="bloque-archivo">
             <div class="emp-bloque__texto">
-                <h2 id="bloque-archivo" class="emp-bloque__titulo">Archivo</h2>
-                <p>El artículo completo en PDF, de máximo {{ pdfMaxMb }} MB.</p>
+                <h2 id="bloque-archivo" class="emp-bloque__titulo">Archivos</h2>
+                <p>El artículo completo y la carta de cesión de derechos firmada, en PDF de máximo {{ pdfMaxMb }} MB cada uno.</p>
+                <p v-if="urlCartaCesion" class="emp-bloque__nota">
+                    Descarga la carta, llénala, fírmala y súbela escaneada en PDF.
+                    <a :href="urlCartaCesion" download>Descargar la carta (Word)</a>
+                </p>
             </div>
             <div class="emp-bloque__campos">
-                <div class="emp-archivo"
-                     :class="{ 'is-arrastrando': arrastrando, 'is-invalid': error('pdf'), 'tiene-archivo': pdfSeleccionado && !error('pdf') }"
-                     @dragenter.prevent="arrastrando = true" @dragover.prevent="arrastrando = true"
-                     @dragleave.prevent="arrastrando = false" @drop.prevent="alSoltar">
-                    <input id="pdf" ref="campoPdf" class="emp-archivo__campo" name="pdf" type="file" accept="application/pdf,.pdf"
-                           required aria-describedby="pdf-ayuda pdf-error" @change="alElegirPdf" />
-                    <label for="pdf" class="emp-archivo__zona">
-                        <span class="emp-archivo__icono" aria-hidden="true">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" focusable="false">
-                                <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5" />
-                                <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
-                            </svg>
-                        </span>
-                        <span v-if="pdfSeleccionado" class="emp-archivo__texto">
-                            <strong class="text-break">{{ pdfSeleccionado.name }}</strong>
-                            <span id="pdf-ayuda" class="emp-num">{{ pesoPdf }} · <span class="emp-archivo__accion">Cambiar archivo</span></span>
-                        </span>
-                        <span v-else class="emp-archivo__texto">
-                            <strong>Arrastra tu PDF aquí</strong>
-                            <span id="pdf-ayuda">o <span class="emp-archivo__accion">elige un archivo</span> · solo PDF, máximo {{ pdfMaxMb }} MB</span>
-                        </span>
-                    </label>
-                </div>
-                <div v-if="error('pdf')" id="pdf-error" class="invalid-feedback d-block">{{ error('pdf') }}</div>
+                <label class="form-label" for="pdf">Artículo</label>
+                <CampoPdf nombre="pdf" :max-kb="pdfMaxKb" titulo="Arrastra aquí el PDF del artículo" :error="error('pdf')"
+                          @elegido="(d) => alElegirArchivo('pdf', d)" />
+                <label class="form-label mt-3" for="carta_cesion">Carta de cesión de derechos firmada</label>
+                <CampoPdf nombre="carta_cesion" :max-kb="pdfMaxKb" titulo="Arrastra aquí la carta firmada"
+                          :error="error('carta_cesion')" @elegido="(d) => alElegirArchivo('carta_cesion', d)" />
             </div>
         </section>
 

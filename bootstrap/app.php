@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Middleware\EncabezadosSeguridad;
+use App\Http\Middleware\ExpiraPorInactividad;
+use App\Http\Middleware\SinCache;
 use App\Http\Middleware\TienePrivilegio;
 use App\Models\Usuario;
 use App\Services\AccesoService;
@@ -12,6 +14,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -35,7 +38,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'privilegio' => TienePrivilegio::class,
         ]);
 
-        $middleware->web(append: [EncabezadosSeguridad::class]);
+        $middleware->web(append: [
+            EncabezadosSeguridad::class,
+            SinCache::class,
+            ExpiraPorInactividad::class,
+        ]);
 
         // Solo se aceptan peticiones dirigidas al dominio de APP_URL: los enlaces
         // de los correos (recuperar contraseña, newsletter) no dependen del
@@ -44,7 +51,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->redirectGuestsTo(fn () => route('login'));
 
-        // Quien ya inició sesión y abre /iniciar-sesion o /registro va a su panel.
+        // Quien ya inició sesión y abre /registro o la recuperación de contraseña
+        // va a su panel (el login no lleva «guest»: ver routes/auth.php).
         $middleware->redirectUsersTo(fn (Request $request) => $request->user() instanceof Usuario
             ? app(AccesoService::class)->rutaInicio($request->user())
             : route('inicio'));
@@ -70,6 +78,29 @@ return Application::configure(basePath: dirname(__DIR__))
             ]);
 
             return false;
+        });
+
+        // Token CSRF vencido (419) en el login o al cerrar sesión: la sesión ya
+        // había terminado o la página llevaba mucho tiempo abierta. Se vuelve
+        // al login con un aviso claro en lugar de la página de error.
+        $exceptions->render(function (HttpException $e, Request $request) {
+            if ($e->getStatusCode() !== 419 || $request->expectsJson()) {
+                return null;
+            }
+
+            if ($request->routeIs('logout')) {
+                return redirect()->route('login')->with('aviso', $request->input('motivo') === 'inactividad'
+                    ? ExpiraPorInactividad::MENSAJE
+                    : 'Tu sesión ya había terminado.');
+            }
+
+            if ($request->routeIs('login.store')) {
+                return redirect()->route('login')
+                    ->withInput($request->only('acceso'))
+                    ->with('aviso', 'La página estuvo abierta demasiado tiempo. Escribe de nuevo tu contraseña.');
+            }
+
+            return null;
         });
 
         $exceptions->render(function (QueryException $e, Request $request) {

@@ -129,7 +129,16 @@
                 <!-- Formulario -->
                 <div class="col-lg-7">
 
-                    <form class="form-lux" id="formConsultorio" method="POST" action="{{ route('consultorio.store') }}" novalidate>
+                    @if (session('consulta_enviada'))
+                        <x-sitio.aviso-enviado id="avisoConsulta" etiqueta="Consultorio" titulo="Consulta recibida">
+                            <p class="aviso-lux__asunto">«{{ session('consulta_enviada') }}»</p>
+                            <p>El comité editorial responderá en un plazo no mayor a cinco días hábiles. Si su consulta
+                                se responde, se publicará en esta página con su nombre y lugar, nunca con su correo.</p>
+                        </x-sitio.aviso-enviado>
+                    @endif
+
+                    <form class="form-lux" id="formConsultorio" method="POST" action="{{ route('consultorio.store') }}" novalidate
+                          data-envio-unico>
                         @csrf
 
                         @if (session('exito'))
@@ -161,7 +170,7 @@
                             <input type="text" id="sitioWeb" name="sitio_web" tabindex="-1" autocomplete="off">
                         </div>
 
-                        <button type="submit" class="btn-enviar">Enviar consulta</button>
+                        <button type="submit" class="btn-enviar" data-texto-enviando="Enviando consulta…">Enviar consulta</button>
 
                         <p class="form-nota">
                             Al enviar este formulario, acepta que sus datos sean tratados conforme al

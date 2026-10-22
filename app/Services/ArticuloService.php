@@ -3,12 +3,14 @@
 namespace App\Services;
 
 use App\Enums\EstatusArticulo;
+use App\Enums\TipoDocumento;
 use App\Mail\ArticuloRechazado;
 use App\Mail\ArticuloRecibido;
 use App\Models\Articulo;
 use App\Models\Autor;
 use App\Models\AutorArticulo;
 use App\Models\Comunicacion;
+use App\Models\Constancia;
 use App\Models\Persona;
 use App\Models\TipoComunicacion;
 use App\Models\Usuario;
@@ -31,19 +33,21 @@ class ArticuloService
     public function __construct(private PalabraClaveService $palabras) {}
 
     /**
-     * Guarda el artículo, su PDF, autores y palabras clave en UNA transacción.
-     * Si algo falla se borra el PDF guardado.
+     * Guarda el artículo, su PDF, la carta de cesión firmada (constancia de
+     * tipo CESION, sin folio), autores y palabras clave en UNA transacción.
+     * Si algo falla se borran los archivos guardados.
      *
      * @param  array{titulo: string, resumen: string, tema_id_tema: int|string, palabras: list<string>,
      *               tiene_coautores?: bool, coautores?: list<array<string, ?string>>}  $datos
      */
-    public function enviar(Usuario $remitente, array $datos, UploadedFile $pdf): Articulo
+    public function enviar(Usuario $remitente, array $datos, UploadedFile $pdf, UploadedFile $cartaCesion): Articulo
     {
         $disco = Storage::disk('local');
         $ruta = null;
+        $rutaCesion = null;
 
         try {
-            $articulo = DB::transaction(function () use ($remitente, $datos, $pdf, $disco, &$ruta) {
+            $articulo = DB::transaction(function () use ($remitente, $datos, $pdf, $cartaCesion, $disco, &$ruta, &$rutaCesion) {
                 // El nombre del PDF usa el id del artículo: se reserva antes del INSERT.
                 $id = (int) DB::selectOne(
                     "select nextval(pg_get_serial_sequence('articulo', 'arti_id_autor')) as id"
@@ -66,6 +70,19 @@ class ArticuloService
                     throw new \RuntimeException('No se pudo guardar el PDF del artículo.');
                 }
 
+                $rutaCesion = config('emprende.carpeta_cesiones')."/{$id}.pdf";
+                if ($disco->putFileAs(dirname($rutaCesion), $cartaCesion, basename($rutaCesion)) === false) {
+                    throw new \RuntimeException('No se pudo guardar la carta de cesión.');
+                }
+
+                Constancia::create([
+                    'arti_id_autor' => $id,
+                    'cons_fecha_emision' => today(),
+                    'cons_url_archivo' => $rutaCesion,
+                    'cons_folio' => null,
+                    'cons_tipo' => TipoDocumento::CESION,
+                ]);
+
                 AutorArticulo::create([
                     'auar_id_autor' => $this->autorDe($remitente)->auto_id_autor,
                     'arti_id_autor' => $id,
@@ -87,9 +104,7 @@ class ArticuloService
                 return $articulo;
             });
         } catch (Throwable $e) {
-            if ($ruta !== null) {
-                $disco->delete($ruta);
-            }
+            $disco->delete(array_filter([$ruta, $rutaCesion]));
 
             throw $e;
         }
@@ -115,6 +130,8 @@ class ArticuloService
             ->with([
                 'tema',
                 'constancia',
+                'cartaAgradecimiento',
+                'entradasRevista' => fn ($q) => $q->whereHas('revista', fn ($r) => $r->where('revi_visible', true)),
                 'autores' => fn ($q) => $q->where('autor.auto_id_autor', $idAutor),
             ])
             ->orderByDesc('arti_fecha_registro')
@@ -188,6 +205,8 @@ class ArticuloService
             'tema',
             'palabras',
             'constancia',
+            'cartaCesion',
+            'cartaAgradecimiento',
             'autores' => fn ($q) => $q->orderByDesc('autor_articulo.auar_principal')->orderBy('autor_articulo.auar_id_autor_articulo'),
             'autores.persona.correo',
             'autores.persona.usuario',

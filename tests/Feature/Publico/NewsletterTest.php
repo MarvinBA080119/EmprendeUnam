@@ -173,6 +173,38 @@ class NewsletterTest extends TestCase
         $this->get("/newsletter/confirmar/{$persona->pers_token_confirmacion}")->assertSee('ya estaba confirmada');
     }
 
+    public function test_el_enlace_de_confirmacion_vence_y_la_suscripcion_sigue_pendiente(): void
+    {
+        $this->post('/newsletter/suscribir', $this->datos());
+        $persona = $this->personaDe('valeria.torres@example.com');
+
+        $this->travel(49)->hours();
+
+        $this->get("/newsletter/confirmar/{$persona->pers_token_confirmacion}")
+            ->assertOk()
+            ->assertSee('El enlace de confirmación venció');
+
+        $this->assertNull($persona->fresh()->pers_fecha_confirmacion);
+
+        // Al suscribirse otra vez llega un enlace nuevo que sí funciona.
+        $this->post('/newsletter/suscribir', $this->datos());
+        $nuevo = $persona->fresh()->pers_token_confirmacion;
+        $this->assertNotSame($persona->pers_token_confirmacion, $nuevo);
+        $this->get("/newsletter/confirmar/{$nuevo}")->assertSee('¡Suscripción confirmada!');
+    }
+
+    public function test_el_enlace_de_baja_no_vence(): void
+    {
+        $this->post('/newsletter/suscribir', $this->datos());
+        $persona = $this->personaDe('valeria.torres@example.com');
+
+        $this->travel(30)->days();
+
+        $this->get("/newsletter/baja/{$persona->pers_token_confirmacion}")
+            ->assertOk()
+            ->assertSee('¿Dejar de recibir el newsletter?');
+    }
+
     public function test_un_token_desconocido_no_es_valido(): void
     {
         $this->get('/newsletter/confirmar/'.str_repeat('a', 64))->assertOk()->assertSee('Este enlace ya no es válido');

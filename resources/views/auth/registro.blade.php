@@ -24,8 +24,8 @@
                     <x-campo nombre="segundo_apellido" etiqueta="Segundo apellido" opcional maxlength="100" />
                 </div>
                 <div class="col-12 col-sm-6">
-                    <x-campo nombre="grado_academico" etiqueta="Grado académico" opcional maxlength="100"
-                             placeholder="Licenciatura, Maestría, Doctorado" />
+                    <x-campo nombre="grado_academico" etiqueta="Grado académico" opcional tipo="select"
+                             :opciones="\App\Models\Autor::GRADOS" vacio="Elige una opción" />
                 </div>
                 <div class="col-12">
                     <x-campo nombre="institucion" etiqueta="Institución" requerido maxlength="100" autocomplete="organization" />

@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Publico;
 
+use App\Models\ArticuloRevista;
+use App\Models\Revista;
 use App\Models\Tema;
 use App\Services\ArticuloService;
 use App\Services\BuscadorService;
@@ -75,6 +77,40 @@ class BuscadorTest extends TestCase
         $this->assertSame(['Con autora'], $this->titulos('q=quinones'));
         $this->assertSame(['Con coautor'], $this->titulos('q=zubiria'));
         $this->assertContains('Con tema', $this->titulos('q=internacionales'));
+    }
+
+    public function test_busca_tambien_en_el_resumen(): void
+    {
+        $this->aprobado(['articulo' => ['titulo' => 'Cadenas de suministro', 'resumen' => 'Analiza la logística inversa en talleres de calzado de León.']]);
+
+        $this->assertSame(['Cadenas de suministro'], $this->titulos('q=calzado'));
+
+        $resumen = collect($this->getJson('/buscar/resultados?q=calzado')->json('datos.0.resumen'));
+        $this->assertTrue($resumen->contains(fn ($s) => $s['marca'] && $s['texto'] === 'calzado'));
+    }
+
+    public function test_busca_en_los_articulos_editoriales_de_numeros_visibles(): void
+    {
+        $admin = $this->administrador();
+        foreach (['221' => true, '222' => false] as $numero => $visible) {
+            $revista = new Revista;
+            $revista->forceFill([
+                'usua_id_usuario' => $admin->usua_id_usuario, 'revi_titulo' => "Número {$numero}", 'revi_anio' => '2026',
+                'revi_mes' => 'julio-agosto', 'revi_num_edicion' => $numero, 'revi_url_portada' => 'p.jpg',
+                'revi_url_revista_pdf' => 'r.pdf', 'revi_fecha_publicacion' => today(), 'revi_visible' => $visible,
+            ])->save();
+            ArticuloRevista::create([
+                'revi_id_revista' => $revista->revi_id_revista, 'arre_titulo' => "Cafeterías de barrio {$numero}",
+                'arre_autores' => 'Laura Méndez', 'arre_descripcion' => 'Cómo compiten frente a las cadenas.',
+            ]);
+        }
+
+        $this->assertSame(['Cafeterías de barrio 221'], $this->titulos('q=cafeterias'));
+        $this->assertSame(['Cafeterías de barrio 221'], $this->titulos('q=cadenas'), 'Busca en la descripción.');
+        $this->assertSame([], $this->titulos('q=cafeterias&tipo=curso'));
+
+        $url = $this->getJson('/buscar/resultados?q=cafeterias')->json('datos.0.url');
+        $this->assertStringContainsString('/edicion/', $url);
     }
 
     public function test_resalta_el_termino_encontrado(): void

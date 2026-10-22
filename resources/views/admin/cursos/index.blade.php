@@ -63,7 +63,8 @@
                                             Editar<span class="visually-hidden"> «{{ $curso->curs_nombre_curso }}»</span>
                                         </a>
                                         <form method="POST" action="{{ route('admin.cursos.destroy', $curso) }}"
-                                              data-confirmar="¿Eliminar el curso «{{ $curso->curs_nombre_curso }}»? Esta acción no se puede deshacer.">
+                                              data-confirmar="¿Eliminar el curso «{{ $curso->curs_nombre_curso }}»? Esta acción no se puede deshacer."
+                                              data-confirmar-boton="Eliminar curso" data-destructivo>
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-quieto btn-sm">

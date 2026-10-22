@@ -37,6 +37,14 @@ return [
     'expire_on_close' => env('SESSION_EXPIRE_ON_CLOSE', false),
 
     /*
+    | Minutos sin actividad tras los que se cierra la sesión con sesión iniciada
+    | (App\Http\Middleware\ExpiraPorInactividad y resources/js/sesion.js).
+    | Debe ser menor que «lifetime» para que el aviso alcance a mostrarse.
+    */
+
+    'inactividad' => (int) env('SESSION_INACTIVIDAD', 30),
+
+    /*
     |--------------------------------------------------------------------------
     | Session Encryption
     |--------------------------------------------------------------------------

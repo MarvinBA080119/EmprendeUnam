@@ -24,7 +24,7 @@ class ErrorBaseDatosTest extends TestCase
         return [
             'correo repetido' => ['23505', 'duplicate key value violates unique constraint "uq_comunicacion_valor"', 'Este correo ya está registrado.'],
             'usuario repetido (índice sin mayúsculas)' => ['23505', 'duplicate key value violates unique constraint "uq_usuario_nombre_ci"', 'Ese nombre de usuario ya está en uso.'],
-            'constancia repetida' => ['23505', 'duplicate key value violates unique constraint "uq_constancia_articulo"', 'La constancia de este artículo ya fue generada.'],
+            'constancia repetida' => ['23505', 'duplicate key value violates unique constraint "uq_constancia_articulo_tipo"', 'Ese documento del artículo ya fue generado.'],
             'duplicado sin traducción propia' => ['23505', 'duplicate key value violates unique constraint "otra"', 'Ese registro ya existe.'],
             'sexta palabra clave (trigger)' => ['23514', 'ERROR:  El artículo 7 ya tiene 5 palabras clave', 'Un artículo admite como máximo 5 palabras clave.'],
             'rechazo sin motivo' => ['23514', 'new row for relation "articulo" violates check constraint "ck_arti_rechazo"', 'Para rechazar un artículo hay que escribir el motivo.'],

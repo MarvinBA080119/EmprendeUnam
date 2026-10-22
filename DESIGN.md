@@ -509,6 +509,16 @@ Sin marco, alineadas con el texto de la página: encabezados en Label pizarra co
 
 ### Avisos
 Caja de 8px con borde de 1px, ícono SVG de 16px pintado con `currentColor` y texto azul. Neutro: `emp-n-25` con borde `emp-n-150`; éxito e información: `emp-n-50` con borde `emp-n-200`; atención y error: café papel con borde café bruma e ícono café. Entran con 240ms desde 4px arriba y se pueden cerrar.
+Se usan dentro de la página para lo que acompaña a un formulario (errores de validación, la sesión abierta en el login).
+
+### Notificaciones
+Los mensajes que llegan tras una acción (flash `exito`, `aviso`, `error` y los de las tablas Vue) son una hoja blanca flotante de 12px de radio con `--emp-sombra-menu`, 23rem de ancho, bajo el encabezado a la derecha (en celular, abajo, a todo lo ancho). Llevan ícono de 18px (azul en éxito, café en aviso y error), un título de 13px en 600 que nombra el estado («Listo», «Aviso», «No se pudo completar», café en aviso y error) y el mensaje en 14px grafito. Entran en 260ms desde 6px arriba con escala 0.98 y salen por el mismo camino en 160ms; éxito se cierra a los 6s, aviso a los 9s y error se queda hasta cerrarlo; el puntero o el foco pausan la cuenta (`resources/js/avisos.js`).
+
+### Diálogos
+Confirmaciones y el aviso de inactividad: `<dialog>` modal de 27rem y 16px de radio, fondo azul al 42%, título Newsreader 420 de 22px con `text-wrap: balance`, texto de 15px grafito y acciones a la derecha (secundario + primario; en celular, apiladas a todo lo ancho). Entran en 240ms desde 8px abajo con escala 0.98. Si la acción es destructiva, el foco inicial queda en «Cancelar». El título y el texto salen de `data-confirmar` (la pregunta hasta el «?» es el título) y el botón, de `data-confirmar-boton`.
+
+### Envío en curso
+Al enviar un formulario POST, el botón muestra un anillo de 13px que gira (700ms) y el texto «Enviando…» (o `data-texto-enviando`); un segundo clic no vuelve a enviar. Con movimiento reducido el anillo queda quieto.
 
 ### Acceso
 - **Nota editorial:** sobre hueso con halo café, el lema en Display acceso y un párrafo en Body entrada grafito. En registro, el proceso de publicación en cuatro renglones separados por hilos `emp-n-200`: número en Cifra de paso café, paso en 600 y explicación en 14px pizarra.

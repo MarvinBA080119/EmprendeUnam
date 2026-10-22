@@ -438,6 +438,254 @@ table {
     background-size: 0.625rem;
 }
 
+/* --- Notificaciones: hoja blanca flotante bajo el encabezado ------------- */
+.emp-avisos {
+    position: fixed;
+    top: calc(var(--emp-alto-cab) + 0.875rem);
+    right: 1rem;
+    z-index: 1090;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: min(23rem, calc(100vw - 2rem));
+    pointer-events: none;
+}
+
+.emp-aviso {
+    --emp-icono-aviso: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm3.03 5.28-3.5 3.5a.75.75 0 0 1-1.06 0l-1.5-1.5a.75.75 0 1 1 1.06-1.06l.97.97 2.97-2.97a.75.75 0 0 1 1.06 1.06Z'/%3E%3C/svg%3E");
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.75rem;
+    align-items: start;
+    padding: 0.8125rem 0.5rem 0.875rem 0.9375rem;
+    color: var(--emp-azul);
+    background-color: var(--emp-blanco);
+    border-radius: 0.75rem;
+    box-shadow: var(--emp-sombra-menu);
+    pointer-events: auto;
+    transition: opacity 200ms ease, transform 260ms var(--emp-ease-out);
+}
+
+@starting-style {
+    .emp-aviso {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.98);
+    }
+}
+
+.emp-aviso.is-saliendo {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+    transition-duration: 160ms;
+}
+
+.emp-aviso--aviso,
+.emp-aviso--error {
+    --emp-icono-aviso: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm0 3.25a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0V5A.75.75 0 0 1 8 4.25Zm0 7.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E");
+}
+
+.emp-aviso__marca {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-top: 0.0625rem;
+    background-color: var(--emp-azul);
+    -webkit-mask: var(--emp-icono-aviso) center / contain no-repeat;
+    mask: var(--emp-icono-aviso) center / contain no-repeat;
+}
+
+.emp-aviso--aviso .emp-aviso__marca,
+.emp-aviso--error .emp-aviso__marca {
+    background-color: var(--emp-cafe);
+}
+
+.emp-aviso__titulo {
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.emp-aviso--aviso .emp-aviso__titulo,
+.emp-aviso--error .emp-aviso__titulo {
+    color: var(--emp-cafe);
+}
+
+.emp-aviso__texto {
+    margin: 0.125rem 0 0;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--emp-n-700);
+    overflow-wrap: anywhere;
+}
+
+.emp-aviso__cerrar {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-top: -0.1875rem;
+    padding: 0;
+    color: var(--emp-n-600);
+    background: transparent;
+    border: 0;
+    border-radius: 0.5rem;
+    transition: color var(--emp-rapido) ease, background-color var(--emp-rapido) ease, transform var(--emp-rapido) var(--emp-ease-out);
+}
+
+.emp-aviso__cerrar:hover {
+    color: var(--emp-azul);
+    background-color: var(--emp-n-100);
+}
+
+.emp-aviso__cerrar:active {
+    transform: scale(0.92);
+}
+
+/* En el celular salen abajo, al alcance del pulgar, y suben desde el borde */
+@media (max-width: 575.98px) {
+    .emp-avisos {
+        top: auto;
+        bottom: 1rem;
+        left: 1rem;
+        right: 1rem;
+        width: auto;
+        flex-direction: column-reverse;
+    }
+
+    @starting-style {
+        .emp-aviso {
+            opacity: 0;
+            transform: translateY(8px) scale(0.98);
+        }
+    }
+
+    .emp-aviso.is-saliendo {
+        transform: translateY(6px) scale(0.98);
+    }
+}
+
+/* --- Diálogos: confirmación y aviso de inactividad ----------------------- */
+.emp-dialogo {
+    width: min(27rem, calc(100vw - 2rem));
+    padding: 0;
+    color: var(--emp-azul);
+    background-color: var(--emp-blanco);
+    border: 0;
+    border-radius: 1rem;
+    box-shadow:
+        0 0 0 1px rgba(0, 19, 40, 0.06),
+        0 2px 6px rgba(0, 19, 40, 0.05),
+        0 28px 64px -24px rgba(0, 19, 40, 0.38);
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+    transition:
+        opacity 180ms ease,
+        transform 240ms var(--emp-ease-out),
+        overlay 240ms allow-discrete,
+        display 240ms allow-discrete;
+}
+
+.emp-dialogo[open] {
+    opacity: 1;
+    transform: none;
+}
+
+@starting-style {
+    .emp-dialogo[open] {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+}
+
+.emp-dialogo::backdrop {
+    background-color: rgba(0, 19, 40, 0);
+    transition:
+        background-color 240ms ease,
+        overlay 240ms allow-discrete,
+        display 240ms allow-discrete;
+}
+
+.emp-dialogo[open]::backdrop {
+    background-color: rgba(0, 19, 40, 0.42);
+}
+
+@starting-style {
+    .emp-dialogo[open]::backdrop {
+        background-color: rgba(0, 19, 40, 0);
+    }
+}
+
+.emp-dialogo__cuerpo {
+    padding: 1.5rem 1.5rem 1.25rem;
+}
+
+.emp-dialogo__titulo {
+    margin: 0 0 0.5rem;
+    font-family: var(--emp-serif);
+    font-size: 1.375rem;
+    font-weight: 420;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+}
+
+.emp-dialogo__texto {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--emp-n-700);
+    text-wrap: pretty;
+}
+
+.emp-dialogo__cuenta {
+    color: var(--emp-azul);
+    font-variant-numeric: tabular-nums;
+}
+
+.emp-dialogo__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+@media (max-width: 575.98px) {
+    .emp-dialogo__acciones {
+        flex-direction: column-reverse;
+    }
+
+    .emp-dialogo__acciones .btn {
+        width: 100%;
+    }
+}
+
+/* --- Botón mientras se envía el formulario -------------------------------- */
+.is-enviando {
+    pointer-events: none;
+    opacity: 0.88;
+}
+
+.is-enviando::before {
+    content: '';
+    display: inline-block;
+    flex: none;
+    width: 0.8125rem;
+    height: 0.8125rem;
+    margin-right: 0.5rem;
+    vertical-align: -0.125em;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: emp-girar 700ms linear infinite;
+}
+
+@keyframes emp-girar {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /* --- Insignias de estado: punto + texto, nunca solo color ---------------- */
 .emp-insignia {
     display: inline-flex;
@@ -1907,6 +2155,16 @@ td.emp-vacio {
     max-width: 34ch;
 }
 
+.emp-bloque__texto .emp-bloque__nota {
+    margin-top: 0.75rem;
+}
+
+.emp-bloque__nota a {
+    display: inline-block;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
 .emp-bloque__campos {
     max-width: 40rem;
 }
@@ -2404,4 +2662,22 @@ a.emp-fila:hover .emp-fila__lado .emp-icono {
         transition-duration: 0.01ms !important;
         animation-duration: 0.01ms !important;
     }
+
+    /* El indicador de envío queda quieto; el texto «Enviando…» lo explica */
+    .is-enviando::before {
+        animation: none !important;
+    }
+}
+
+/* --- Gestor de portada --------------------------------------------------- */
+.emp-seccion__texto {
+    max-width: 62ch;
+    margin: -0.25rem 0 1rem;
+    color: var(--emp-n-600);
+    font-size: 0.875rem;
+}
+
+.alert .ms-auto {
+    flex: none;
+    margin-top: -0.25rem;
 }

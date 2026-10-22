@@ -10,7 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
  * Encabezados de seguridad en todas las respuestas web: impiden que otro sitio
  * muestre las páginas en un iframe (clickjacking de los formularios del
  * administrador), que el navegador adivine tipos de archivo y que la URL
- * completa (con tokens) viaje como Referer a otros sitios.
+ * completa (con tokens) viaje como Referer a otros sitios. Con HTTPS agrega
+ * HSTS.
  */
 class EncabezadosSeguridad
 {
@@ -25,6 +26,11 @@ class EncabezadosSeguridad
             'Referrer-Policy' => 'strict-origin-when-cross-origin',
             'Permissions-Policy' => 'camera=(), microphone=(), geolocation=()',
         ];
+
+        // Con HTTPS, el navegador ya no intentará conectarse por HTTP durante un año.
+        if ($request->isSecure()) {
+            $encabezados['Strict-Transport-Security'] = 'max-age=31536000';
+        }
 
         foreach ($encabezados as $nombre => $valor) {
             if (! $respuesta->headers->has($nombre)) {

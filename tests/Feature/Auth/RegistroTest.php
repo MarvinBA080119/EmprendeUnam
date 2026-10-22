@@ -34,6 +34,27 @@ class RegistroTest extends TestCase
         ], $cambios);
     }
 
+    public function test_el_grado_academico_se_elige_de_la_lista(): void
+    {
+        Mail::fake();
+
+        $this->get('/registro')
+            ->assertSee('<select', false)
+            ->assertSee('Estudiante / Sin grado')
+            ->assertSee('Posdoctorado');
+
+        $this->post('/registro', $this->datos(['grado_academico' => 'Doctorado']))->assertRedirect('/iniciar-sesion');
+
+        $usuario = Usuario::with('persona.autor')->where('usua_nombre_usuario', 'luis.perez')->firstOrFail();
+        $this->assertSame('Doctorado', $usuario->persona->autor->auto_grado_academico);
+    }
+
+    public function test_un_grado_fuera_de_la_lista_no_se_acepta(): void
+    {
+        $this->post('/registro', $this->datos(['grado_academico' => '<b>Experto</b>']))
+            ->assertSessionHasErrors(['grado_academico' => 'Elige un grado académico de la lista.']);
+    }
+
     public function test_registro_completo_crea_persona_correo_usuario_autor_y_rol_en_una_transaccion(): void
     {
         Mail::fake();

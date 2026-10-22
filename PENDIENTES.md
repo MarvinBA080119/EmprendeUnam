@@ -1,5 +1,10 @@
 # Pendientes y decisiones
 
+## Gestor de portada y documentos (2026-10-22)
+
+- [ ] **Privilegio propio para el gestor de portada.** Hoy usa `DICTAMINAR_ARTICULO` (el administrador lo tiene). Un privilegio `GESTIONAR_EDICIONES` es un dato nuevo en `privilegio` y `rol_privilegio`: se propondrá como script si se quiere separar.
+- [ ] **Imágenes y PDF reales del número en portada**: se suben desde el gestor; mientras no haya número en portada con artículos en el índice, el inicio muestra el contenido fijo anterior (`config/sitio/edicion.php`).
+
 ## Pendientes de definir
 
 - [ ] Formato y firma de la constancia (por ahora, ejemplo provisional con la tipografía DejaVu de dompdf).
@@ -7,7 +12,7 @@
 - [ ] Captcha del consultorio y del newsletter (por ahora honeypot + límite por IP).
 - [ ] Correo real del administrador (por ahora `admin@emprendeunam.invalid` en `comunicacion`).
 - [ ] Uso de la extensión `unaccent` en PostgreSQL (por ahora el buscador quita acentos con `translate()` en ambos lados).
-- [ ] Servidor SMTP institucional (por ahora `MAIL_MAILER=log`).
+- [ ] Servidor SMTP institucional (por ahora `MAIL_MAILER=log`). Al tenerlo: datos en `.env` y `php artisan emprende:probar-correo` (ver README, «Correo (SMTP)»).
 - [ ] Exportación de metadatos para Latindex (RNF-05 del anexo; no está en las secciones 1–11).
 - [ ] Fecha de fin de los cursos (la menciona el anexo, pero `curso` no tiene columna para ella).
 - [ ] Respaldo diario de la base y de los PDF (RNF-06; tarea de infraestructura).
@@ -71,3 +76,14 @@
 | 2026-10-16 | Seguridad — contraseña del administrador: se cambia al instalar con `php artisan emprende:clave-admin` (la pide oculta dos veces, 12 a 72 caracteres, guarda solo el hash, cierra sus sesiones y lo anota en el registro de acciones). No se escribe en ningún archivo. |
 | 2026-10-21 | **Segundo rediseño** (acceso, panel del autor y panel del administrador), inspirado en Apple y Nespresso: encabezado global azul marino con los logotipos de la UNAM y la FCA a la izquierda y la navegación a la derecha (la barra lateral del administrador se sustituye por secciones en el encabezado y un panel desplegable en pantallas angostas); fondo marfil cálido, tarjetas blancas con sombras en capas, métricas en ambos paneles (el del autor cuenta sus artículos por estatus) y campos con transiciones suaves. Misma paleta cerrada y mismas reglas de contraste. |
 | 2026-10-21 | **Tercer rediseño** (sustituye al segundo, que no convenció): encabezado azul que solo lleva los logotipos de la UNAM y la FCA a la izquierda; navegación del autor y del administrador en una barra lateral sobre fondo hueso (en pantallas angostas, franja horizontal desplazable) y el trabajo en una hoja blanca; contenido sin cajas, ordenado por el aire, hilos finos y tipografía (Geist para la interfaz y Newsreader en títulos grandes); los paneles abren con un saludo y una frase con lo pendiente; acceso en dos mitades (nota editorial y formulario). Misma paleta cerrada. |
+| 2026-10-22 | **Sesiones**: el login no lleva `guest`; con sesión abierta avisa con qué cuenta y, al entrar con otras credenciales, cierra e invalida la anterior antes de validar. Cerrar sesión lleva al login. `Cache-Control: no-store` en páginas con sesión y de acceso. Cierre por inactividad a los **30 minutos** (`SESSION_INACTIVIDAD`), con aviso dos minutos antes en el navegador y renovación mientras haya actividad. |
+| 2026-10-22 | **Avisos**: mensajes flash como notificaciones y diálogo de confirmación propio en lugar de `window.confirm`; botones con estado «Enviando…» que evitan envíos duplicados. En el sitio público, ventana de confirmación con el diseño del sitio tras enviar el consultorio o la suscripción. |
+| 2026-10-22 | **Newsletter**: el enlace de confirmación vence a las 48 horas (`EMPRENDE_NEWSLETTER_HORAS`, sin cambio en la base); la suscripción queda «Pendiente de confirmación» y al suscribirse otra vez llega un enlace nuevo. Sustituye la decisión del 2026-10-16 de dejar el token sin vencimiento. El enlace de baja no vence. |
+| 2026-10-22 | **Registro**: el grado académico se elige de una lista (Licenciatura, Especialidad, Maestría, Doctorado, Posdoctorado, Estudiante / Sin grado, Otro), sigue siendo opcional y se valida en el servidor. |
+| 2026-10-22 | **Buscador**: también busca en el resumen del artículo y lo muestra con las coincidencias resaltadas. El buscador del inicio del sitio ya envía la búsqueda. |
+| 2026-10-22 | **Correo**: `php artisan emprende:probar-correo` (configuración, cola, envío de prueba y causa probable si falla). SELinux: `httpd_can_sendmail` para envíos desde PHP-FPM. |
+| 2026-10-22 | **Base aprobada y aplicada** (`database/cambios/2026-10-22_documentos_y_edicion.sql`, incorporado a `EMP_FINAL_corregido.sql`; 52 tablas). No toca `autor` ni `articulo`. |
+| 2026-10-22 | **Carta de cesión**: plantilla en blanco (Word) para descargar; la firmada se sube en PDF al enviar el artículo (obligatoria) y se guarda en `constancia` con `cons_tipo = 'CESION'`, sin folio. El administrador la descarga desde el detalle del artículo. |
+| 2026-10-22 | **Carta de agradecimiento**: el autor la descarga desde su panel cuando su artículo aprobado está en un número visible; se genera la primera vez con folio `AGR-AAAA-NNNN` (serie aparte de `EMP`), formato de la dirección editorial, firma configurable (`EMPRENDE_AGRADECIMIENTO_FIRMA`, por defecto Dra. Clotilde Hernández Garnica) y se verifica en `/constancias/verificar/<folio>`. Se dirige por nombre, sin «Mtro./Mtra.» (no se conoce el tratamiento de cada persona). |
+| 2026-10-22 | **Gestor de portada** (`/admin/ediciones`): números con portada, PDF completo y Flipbook; artículos del número (ligados a un artículo aprobado o editoriales) con sección, descripción, páginas, PDF e imagen; el administrador elige exactamente 5 para el índice con su posición (la 1 es el principal) y los rota; se guarda cuándo entró cada uno y cuáles faltan por mostrar. Cursos por artículo: se sugieren por palabras clave y título, y lo que marca o desmarca el administrador manda. Los archivos se guardan fuera de `public/` con nombre aleatorio y se entregan solo si el número es visible. |
+| 2026-10-22 | **Inicio del sitio** desde la base cuando hay número en portada con artículos en el índice; si no, el contenido fijo anterior. El buscador incluye los artículos editoriales de números visibles. |

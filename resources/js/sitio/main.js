@@ -233,24 +233,21 @@
   }
 
   /* ----------------------------------------------------------------------
-     BÚSQUEDA (placeholder de Fase 2)
+     BÚSQUEDA: el formulario va al buscador (/buscador?q=...); solo se evita
+     enviar una búsqueda vacía.
      ---------------------------------------------------------------------- */
   function initBusqueda() {
     var form = document.getElementById('formBusqueda');
     if (!form) { return; }
 
     form.addEventListener('submit', function (e) {
-      e.preventDefault();
       var input = document.getElementById('inputBusqueda');
       var termino = input ? input.value.replace(/^\s+|\s+$/g, '') : '';
 
       if (termino === '') {
+        e.preventDefault();
         if (input) { input.focus(); }
-        return;
       }
-
-      console.log('[Búsqueda] Término:', termino);
-      // Fase 2: window.location = 'buscar.php?q=' + encodeURIComponent(termino);
     });
   }
 

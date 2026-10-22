@@ -25,7 +25,7 @@ class NewsletterTest extends TestCase
 
         $this->assertSame('Activo', $filas['activa@example.com']['estadoEtiqueta']);
         $this->assertSame('Comunicación', $filas['activa@example.com']['temas']);
-        $this->assertSame('Sin confirmar', $filas['pendiente@example.com']['estadoEtiqueta']);
+        $this->assertSame('Pendiente de confirmación', $filas['pendiente@example.com']['estadoEtiqueta']);
         $this->assertSame('Dado de baja', $filas['baja@example.com']['estadoEtiqueta']);
 
         $activos = collect($this->actingAs($this->administrador())

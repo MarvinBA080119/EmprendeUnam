@@ -10,8 +10,9 @@
     <title>@hasSection('titulo')@yield('titulo') · @endif{{ config('app.name') }}</title>
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
 </head>
-<body class="emp-app">
+<body class="emp-app" data-privada>
     <a class="emp-saltar" href="#contenido">Saltar al contenido</a>
+    <x-alertas />
 
     <x-cabecera :inicio="route('autor.panel')" />
 
@@ -29,10 +30,11 @@
 
         <main id="contenido" class="emp-hoja">
             <div class="emp-hoja__interior emp-hoja__interior--lectura">
-                <x-alertas />
                 @yield('contenido')
             </div>
         </main>
     </div>
+
+    <x-sesion-inactiva />
 </body>
 </html>

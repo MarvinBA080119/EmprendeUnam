@@ -31,6 +31,22 @@ class SeguridadTest extends TestCase
             ->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     }
 
+    public function test_hsts_solo_con_https(): void
+    {
+        $this->get('/iniciar-sesion')->assertHeaderMissing('Strict-Transport-Security');
+        $this->get('https://localhost/iniciar-sesion')->assertHeader('Strict-Transport-Security', 'max-age=31536000');
+    }
+
+    public function test_un_autor_no_entra_a_ninguna_ruta_del_administrador(): void
+    {
+        $this->actingAs($this->crearAutor());
+
+        foreach (['/admin', '/admin/articulos', '/admin/autores', '/admin/consultorio', '/admin/cursos', '/admin/newsletter', '/admin/autores/datos'] as $ruta) {
+            $this->get($ruta)->assertForbidden();
+        }
+        $this->post('/admin/newsletter/avisar', ['titulo' => 'x', 'enlace' => 'https://example.com'])->assertForbidden();
+    }
+
     public function test_bloquea_una_cuenta_atacada_desde_muchas_ip(): void
     {
         $autor = $this->crearAutor();

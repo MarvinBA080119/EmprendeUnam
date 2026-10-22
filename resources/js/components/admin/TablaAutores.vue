@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import Paginacion from '../comun/Paginacion.vue';
+import { avisar, confirmar } from '../../avisos';
 import { peticionJson } from '../comun/http';
 import { useListado } from '../comun/useListado';
 
@@ -14,18 +15,21 @@ const { filtros, filas, meta, cargando, error, irAPagina } = useListado(props.ur
     estatus: props.filtros.estatus ?? '',
 });
 
-const aviso = ref('');
 const activando = ref(null);
 
 async function activar(autor) {
-    if (!window.confirm(`¿Activar la cuenta de ${autor.nombre}? Se le avisará por correo.`)) return;
+    const aceptado = await confirmar({
+        titulo: `¿Activar la cuenta de ${autor.nombre}?`,
+        texto: 'Podrá iniciar sesión y enviar artículos. Se le avisará por correo.',
+        aceptar: 'Activar cuenta',
+    });
+    if (!aceptado) return;
     activando.value = autor.id;
-    aviso.value = '';
     error.value = '';
     try {
         const respuesta = await peticionJson(autor.urlActivar, { metodo: 'POST' });
         autor.activo = true;
-        aviso.value = respuesta.mensaje;
+        avisar(respuesta.mensaje);
     } catch (e) {
         error.value = e.message;
     } finally {
@@ -52,7 +56,6 @@ async function activar(autor) {
             </div>
         </form>
 
-        <div v-if="aviso" class="alert alert-success" role="status">{{ aviso }}</div>
         <div v-if="error" class="alert alert-danger" role="alert">{{ error }}</div>
 
         <div class="emp-marco-tabla">

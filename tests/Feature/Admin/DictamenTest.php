@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Enums\EstatusArticulo;
+use App\Enums\TipoDocumento;
 use App\Mail\ArticuloAprobado;
 use App\Mail\ArticuloRechazado;
 use App\Models\Constancia;
@@ -85,7 +86,7 @@ class DictamenTest extends TestCase
             ->post("/admin/articulos/{$articulo->arti_id_autor}/aprobar")
             ->assertSessionHasErrors('articulo');
 
-        $this->assertSame(1, Constancia::where('arti_id_autor', $articulo->arti_id_autor)->count());
+        $this->assertSame(1, Constancia::where('arti_id_autor', $articulo->arti_id_autor)->deTipo(TipoDocumento::CONSTANCIA)->count());
         $this->assertSame($folio, $articulo->fresh()->constancia->cons_folio);
         Mail::assertQueued(ArticuloAprobado::class, 1);
     }
