@@ -527,6 +527,9 @@ Al enviar un formulario POST, el botón muestra un anillo de 13px que gira (700m
 ### Artículo aprobado
 El único momento con movimiento propio: un sello circular azul con palomita blanca crece desde 0.6 en 500ms y, 80ms después, la constancia sube 10px y aparece (`@starting-style`, solo al llegar). Título en Headline pequeño; la constancia es un apartado con la insignia, el título del artículo en 600 y un registro de folio y fecha.
 
+### Gestor de portada
+Superficie de operación. El número principal se presenta con su portada en miniatura (proporción 7:9, radio 6px, hilo azul al 8% y una sombra baja) junto al título en Newsreader; debajo, el estado de cada archivo en una rejilla entre hilos: nombre en 13px/500 seguido de su insignia con texto (Listo azul, Falta café, Opcional neutra) y un detalle en 12px con números tabulares. Los demás números van en galería de portadas. En el formulario, la vista previa de la portada ocupa la columna derecha y cambia al elegir el archivo. En la pantalla del número, el esquema reproduce el acomodo del inicio (principal grande en hueso, cuatro secundarios en blanco con hilo) y se actualiza al mover las posiciones, que son radios segmentados («No se muestra · Principal · 1–4»); la casilla que cambia se tiñe de café claro 700ms. El pie con el conteo y «Guardar destacados» queda fijo al fondo. Los cursos son fichas marcables; las sugeridas llevan la insignia «Sugerido».
+
 ### Páginas de error
 Plantilla autónoma, sin Vite ni sesión, que repite en línea los valores del sistema: encabezado azul de 4rem con los dos logotipos, fondo blanco, código en 13px pizarra, título Newsreader 420 de 40px, mensaje grafito y el botón primario café de 10px.
 

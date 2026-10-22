@@ -18,7 +18,13 @@ class EdicionController extends Controller
 
     public function index(): View
     {
-        return view('admin.ediciones.index', ['numeros' => $this->ediciones->numeros()]);
+        $numeros = $this->ediciones->numeros();
+
+        return view('admin.ediciones.index', [
+            'principal' => $numeros->firstWhere('revi_en_portada', true),
+            'otros' => $numeros->reject(fn ($n) => $n->revi_en_portada)->values(),
+            'pendientesDeMaquetar' => $this->ediciones->aprobadosSinNumero()->count(),
+        ]);
     }
 
     public function create(): View
@@ -47,6 +53,7 @@ class EdicionController extends Controller
         return view('admin.ediciones.show', [
             'revista' => $revista,
             'articulos' => $articulos,
+            'pendientesDeMaquetar' => $this->ediciones->aprobadosSinNumero()->count(),
             'cursos' => $articulos->mapWithKeys(fn ($a) => [$a->arre_id_articulo_revista => $this->ediciones->cursosDe($a)]),
         ]);
     }

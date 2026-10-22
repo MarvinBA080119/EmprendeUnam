@@ -83,6 +83,20 @@ class EdicionTest extends TestCase
         $this->actingAs($this->crearAutor())->get('/admin/ediciones')->assertForbidden();
     }
 
+    public function test_las_pantallas_del_gestor_se_abren_vacias_y_con_datos(): void
+    {
+        $admin = $this->administrador();
+        $this->actingAs($admin)->get('/admin/ediciones')->assertOk()->assertSee('Registrar número');
+        $this->actingAs($admin)->get('/admin/ediciones/nuevo')->assertOk()->assertSee('(obligatoria)');
+
+        $revista = $this->crearNumero();
+        $this->agregar($revista, 2);
+
+        $this->actingAs($admin)->get('/admin/ediciones')->assertOk()->assertSee('Número principal');
+        $this->actingAs($admin)->get("/admin/ediciones/{$revista->revi_id_revista}")->assertOk()->assertSee('Guardar destacados');
+        $this->actingAs($admin)->get("/admin/ediciones/{$revista->revi_id_revista}/editar")->assertOk()->assertDontSee('(obligatoria)');
+    }
+
     public function test_registra_un_numero_con_portada_pdf_y_flipbook(): void
     {
         $revista = $this->crearNumero();

@@ -44,7 +44,11 @@ class EdicionService
     public function numeros(): Collection
     {
         return Revista::query()
-            ->withCount(['articulos', 'articulos as en_indice_count' => fn ($q) => $q->whereNotNull('arre_posicion_index')])
+            ->withCount([
+                'articulos',
+                'articulos as en_indice_count' => fn ($q) => $q->whereNotNull('arre_posicion_index'),
+                'articulos as con_pdf_count' => fn ($q) => $q->whereNotNull('arre_url_pdf'),
+            ])
             ->orderByDesc('revi_fecha_publicacion')
             ->orderByDesc('revi_id_revista')
             ->get();
