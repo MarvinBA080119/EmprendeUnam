@@ -330,6 +330,208 @@ class EdicionService
     }
 
     /**
+     * Artículos aprobados que aún no forman parte de ningún número: los que el
+     * equipo editorial descarga para maquetar.
+     *
+     * @return Collection<int, Articulo>
+     */
+    public function aprobadosSinNumero(): Collection
+    {
+        return Articulo::aprobados()
+            ->whereDoesntHave('entradasRevista')
+            ->orderBy('arti_id_autor')
+            ->get(['arti_id_autor', 'arti_titulo', 'arti_url_pdf']);
+    }
+
+    /** Nombre con el que viaja el manuscrito: «12-titulo-del-articulo.docx». */
+    public static function nombreManuscrito(Articulo $articulo): string
+    {
+        $extension = strtolower(pathinfo($articulo->arti_url_pdf, PATHINFO_EXTENSION)) ?: 'pdf';
+
+        return $articulo->arti_id_autor.'-'.Str::limit(Str::slug($articulo->arti_titulo), 60, '').'.'.$extension;
+    }
+
+    /**
+     * .zip temporal con los manuscritos de los artículos aprobados sin número.
+     * Cada nombre empieza con el id del artículo: si el PDF maquetado conserva
+     * ese número al inicio, la carga por .zip lo vincula sola.
+     *
+     * @return string|null ruta del .zip (el que llama lo borra) o null si no hay manuscritos
+     */
+    public function zipManuscritos(): ?string
+    {
+        $articulos = $this->aprobadosSinNumero()
+            ->filter(fn (Articulo $a) => Storage::disk('local')->exists($a->arti_url_pdf));
+        if ($articulos->isEmpty()) {
+            return null;
+        }
+
+        $ruta = tempnam(sys_get_temp_dir(), 'manuscritos');
+        $zip = new \ZipArchive;
+        $zip->open($ruta, \ZipArchive::OVERWRITE);
+        foreach ($articulos as $articulo) {
+            $zip->addFile(Storage::disk('local')->path($articulo->arti_url_pdf), self::nombreManuscrito($articulo));
+        }
+        $zip->close();
+
+        return $ruta;
+    }
+
+    /**
+     * Carga un .zip con los PDF maquetados de los artículos del número y vincula
+     * cada uno con su artículo:
+     *  1. por el número al inicio del nombre («12-…pdf» = artículo 12 del sistema,
+     *     que debe estar aprobado; si aún no está en el número, se agrega con su
+     *     título, autores, tema y sus 5 palabras clave);
+     *  2. si no, por el título (nombre del archivo y título iguales al quitar
+     *     acentos, mayúsculas y signos), entre los artículos del número y los
+     *     aprobados sin número.
+     * Solo se aceptan PDF reales; se ignoran carpetas, rutas y archivos ocultos.
+     *
+     * @return array{vinculados: list<string>, agregados: list<string>, no_reconocidos: list<string>}
+     */
+    public function cargarZip(Revista $revista, UploadedFile $archivo, Usuario $administrador): array
+    {
+        $zip = new \ZipArchive;
+        if ($zip->open($archivo->getRealPath(), \ZipArchive::RDONLY) !== true) {
+            throw ValidationException::withMessages(['zip' => 'No se pudo abrir el .zip. Vuelve a comprimir los PDF.']);
+        }
+
+        $maxPdf = (int) config('emprende.zip_pdf_max_kb') * 1024;
+        $resultado = ['vinculados' => [], 'agregados' => [], 'no_reconocidos' => []];
+        $nuevos = [];
+        $anteriores = [];
+
+        try {
+            $entradas = [];
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $info = $zip->statIndex($i);
+                $nombre = basename(str_replace('\\', '/', (string) $info['name']));
+                if (str_ends_with((string) $info['name'], '/') || $nombre === '' || str_starts_with($nombre, '.')
+                    || str_contains((string) $info['name'], '__MACOSX')) {
+                    continue;
+                }
+                if (strtolower(pathinfo($nombre, PATHINFO_EXTENSION)) !== 'pdf') {
+                    $resultado['no_reconocidos'][] = "{$nombre} (no es PDF)";
+
+                    continue;
+                }
+                $entradas[] = [$i, $nombre, (int) $info['size']];
+            }
+
+            if (count($entradas) > (int) config('emprende.zip_max_archivos')) {
+                throw ValidationException::withMessages(['zip' => 'El .zip trae más de '.config('emprende.zip_max_archivos').' PDF.']);
+            }
+
+            DB::transaction(function () use ($revista, $zip, $entradas, $maxPdf, &$resultado, &$nuevos, &$anteriores) {
+                foreach ($entradas as [$indice, $nombre, $tamano]) {
+                    if ($tamano > $maxPdf) {
+                        $resultado['no_reconocidos'][] = "{$nombre} (pesa más de ".round($maxPdf / 1048576).' MB)';
+
+                        continue;
+                    }
+
+                    [$entrada, $agregado] = $this->entradaParaArchivo($revista, $nombre);
+                    if ($entrada === null) {
+                        $resultado['no_reconocidos'][] = $nombre;
+
+                        continue;
+                    }
+
+                    $contenido = $this->leerEntrada($zip, $indice, $maxPdf);
+                    if ($contenido === null || ! str_starts_with($contenido, '%PDF')) {
+                        $resultado['no_reconocidos'][] = "{$nombre} (no es un PDF válido)";
+
+                        continue;
+                    }
+
+                    $ruta = config('emprende.carpeta_ediciones').'/articulos/'.Str::random(40).'.pdf';
+                    Storage::disk('local')->put($ruta, $contenido);
+                    $nuevos[] = $ruta;
+                    $anteriores[] = $entrada->arre_url_pdf;
+                    $entrada->forceFill(['arre_url_pdf' => $ruta])->save();
+
+                    $resultado[$agregado ? 'agregados' : 'vinculados'][] = "{$nombre} → {$entrada->arre_titulo}";
+                }
+            });
+        } catch (Throwable $e) {
+            Storage::disk('local')->delete($nuevos);
+
+            throw $e;
+        } finally {
+            $zip->close();
+        }
+
+        Storage::disk('local')->delete(array_values(array_filter($anteriores)));
+        $this->registrar('PDF maquetados cargados por .zip', $administrador, [
+            'revista' => $revista->revi_id_revista,
+            'vinculados' => count($resultado['vinculados']) + count($resultado['agregados']),
+            'no_reconocidos' => count($resultado['no_reconocidos']),
+        ]);
+
+        return $resultado;
+    }
+
+    /**
+     * Entrada del número a la que corresponde un archivo, creándola si el
+     * archivo nombra un artículo aprobado que aún no está en el número.
+     *
+     * @return array{0: ?ArticuloRevista, 1: bool} entrada y si se agregó
+     */
+    private function entradaParaArchivo(Revista $revista, string $nombre): array
+    {
+        $base = pathinfo($nombre, PATHINFO_FILENAME);
+
+        if (preg_match('/^(\d+)/', $base, $m)) {
+            $articulo = Articulo::aprobados()->with('tema')->find((int) $m[1]);
+            if ($articulo) {
+                $entrada = $revista->articulos()->where('arti_id_autor', $articulo->arti_id_autor)->first();
+
+                return $entrada ? [$entrada, false] : [$this->agregarDelSistema($revista, $articulo), true];
+            }
+        }
+
+        $clave = Str::slug(preg_replace('/^\d+[\s._-]*/', '', $base));
+        if ($clave === '') {
+            return [null, false];
+        }
+
+        $entrada = $revista->articulos()->get()->first(fn ($e) => Str::slug($e->arre_titulo) === $clave);
+        if ($entrada) {
+            return [$entrada, false];
+        }
+
+        $articulo = $this->aprobadosSinNumero()->first(fn ($a) => Str::slug($a->arti_titulo) === $clave);
+
+        return $articulo ? [$this->agregarDelSistema($revista, $articulo->load('tema')), true] : [null, false];
+    }
+
+    private function agregarDelSistema(Revista $revista, Articulo $articulo): ArticuloRevista
+    {
+        return ArticuloRevista::create([
+            'revi_id_revista' => $revista->revi_id_revista,
+            'arti_id_autor' => $articulo->arti_id_autor,
+            'arre_titulo' => $articulo->arti_titulo,
+            'arre_autores' => $this->autoresDe($articulo),
+            'arre_seccion' => $articulo->tema?->tema_nombre,
+            'arre_descripcion' => $articulo->arti_resumen ?: null,
+        ]);
+    }
+
+    /** Contenido de una entrada del .zip, leído con tope (no se confía en el tamaño declarado). */
+    private function leerEntrada(\ZipArchive $zip, int $indice, int $maximo): ?string
+    {
+        $flujo = $zip->getStream((string) $zip->getNameIndex($indice));
+        if ($flujo === false) {
+            return null;
+        }
+        $contenido = stream_get_contents($flujo, $maximo + 1);
+        fclose($flujo);
+
+        return $contenido === false || strlen($contenido) > $maximo ? null : $contenido;
+    }
+
+    /**
      * Número principal (en portada) para el inicio del sitio, con sus
      * destacados en orden; principal y resto quedan vacíos mientras no se
      * elijan. Null si ningún número está en portada.

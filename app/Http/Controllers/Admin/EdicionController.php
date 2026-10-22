@@ -9,6 +9,7 @@ use App\Services\EdicionService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /** Gestor de portada: números de la revista y los 5 artículos del índice. */
 class EdicionController extends Controller
@@ -31,8 +32,8 @@ class EdicionController extends Controller
             $request->validated(), $request->user(), null, $request->file('portada'), $request->file('pdf'),
         );
 
-        return redirect()->route('admin.ediciones.show', $revista)
-            ->with('exito', "Se registró el número {$revista->revi_num_edicion}. Agrega sus artículos y elige los 5 del índice.");
+        return $this->conZip($request, $revista, redirect()->route('admin.ediciones.show', $revista)
+            ->with('exito', "Se registró el número {$revista->revi_num_edicion}. Agrega sus artículos y elige los 5 destacados."));
     }
 
     /** Artículos del número, posición en el índice y cursos. */
@@ -61,7 +62,8 @@ class EdicionController extends Controller
             $request->validated(), $request->user(), $revista, $request->file('portada'), $request->file('pdf'),
         );
 
-        return redirect()->route('admin.ediciones.show', $revista)->with('exito', 'Se guardaron los cambios del número.');
+        return $this->conZip($request, $revista, redirect()->route('admin.ediciones.show', $revista)
+            ->with('exito', 'Se guardaron los cambios del número.'));
     }
 
     public function destroy(Request $request, Revista $revista): RedirectResponse
@@ -77,6 +79,47 @@ class EdicionController extends Controller
         $this->ediciones->ponerEnPortada($revista, $request->user());
 
         return back()->with('exito', "El número {$revista->revi_num_edicion} ahora aparece en el inicio del sitio.");
+    }
+
+    /** Si el formulario del número trae el .zip de PDF, se carga en el mismo paso. */
+    private function conZip(Request $request, Revista $revista, RedirectResponse $respuesta): RedirectResponse
+    {
+        if (! $request->hasFile('zip')) {
+            return $respuesta;
+        }
+
+        return $respuesta->with('zip_resultado', $this->ediciones->cargarZip($revista, $request->file('zip'), $request->user()));
+    }
+
+    /** Manuscritos de los artículos aprobados sin número, para maquetarlos. */
+    public function manuscritos(): BinaryFileResponse|RedirectResponse
+    {
+        $ruta = $this->ediciones->zipManuscritos();
+        if ($ruta === null) {
+            return back()->with('aviso', 'No hay artículos aprobados pendientes de publicar.');
+        }
+
+        return response()->download($ruta, 'manuscritos-aprobados-'.now()->format('Y-m-d').'.zip', [
+            'Content-Type' => 'application/zip',
+        ])->deleteFileAfterSend();
+    }
+
+    /** PDF maquetados de los artículos del número en un .zip. */
+    public function zip(Request $request, Revista $revista): RedirectResponse
+    {
+        $request->validate(
+            ['zip' => ['required', 'file', 'mimetypes:application/zip,application/x-zip-compressed', 'max:'.config('emprende.zip_max_kb')]],
+            ['zip.required' => 'Elige el .zip con los PDF de los artículos.', 'zip.mimetypes' => 'El archivo debe ser un .zip.'],
+        );
+
+        $resultado = $this->ediciones->cargarZip($revista, $request->file('zip'), $request->user());
+        $vinculados = count($resultado['vinculados']) + count($resultado['agregados']);
+
+        return back()
+            ->with($vinculados > 0 ? 'exito' : 'aviso', $vinculados > 0
+                ? "Se vincularon {$vinculados} PDF con sus artículos."
+                : 'No se pudo vincular ningún PDF. Revisa los nombres de los archivos.')
+            ->with('zip_resultado', $resultado);
     }
 
     public function indice(Request $request, Revista $revista): RedirectResponse

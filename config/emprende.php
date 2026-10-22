@@ -14,6 +14,11 @@ return [
     // upload_max_filesize y post_max_size de PHP y client_max_body_size del servidor web.
     'pdf_max_revista_kb' => (int) env('EMPRENDE_PDF_MAX_REVISTA_KB', 51200),
 
+    // .zip con los PDF maquetados de cada artículo: tamaño del .zip, de cada PDF y número de archivos.
+    'zip_max_kb' => (int) env('EMPRENDE_ZIP_MAX_KB', 204800),
+    'zip_pdf_max_kb' => (int) env('EMPRENDE_ZIP_PDF_MAX_KB', 30720),
+    'zip_max_archivos' => 60,
+
     // Prefijo del folio de constancia: {prefijo}-{AAAA}-{NNNN} (pendiente).
     'folio_prefijo' => env('EMPRENDE_FOLIO_PREFIJO', 'EMP'),
 

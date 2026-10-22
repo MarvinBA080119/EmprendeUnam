@@ -35,6 +35,7 @@ class NumeroRequest extends FormRequest
             'visible' => ['boolean'],
             'portada' => [$creando ? 'required' : 'nullable', 'file', 'mimetypes:image/jpeg,image/png,image/webp', 'max:'.self::IMAGEN_MAX_KB],
             'pdf' => [$creando ? 'required' : 'nullable', 'file', 'mimetypes:application/pdf', 'max:'.config('emprende.pdf_max_revista_kb')],
+            'zip' => ['nullable', 'file', 'mimetypes:application/zip,application/x-zip-compressed', 'max:'.config('emprende.zip_max_kb')],
         ];
     }
 
@@ -49,6 +50,7 @@ class NumeroRequest extends FormRequest
             'portada.mimetypes' => 'La portada debe ser una imagen JPG, PNG o WebP.',
             'pdf.required' => 'Sube el PDF completo del número.',
             'pdf.mimetypes' => 'El número completo debe ser un PDF.',
+            'zip.mimetypes' => 'Los PDF de los artículos deben ir en un archivo .zip.',
         ];
     }
 
