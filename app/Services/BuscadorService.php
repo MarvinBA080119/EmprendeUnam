@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Buscador público (6.9): artículos APROBADOS (título, palabras clave, autores,
- * coautores, tema y resumen) y cursos vigentes (nombre, institución y palabras
- * clave).
+ * coautores, tema y resumen), artículos editoriales de los números visibles
+ * (título, sección, autores y descripción; los del sistema ya salen como
+ * aprobados) y cursos vigentes (nombre, institución y palabras clave).
  *
  * Usa búsqueda de texto completo de PostgreSQL con la configuración "spanish".
  * Mientras no se autorice la extensión unaccent, los acentos se quitan con
@@ -87,7 +88,9 @@ class BuscadorService
                              where aa.arti_id_autor = a.arti_id_autor) as autores,
                            null::text as institucion,
                            null::text as url,
-                           a.arti_resumen::text as resumen
+                           a.arti_resumen::text as resumen,
+                           null::int as revista,
+                           false as con_pdf
                       from articulo a
                       join tema t on t.tema_id_tema = a.tema_id_tema
                      where a.arti_status = 'APROBADO'";
@@ -98,6 +101,29 @@ class BuscadorService
             if ($anio) {
                 $sql .= ' and extract(year from a.arti_fecha_modificacion) = ?';
                 $bindings[] = (int) $anio;
+            }
+            $partes[] = $sql;
+        }
+
+        // Artículos editoriales de números visibles (el tema solo clasifica artículos del sistema).
+        if ($tipo !== 'curso' && ! $tema) {
+            $sql = "select 'revista' as tipo, ar.arre_id_articulo_revista as id, ar.arre_titulo as titulo,
+                           ar.arre_seccion::text as tema,
+                           cast(r.revi_anio as int) as anio,
+                           r.revi_fecha_publicacion as fecha,
+                           null::text as palabras,
+                           ar.arre_autores::text as autores,
+                           null::text as institucion,
+                           null::text as url,
+                           ar.arre_descripcion::text as resumen,
+                           r.revi_id_revista as revista,
+                           ar.arre_url_pdf is not null as con_pdf
+                      from articulo_revista ar
+                      join revista r on r.revi_id_revista = ar.revi_id_revista
+                     where r.revi_visible and ar.arti_id_autor is null and r.revi_anio ~ '^[0-9]{4}$'";
+            if ($anio) {
+                $sql .= ' and r.revi_anio = ?';
+                $bindings[] = (string) (int) $anio;
             }
             $partes[] = $sql;
         }
@@ -115,7 +141,9 @@ class BuscadorService
                            null::text as autores,
                            c.curs_institucion::text as institucion,
                            c.curs_url::text as url,
-                           null::text as resumen
+                           null::text as resumen,
+                           null::int as revista,
+                           false as con_pdf
                       from curso c
                      where c.curs_fecha >= current_date";
             if ($anio) {
@@ -147,7 +175,7 @@ class BuscadorService
 
         $total = (int) DB::scalar("select count(*) from ({$base}) x", $bindings);
         $filas = DB::select(
-            "select tipo, id, titulo, tema, anio, fecha, palabras, autores, institucion, url, resumen
+            "select tipo, id, titulo, tema, anio, fecha, palabras, autores, institucion, url, resumen, revista, con_pdf
                from ({$base}) x order by {$orden} limit ? offset ?",
             [...$bindings, $porPagina, ($pagina - 1) * $porPagina],
         );
@@ -157,7 +185,9 @@ class BuscadorService
             'id' => $f->id,
             'tema' => $f->tema,
             'anio' => $f->anio,
-            'url' => $f->url,
+            'url' => $f->tipo === 'revista'
+                ? ($f->con_pdf ? route('edicion.articulo.pdf', $f->id) : route('edicion.numero', $f->revista))
+                : $f->url,
             'titulo' => $this->resaltar($f->titulo, $terminos),
             'autores' => $this->resaltar($f->autores, $terminos),
             'palabras' => $this->resaltar($f->palabras, $terminos),
@@ -179,6 +209,9 @@ class BuscadorService
             ->where('arti_status', 'APROBADO')
             ->selectRaw('extract(year from arti_fecha_modificacion)::int as anio')
             ->union(DB::table('curso')->whereDate('curs_fecha', '>=', today())->selectRaw('extract(year from curs_fecha)::int as anio'))
+            ->union(DB::table('revista')->where('revi_visible', true)->whereRaw("revi_anio ~ '^[0-9]{4}$'")
+                ->whereExists(fn ($q) => $q->from('articulo_revista')->whereColumn('articulo_revista.revi_id_revista', 'revista.revi_id_revista'))
+                ->selectRaw('cast(revi_anio as int) as anio'))
             ->orderByDesc('anio')
             ->pluck('anio')
             ->unique()

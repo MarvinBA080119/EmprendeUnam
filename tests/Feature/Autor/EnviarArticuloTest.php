@@ -273,7 +273,7 @@ class EnviarArticuloTest extends TestCase
         $this->post("/autor/articulos/{$articulo->arti_id_autor}/reenviar")->assertNotFound();
 
         $nombres = collect(Route::getRoutes()->getRoutesByName())->keys();
-        $this->assertEmpty($nombres->filter(fn ($n) => preg_match('/articulos\.(edit|update|reenviar)/', $n)));
+        $this->assertEmpty($nombres->filter(fn ($n) => preg_match('/^(autor|admin)\.articulos\.(edit|update|reenviar)/', $n)));
     }
 
     public function test_si_falla_la_transaccion_se_borra_el_pdf(): void

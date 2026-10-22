@@ -443,6 +443,7 @@ psql -h 127.0.0.1 -U emprende -d emprendeunam -f database/cambios/2026-10-15_art
 | Script | Cambio |
 |---|---|
 | `2026-10-15_arti_resumen.sql` | Columna `arti_resumen varchar(500)` en `articulo` (resumen de hasta 50 palabras). |
+| `2026-10-22_documentos_y_edicion.sql` | `constancia.cons_tipo` (constancia, carta de agradecimiento, carta de cesión) y `cons_folio` nulo; `revista.revi_url_flipbook` y `revi_en_portada`; tablas `articulo_revista` (artículos del número y los 5 del índice) y `articulo_curso`. **Aplícalo con el usuario de la aplicación**, no con `postgres`. |
 
 Una base creada con `scripts/crear_bd.sh` después de la fecha de un script ya
 incluye ese cambio.

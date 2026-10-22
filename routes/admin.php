@@ -7,9 +7,11 @@
 */
 
 use App\Http\Controllers\Admin\ArticuloController;
+use App\Http\Controllers\Admin\ArticuloNumeroController;
 use App\Http\Controllers\Admin\AutorController;
 use App\Http\Controllers\Admin\ConsultorioController;
 use App\Http\Controllers\Admin\CursoController;
+use App\Http\Controllers\Admin\EdicionController;
 use App\Http\Controllers\Admin\NewsletterController;
 use App\Http\Controllers\Admin\PanelController;
 use Illuminate\Support\Facades\Route;
@@ -60,4 +62,24 @@ Route::middleware('privilegio:CONSULTAR_SUSCRIPTORES')->group(function () {
     Route::get('/newsletter/datos', [NewsletterController::class, 'datos'])->name('newsletter.datos');
     Route::get('/newsletter/exportar', [NewsletterController::class, 'exportar'])->name('newsletter.exportar');
     Route::post('/newsletter/avisar', [NewsletterController::class, 'avisar'])->name('newsletter.avisar');
+});
+
+// Gestor de portada: números, sus artículos, los 5 del índice y sus cursos.
+// Decisión editorial sobre artículos: mismo privilegio que dictaminar.
+Route::middleware('privilegio:DICTAMINAR_ARTICULO')->group(function () {
+    Route::get('/ediciones', [EdicionController::class, 'index'])->name('ediciones.index');
+    Route::get('/ediciones/nuevo', [EdicionController::class, 'create'])->name('ediciones.create');
+    Route::post('/ediciones', [EdicionController::class, 'store'])->name('ediciones.store');
+    Route::get('/ediciones/{revista}', [EdicionController::class, 'show'])->name('ediciones.show');
+    Route::get('/ediciones/{revista}/editar', [EdicionController::class, 'edit'])->name('ediciones.edit');
+    Route::put('/ediciones/{revista}', [EdicionController::class, 'update'])->name('ediciones.update');
+    Route::delete('/ediciones/{revista}', [EdicionController::class, 'destroy'])->name('ediciones.destroy');
+    Route::post('/ediciones/{revista}/portada', [EdicionController::class, 'portada'])->name('ediciones.portada');
+    Route::post('/ediciones/{revista}/indice', [EdicionController::class, 'indice'])->name('ediciones.indice');
+
+    Route::get('/ediciones/{revista}/articulos/nuevo', [ArticuloNumeroController::class, 'create'])->name('ediciones.articulos.create');
+    Route::post('/ediciones/{revista}/articulos', [ArticuloNumeroController::class, 'store'])->name('ediciones.articulos.store');
+    Route::get('/ediciones/{revista}/articulos/{entrada}/editar', [ArticuloNumeroController::class, 'edit'])->name('ediciones.articulos.edit');
+    Route::put('/ediciones/{revista}/articulos/{entrada}', [ArticuloNumeroController::class, 'update'])->name('ediciones.articulos.update');
+    Route::delete('/ediciones/{revista}/articulos/{entrada}', [ArticuloNumeroController::class, 'destroy'])->name('ediciones.articulos.destroy');
 });

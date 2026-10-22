@@ -9,6 +9,7 @@
 use App\Http\Controllers\Publico\BuscadorController;
 use App\Http\Controllers\Publico\ConsultorioController;
 use App\Http\Controllers\Publico\CursoController;
+use App\Http\Controllers\Publico\EdicionArchivoController;
 use App\Http\Controllers\Publico\InicioController;
 use App\Http\Controllers\Publico\NewsletterController;
 use App\Http\Controllers\Publico\PaginaController;
@@ -50,6 +51,14 @@ Route::controller(NewsletterController::class)->group(function () {
     Route::get('/newsletter/confirmar/{token}', 'confirmar')->where('token', '[a-f0-9]{64}')->name('newsletter.confirmar');
     Route::get('/newsletter/baja/{token}', 'baja')->where('token', '[a-f0-9]{64}')->name('newsletter.baja');
     Route::post('/newsletter/baja/{token}', 'confirmarBaja')->where('token', '[a-f0-9]{64}')->name('newsletter.baja.confirmar');
+});
+
+// Archivos de los números de la revista (solo de números visibles).
+Route::controller(EdicionArchivoController::class)->prefix('edicion')->name('edicion.')->group(function () {
+    Route::get('/{revista}/portada', 'portada')->whereNumber('revista')->name('portada');
+    Route::get('/{revista}/numero', 'numero')->whereNumber('revista')->name('numero');
+    Route::get('/articulo/{entrada}/pdf', 'articuloPdf')->whereNumber('entrada')->name('articulo.pdf');
+    Route::get('/articulo/{entrada}/imagen', 'articuloImagen')->whereNumber('entrada')->name('articulo.imagen');
 });
 
 // Verificación pública de constancias (6.10).

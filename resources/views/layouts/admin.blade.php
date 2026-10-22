@@ -32,6 +32,7 @@
                 </ul>
                 <p class="emp-nav__grupo">Difusión</p>
                 <ul class="emp-nav__lista">
+                    <x-enlace-lateral ruta="admin.ediciones.index" activa="admin.ediciones.*" icono="portada">Portada del sitio</x-enlace-lateral>
                     <x-enlace-lateral ruta="admin.cursos.index" activa="admin.cursos.*" icono="cursos">Cursos</x-enlace-lateral>
                     <x-enlace-lateral ruta="admin.newsletter.index" activa="admin.newsletter.*" icono="newsletter">Newsletter</x-enlace-lateral>
                 </ul>

@@ -123,6 +123,24 @@
                         </div>
 
                     </div>
+
+                    {{-- Cursos del artículo principal (gestor de portada); el contenido fijo anterior no los trae. --}}
+                    @if (!empty($articulo_principal['cursos_fca']))
+                        <aside class="curso-vip">
+                            <span class="curso-vip__label">Aprenda más</span>
+                            <ul class="curso-vip__lista">
+                                @foreach ($articulo_principal['cursos_fca'] as $n => $curso)
+                                    <li>
+                                        <a href="{{ $curso['url'] }}" target="_blank" rel="noopener">
+                                            <span class="curso-vip__num" aria-hidden="true">{{ str_pad($n + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                                            <span class="curso-vip__nombre">{{ $curso['texto'] }}</span>
+                                            <span class="curso-vip__flecha" aria-hidden="true">&rarr;</span>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </aside>
+                    @endif
                 </article>
 
                 <!-- ── En este número ── -->
@@ -162,7 +180,7 @@
 
                                 <p class="post__meta">
                                     <strong>@foreach ((array) $art['autores'] as $autor){{ $autor }}@unless ($loop->last)<br>@endunless @endforeach</strong>
-                                    &nbsp;·&nbsp; pp. {{ $art['paginas'] }}
+                                    @if (! empty($art['paginas']))&nbsp;·&nbsp; pp. {{ $art['paginas'] }}@endif
                                 </p>
 
                                 <a href="{{ asset($art['pdf_art']) }}"

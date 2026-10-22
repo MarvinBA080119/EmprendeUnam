@@ -1,20 +1,9 @@
 # Pendientes y decisiones
 
-## Por aprobar: cambios a la base (propuesta del 2026-10-22, versión 3)
+## Gestor de portada y documentos (2026-10-22)
 
-SQL exacto en `database/propuestas/2026-10-22_perfil_cesion_edicion.sql` (no
-aplicado; probado en una base nueva creada desde cero). No toca `autor` ni
-`articulo`.
-
-- [ ] `constancia.cons_tipo` (`CONSTANCIA`, `AGRADECIMIENTO`, `CESION`) y `cons_folio` nulo: la carta de cesión no lleva folio; la constancia y la carta de agradecimiento sí. Un documento de cada tipo por artículo.
-- [ ] `revista.revi_url_flipbook` y `revista.revi_en_portada` (un solo número en portada, visible). `revi_mes` guarda el periodo («julio-agosto», se amplía a 20); la portada es `revi_url_portada`.
-- [ ] Tabla nueva `articulo_revista`: todos los artículos del número; `arre_posicion_index` (1 a 5) marca los 5 que se ven en el índice y `arre_fecha_index` cuándo se mostraron, para rotarlos hasta mostrar todos.
-- [ ] Tabla nueva `articulo_curso`: cursos que el administrador elige (o descarta) para cada artículo del índice.
-
-### Preguntas abiertas de esa propuesta
-
-- [ ] **Carta de agradecimiento**: ¿la descarga el autor desde su panel cuando su artículo sale en el número? ¿Firma fija (Dra. Clotilde Hernández Garnica) y fecha de emisión?
-- [ ] **Carta de cesión**: ¿se descarga en blanco o prellenada con el nombre y el título? El número y el bimestre aún no se conocen al enviar.
+- [ ] **Privilegio propio para el gestor de portada.** Hoy usa `DICTAMINAR_ARTICULO` (el administrador lo tiene). Un privilegio `GESTIONAR_EDICIONES` es un dato nuevo en `privilegio` y `rol_privilegio`: se propondrá como script si se quiere separar.
+- [ ] **Imágenes y PDF reales del número en portada**: se suben desde el gestor; mientras no haya número en portada con artículos en el índice, el inicio muestra el contenido fijo anterior (`config/sitio/edicion.php`).
 
 ## Pendientes de definir
 
@@ -93,3 +82,8 @@ aplicado; probado en una base nueva creada desde cero). No toca `autor` ni
 | 2026-10-22 | **Registro**: el grado académico se elige de una lista (Licenciatura, Especialidad, Maestría, Doctorado, Posdoctorado, Estudiante / Sin grado, Otro), sigue siendo opcional y se valida en el servidor. |
 | 2026-10-22 | **Buscador**: también busca en el resumen del artículo y lo muestra con las coincidencias resaltadas. El buscador del inicio del sitio ya envía la búsqueda. |
 | 2026-10-22 | **Correo**: `php artisan emprende:probar-correo` (configuración, cola, envío de prueba y causa probable si falla). SELinux: `httpd_can_sendmail` para envíos desde PHP-FPM. |
+| 2026-10-22 | **Base aprobada y aplicada** (`database/cambios/2026-10-22_documentos_y_edicion.sql`, incorporado a `EMP_FINAL_corregido.sql`; 52 tablas). No toca `autor` ni `articulo`. |
+| 2026-10-22 | **Carta de cesión**: plantilla en blanco (Word) para descargar; la firmada se sube en PDF al enviar el artículo (obligatoria) y se guarda en `constancia` con `cons_tipo = 'CESION'`, sin folio. El administrador la descarga desde el detalle del artículo. |
+| 2026-10-22 | **Carta de agradecimiento**: el autor la descarga desde su panel cuando su artículo aprobado está en un número visible; se genera la primera vez con folio `AGR-AAAA-NNNN` (serie aparte de `EMP`), formato de la dirección editorial, firma configurable (`EMPRENDE_AGRADECIMIENTO_FIRMA`, por defecto Dra. Clotilde Hernández Garnica) y se verifica en `/constancias/verificar/<folio>`. Se dirige por nombre, sin «Mtro./Mtra.» (no se conoce el tratamiento de cada persona). |
+| 2026-10-22 | **Gestor de portada** (`/admin/ediciones`): números con portada, PDF completo y Flipbook; artículos del número (ligados a un artículo aprobado o editoriales) con sección, descripción, páginas, PDF e imagen; el administrador elige exactamente 5 para el índice con su posición (la 1 es el principal) y los rota; se guarda cuándo entró cada uno y cuáles faltan por mostrar. Cursos por artículo: se sugieren por palabras clave y título, y lo que marca o desmarca el administrador manda. Los archivos se guardan fuera de `public/` con nombre aleatorio y se entregan solo si el número es visible. |
+| 2026-10-22 | **Inicio del sitio** desde la base cuando hay número en portada con artículos en el índice; si no, el contenido fijo anterior. El buscador incluye los artículos editoriales de números visibles. |

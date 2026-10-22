@@ -11,6 +11,16 @@
   - ARTICULO_REVISTA: artículos del número y los 5 del índice (posición
     1 a 5 y fecha en que se mostraron, para rotarlos).
   - ARTICULO_CURSO: cursos elegidos para cada artículo del índice.
+
+  IMPORTANTE: aplícalo con el USUARIO DE LA APLICACIÓN (el de DB_USERNAME),
+  no con postgres, para que las tablas nuevas sean suyas:
+     psql -h 127.0.0.1 -U <DB_USERNAME> -d <DB_DATABASE> -f database/cambios/2026-10-22_documentos_y_edicion.sql
+  Si ya lo aplicaste con postgres, corre como postgres (cambia <usuario>):
+     ALTER TABLE articulo_revista OWNER TO <usuario>;
+     ALTER TABLE articulo_curso OWNER TO <usuario>;
+     ALTER SEQUENCE articulo_revista_arre_id_articulo_revista_seq OWNER TO <usuario>;
+     ALTER SEQUENCE articulo_curso_arcu_id_articulo_curso_seq OWNER TO <usuario>;
+     ALTER FUNCTION fn_arre_articulo_aprobado() OWNER TO <usuario>;
 ======================================================================*/
 BEGIN;
 

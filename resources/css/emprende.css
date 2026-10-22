@@ -2668,3 +2668,16 @@ a.emp-fila:hover .emp-fila__lado .emp-icono {
         animation: none !important;
     }
 }
+
+/* --- Gestor de portada --------------------------------------------------- */
+.emp-seccion__texto {
+    max-width: 62ch;
+    margin: -0.25rem 0 1rem;
+    color: var(--emp-n-600);
+    font-size: 0.875rem;
+}
+
+.alert .ms-auto {
+    flex: none;
+    margin-top: -0.25rem;
+}

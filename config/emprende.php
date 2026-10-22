@@ -10,6 +10,10 @@ return [
     // Tamaño máximo del PDF de un artículo, en KB (7 MB, confirmado).
     'pdf_max_kb' => (int) env('EMPRENDE_PDF_MAX_KB', 7168),
 
+    // Tamaño máximo del PDF de un número completo, en KB (50 MB). Revisa también
+    // upload_max_filesize y post_max_size de PHP y client_max_body_size del servidor web.
+    'pdf_max_revista_kb' => (int) env('EMPRENDE_PDF_MAX_REVISTA_KB', 51200),
+
     // Prefijo del folio de constancia: {prefijo}-{AAAA}-{NNNN} (pendiente).
     'folio_prefijo' => env('EMPRENDE_FOLIO_PREFIJO', 'EMP'),
 

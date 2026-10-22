@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\ArticuloRevista;
+
 /**
  * Contenido del sitio público (config/sitio/*.php, convertido del sitio
  * original). Prepara los datos de cada página: la lógica que antes vivía al
@@ -21,6 +23,8 @@ class SitioService
     /** Orden de las pestañas de «10 de 10» (las áreas no listadas van al final). */
     private const ORDEN_DIEZ_DE_DIEZ = ['contaduria', 'administracion', 'informatica', 'negocios-internacionales'];
 
+    public function __construct(private EdicionService $ediciones) {}
+
     /** @return array<string, mixed> config, revista_actual, convocatoria, incluida_en */
     public function general(): array
     {
@@ -29,6 +33,68 @@ class SitioService
 
     /** @return array<string, mixed> */
     public function inicio(): array
+    {
+        return $this->inicioDesdeLaBase() ?? $this->inicioDesdeConfig();
+    }
+
+    /**
+     * Número en portada (gestor de portada): sus 5 artículos del índice en
+     * orden; el de la posición 1 es el principal. Null si aún no hay número en
+     * portada con artículos en el índice.
+     *
+     * @return array<string, mixed>|null
+     */
+    private function inicioDesdeLaBase(): ?array
+    {
+        $portada = $this->ediciones->portada();
+        if ($portada === null) {
+            return null;
+        }
+
+        $revista = $portada['revista'];
+        $general = $this->general();
+        $pdfNumero = route('edicion.numero', $revista);
+        $imagenPortada = route('edicion.portada', $revista);
+
+        $general['revista_actual'] = array_merge($general['revista_actual'], [
+            'edicion' => $revista->revi_num_edicion,
+            'anio' => $revista->revi_anio,
+            'periodo' => ucfirst($revista->revi_mes).' '.$revista->revi_anio,
+            'titulo' => $revista->revi_titulo,
+            'portada' => $imagenPortada,
+            'pdf_completo' => $pdfNumero,
+        ]);
+        if ($revista->revi_url_flipbook) {
+            $general['config']['ebook_url'] = $revista->revi_url_flipbook;
+        }
+
+        $articulo = function (ArticuloRevista $entrada) use ($pdfNumero, $imagenPortada) {
+            $pdf = $entrada->arre_url_pdf ? route('edicion.articulo.pdf', $entrada) : $pdfNumero;
+
+            return [
+                'categoria' => (string) $entrada->arre_seccion,
+                'titulo' => $entrada->arre_titulo,
+                'descripcion' => (string) $entrada->arre_descripcion,
+                'autores' => array_values(array_filter(array_map('trim', preg_split('/\s*[,;\n]\s*/', $entrada->arre_autores)))),
+                'paginas' => $entrada->arre_paginas,
+                'imagen' => $entrada->arre_url_imagen ? route('edicion.articulo.imagen', $entrada) : $imagenPortada,
+                'pdf' => $pdf,
+                'pdf_art' => $pdf,
+                'cursos_fca' => $this->ediciones->cursosDe($entrada)
+                    ->map(fn ($c) => ['texto' => "{$c->curs_nombre_curso} - {$c->curs_institucion}", 'url' => $c->curs_url])
+                    ->all(),
+            ];
+        };
+
+        return $general + [
+            'articulo_principal' => $articulo($portada['principal']),
+            'tabla_contenidos' => $portada['resto']->map($articulo)->all(),
+            'revelar_portada' => (int) $revista->revi_num_edicion === 0,
+        ];
+    }
+
+    /** Contenido fijo del sitio anterior (config/sitio), mientras no haya número en portada. */
+    private function inicioDesdeConfig(): array
     {
         $general = $this->general();
         $edicion = config('sitio.edicion');
