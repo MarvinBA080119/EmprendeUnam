@@ -30,6 +30,7 @@ Route::middleware('privilegio:CONSULTAR_TODOS_ARTICULOS')->group(function () {
     Route::get('/articulos/datos', [ArticuloController::class, 'datos'])->name('articulos.datos');
     Route::get('/articulos/{articulo}', [ArticuloController::class, 'show'])->name('articulos.show');
     Route::get('/articulos/{articulo}/pdf', [ArticuloController::class, 'pdf'])->name('articulos.pdf');
+    Route::get('/articulos/{articulo}/carta-cesion', [ArticuloController::class, 'cartaCesion'])->name('articulos.carta-cesion');
 });
 
 Route::middleware('privilegio:DICTAMINAR_ARTICULO')->group(function () {

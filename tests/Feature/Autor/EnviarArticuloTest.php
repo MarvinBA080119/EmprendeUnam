@@ -31,7 +31,8 @@ class EnviarArticuloTest extends TestCase
     {
         return $this->post('/autor/articulos', array_merge($this->datosArticulo($cambios), [
             'pdf' => $pdf ?? $this->pdfDePrueba(),
-        ]));
+            'carta_cesion' => $this->pdfDePrueba('carta-cesion-firmada.pdf'),
+        ], $cambios));
     }
 
     public function test_muestra_el_formulario_con_los_temas(): void

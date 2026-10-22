@@ -32,7 +32,9 @@ class ArticuloController extends Controller
 
     public function store(EnviarArticuloRequest $request): RedirectResponse
     {
-        $articulo = $this->articulos->enviar($request->user(), $request->validated(), $request->file('pdf'));
+        $articulo = $this->articulos->enviar(
+            $request->user(), $request->validated(), $request->file('pdf'), $request->file('carta_cesion'),
+        );
 
         return redirect()->route('autor.panel')->with(
             'exito',

@@ -13,12 +13,24 @@ return [
     // Prefijo del folio de constancia: {prefijo}-{AAAA}-{NNNN} (pendiente).
     'folio_prefijo' => env('EMPRENDE_FOLIO_PREFIJO', 'EMP'),
 
+    // Prefijo del folio de la carta de agradecimiento: {prefijo}-{AAAA}-{NNNN}.
+    'folio_prefijo_agradecimiento' => env('EMPRENDE_FOLIO_PREFIJO_AGRADECIMIENTO', 'AGR'),
+
+    // Quién firma la carta de agradecimiento.
+    'agradecimiento_firma' => [
+        'nombre' => env('EMPRENDE_AGRADECIMIENTO_FIRMA', 'Dra. Clotilde Hernández Garnica'),
+        'cargo' => env('EMPRENDE_AGRADECIMIENTO_CARGO', 'La directora editorial'),
+    ],
+
     // Dígitos del consecutivo anual del folio.
     'folio_digitos' => 4,
 
     // Carpetas dentro de storage/app/private (disco "local").
     'carpeta_articulos' => 'articulos',
     'carpeta_constancias' => 'constancias',
+    'carpeta_agradecimientos' => 'agradecimientos',
+    'carpeta_cesiones' => 'cesiones',
+    'carpeta_ediciones' => 'ediciones',
 
     // Remitente que aparece en las respuestas del consultorio.
     'remitente_consultorio' => 'Consultorio EmprendeUNAM',

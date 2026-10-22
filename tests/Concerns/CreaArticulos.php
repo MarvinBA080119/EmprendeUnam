@@ -35,6 +35,8 @@ trait CreaArticulos
     {
         Mail::fake();
 
-        return app(ArticuloService::class)->enviar($autor, $this->datosArticulo($cambios), $this->pdfDePrueba());
+        return app(ArticuloService::class)->enviar(
+            $autor, $this->datosArticulo($cambios), $this->pdfDePrueba(), $this->pdfDePrueba('carta-cesion.pdf'),
+        );
     }
 }

@@ -169,7 +169,7 @@ sudo -iu emprende php /var/www/emprendeunam/artisan emprende:clave-admin   # con
 
 `crear_bd.sh` lee `DB_PASSWORD` de `.env`, carga
 `database/EMP_FINAL_corregido.sql` y `database/datos_iniciales.sql` y verifica
-los conteos (50 tablas, 13 temas, 4 roles, 12 privilegios y el usuario
+los conteos (52 tablas, 13 temas, 4 roles, 12 privilegios y el usuario
 `EmprendeUnam`). Si la base ya existe, se niega a continuar; `--forzar` la
 borra y la recrea (**se pierden los datos**).
 

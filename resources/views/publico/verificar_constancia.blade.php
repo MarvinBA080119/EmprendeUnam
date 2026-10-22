@@ -22,8 +22,11 @@
             <div class="col-lg-8">
                 <div class="form-lux">
                     @if ($constancia)
-                        <p class="consulta__estado">Constancia válida</p>
+                        @php($esAgradecimiento = $constancia->cons_tipo === \App\Enums\TipoDocumento::AGRADECIMIENTO)
+                        <p class="consulta__estado">{{ $esAgradecimiento ? 'Carta de agradecimiento válida' : 'Constancia válida' }}</p>
                         <dl class="verificacion">
+                            <dt>Documento</dt>
+                            <dd>{{ $constancia->cons_tipo->etiqueta() }}</dd>
                             <dt>Folio</dt>
                             <dd>{{ $constancia->cons_folio }}</dd>
                             <dt>Artículo</dt>
@@ -31,7 +34,13 @@
                             <dt>Fecha de emisión</dt>
                             <dd>{{ $constancia->cons_fecha_emision->locale('es')->translatedFormat('j \d\e F \d\e Y') }}</dd>
                         </dl>
-                        <p class="form-nota">La Revista EmprendeUNAM emitió esta constancia por la aprobación del artículo indicado.</p>
+                        <p class="form-nota">
+                            @if ($esAgradecimiento)
+                                La Revista EmprendeUNAM emitió esta carta en agradecimiento por el artículo indicado, publicado en uno de sus números.
+                            @else
+                                La Revista EmprendeUNAM emitió esta constancia por la aprobación del artículo indicado.
+                            @endif
+                        </p>
                     @else
                         <p class="consulta__estado">Folio no encontrado</p>
                         <p class="consultorio__entrada">

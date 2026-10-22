@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Enums\EstatusArticulo;
+use App\Enums\TipoDocumento;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -57,9 +59,32 @@ class Articulo extends Model
         return $this->belongsToMany(Palabra::class, 'palabra_articulo', 'arti_id_autor', 'palabra_id_palabra');
     }
 
+    /** Constancia de aprobación (la fila de tipo CONSTANCIA). */
     public function constancia(): HasOne
     {
-        return $this->hasOne(Constancia::class, 'arti_id_autor', 'arti_id_autor');
+        return $this->documento(TipoDocumento::CONSTANCIA);
+    }
+
+    public function cartaAgradecimiento(): HasOne
+    {
+        return $this->documento(TipoDocumento::AGRADECIMIENTO);
+    }
+
+    /** Carta de cesión de derechos firmada que subió el autor al enviar. */
+    public function cartaCesion(): HasOne
+    {
+        return $this->documento(TipoDocumento::CESION);
+    }
+
+    /** Lugar del artículo en los números de la revista (articulo_revista). */
+    public function entradasRevista(): HasMany
+    {
+        return $this->hasMany(ArticuloRevista::class, 'arti_id_autor', 'arti_id_autor');
+    }
+
+    private function documento(TipoDocumento $tipo): HasOne
+    {
+        return $this->hasOne(Constancia::class, 'arti_id_autor', 'arti_id_autor')->where('cons_tipo', $tipo->value);
     }
 
     public function scopeAprobados(Builder $query): Builder

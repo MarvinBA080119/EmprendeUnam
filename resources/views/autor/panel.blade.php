@@ -80,6 +80,11 @@
                                         Descargar constancia<span class="visually-hidden"> de «{{ $articulo->arti_titulo }}»</span>
                                     </a>
                                 @endif
+                                @if ($articulo->arti_status === $Estatus::APROBADO && ($articulo->cartaAgradecimiento || $articulo->entradasRevista->isNotEmpty()))
+                                    <a href="{{ route('autor.articulos.agradecimiento', $articulo) }}" class="btn btn-secondary btn-sm">
+                                        Carta de agradecimiento<span class="visually-hidden"> de «{{ $articulo->arti_titulo }}»</span>
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </li>

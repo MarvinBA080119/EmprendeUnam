@@ -15,6 +15,11 @@
             <a href="{{ route('admin.articulos.pdf', $articulo) }}" class="btn btn-secondary">
                 <x-icono nombre="descargar" :tamano="14" /> Descargar PDF
             </a>
+            @if ($articulo->cartaCesion)
+                <a href="{{ route('admin.articulos.carta-cesion', $articulo) }}" class="btn btn-secondary">
+                    <x-icono nombre="descargar" :tamano="14" /> Carta de cesión
+                </a>
+            @endif
         </x-slot:acciones>
     </x-encabezado>
 

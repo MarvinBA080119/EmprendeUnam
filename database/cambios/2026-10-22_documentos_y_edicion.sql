@@ -1,12 +1,16 @@
 /*======================================================================
-  PROPUESTA (NO APLICADA) · 2026-10-22 · versión 3
-  Documentos del artículo en CONSTANCIA, edición en portada y los 5
-  artículos del índice.
+  2026-10-22 · Documentos del artículo, edición en portada y los 5
+  artículos del índice (propuesta versión 3, aprobada el 2026-10-22).
+  Para bases creadas ANTES de este cambio. Las bases nuevas ya lo traen
+  en EMP_FINAL_corregido.sql.
 
-  Espera la aprobación del responsable de la base. Cambios respecto a la
-  versión 2: CONSTANCIA usa CONS_TIPO (no un booleano) y ARTICULO_REVISTA
-  guarda la posición en el índice (1 a 5) y cuándo se mostró cada artículo,
-  para rotar los artículos del número hasta mostrarlos todos.
+  - CONSTANCIA.CONS_TIPO: CONSTANCIA, AGRADECIMIENTO (con folio) o CESION
+    (carta de cesión firmada, sin folio). Un documento de cada tipo por
+    artículo. Las constancias existentes quedan como CONSTANCIA.
+  - REVISTA: Flipbook, número en portada; REVI_MES guarda el periodo.
+  - ARTICULO_REVISTA: artículos del número y los 5 del índice (posición
+    1 a 5 y fecha en que se mostraron, para rotarlos).
+  - ARTICULO_CURSO: cursos elegidos para cada artículo del índice.
 ======================================================================*/
 BEGIN;
 

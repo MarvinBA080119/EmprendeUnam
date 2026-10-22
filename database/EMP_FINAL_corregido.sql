@@ -24,6 +24,12 @@ drop index if exists ARTICULOTEMA_FK;
 
 drop index if exists ARTICULO_PK;
 
+drop table if exists ARTICULO_CURSO cascade;
+
+drop table if exists ARTICULO_REVISTA cascade;
+
+drop function if exists FN_ARRE_ARTICULO_APROBADO() cascade;
+
 drop table if exists ARTICULO cascade;
 
 drop index if exists COAUTOR_FK;
@@ -519,7 +525,8 @@ create table CONSTANCIA (
    ARTI_ID_AUTOR            INT4                 not null,
    CONS_FECHA_EMISION       DATE                 not null,
    CONS_URL_ARCHIVO         VARCHAR(256)         not null,
-   CONS_FOLIO               VARCHAR(30)          not null,
+   CONS_FOLIO               VARCHAR(30)          null,
+   CONS_TIPO                VARCHAR(15)          not null,
    constraint PK_CONSTANCIA primary key (CONS_ID_CONSTANCIA)
 );
 
@@ -1392,12 +1399,14 @@ create table REVISTA (
    USUA_ID_USUARIO          INT4                 not null,
    REVI_TITULO              VARCHAR(60)          not null,
    REVI_ANIO                VARCHAR(4)           not null,
-   REVI_MES                 VARCHAR(10)          not null,
+   REVI_MES                 VARCHAR(20)          not null,
    REVI_NUM_EDICION         VARCHAR(3)           not null,
-   REVI_URL_PORTADA         VARCHAR(100)         not null,
-   REVI_URL_REVISTA_PDF     VARCHAR(100)         not null,
+   REVI_URL_PORTADA         VARCHAR(256)         not null,
+   REVI_URL_REVISTA_PDF     VARCHAR(256)         not null,
    REVI_FECHA_PUBLICACION   DATE                 not null,
    REVI_VISIBLE             BOOL                 not null,
+   REVI_URL_FLIPBOOK        VARCHAR(256)         null,
+   REVI_EN_PORTADA          BOOL                 not null default false,
    constraint PK_REVISTA primary key (REVI_ID_REVISTA)
 );
 
@@ -2002,7 +2011,7 @@ alter table ROL_PRIVILEGIO
    add constraint UQ_ROL_PRIVILEGIO unique (ROL_ID_ROL, ROPR_ID_PRIVILEGIO);
 
 alter table CONSTANCIA
-   add constraint UQ_CONSTANCIA_ARTICULO unique (ARTI_ID_AUTOR);
+   add constraint UQ_CONSTANCIA_ARTICULO_TIPO unique (ARTI_ID_AUTOR, CONS_TIPO);
 
 alter table CONSTANCIA
    add constraint UQ_CONSTANCIA_FOLIO unique (CONS_FOLIO);
@@ -2158,3 +2167,80 @@ create constraint trigger TR_USUARIO_CON_CORREO
    after insert on USUARIO
    deferrable initially deferred
    for each row execute function FN_USUARIO_CON_CORREO();
+
+/*==============================================================*/
+/* 2026-10-22: documentos del artículo, edición en portada y     */
+/* los 5 artículos del índice (database/cambios/2026-10-22_...)  */
+/*==============================================================*/
+alter table CONSTANCIA
+   add constraint CK_CONS_TIPO check (CONS_TIPO in ('CONSTANCIA', 'AGRADECIMIENTO', 'CESION'));
+
+/* La carta de cesión no lleva folio; la constancia y la de agradecimiento sí. */
+alter table CONSTANCIA
+   add constraint CK_CONS_FOLIO_SEGUN_TIPO check ((CONS_TIPO = 'CESION' and CONS_FOLIO is null)
+       or (CONS_TIPO <> 'CESION' and CONS_FOLIO is not null));
+
+/* Un solo número en portada, y debe ser visible. */
+alter table REVISTA
+   add constraint CK_REVI_PORTADA_VISIBLE check (not REVI_EN_PORTADA or REVI_VISIBLE);
+
+create unique index UQ_REVISTA_EN_PORTADA on REVISTA (REVI_EN_PORTADA) where REVI_EN_PORTADA;
+
+/* Artículos de cada número; los 5 del índice tienen posición 1 a 5. */
+CREATE TABLE ARTICULO_REVISTA (
+   ARRE_ID_ARTICULO_REVISTA SERIAL        NOT NULL,
+   REVI_ID_REVISTA          INT4          NOT NULL,
+   ARTI_ID_AUTOR            INT4          NULL,
+   ARRE_SECCION             VARCHAR(60)   NULL,
+   ARRE_TITULO              VARCHAR(200)  NOT NULL,
+   ARRE_DESCRIPCION         VARCHAR(500)  NULL,
+   ARRE_AUTORES             VARCHAR(300)  NOT NULL,
+   ARRE_PAGINAS             VARCHAR(15)   NULL,
+   ARRE_URL_PDF             VARCHAR(256)  NULL,
+   ARRE_URL_IMAGEN          VARCHAR(256)  NULL,
+   ARRE_POSICION_INDEX      INT2          NULL,
+   ARRE_FECHA_INDEX         DATE          NULL,
+   CONSTRAINT PK_ARTICULO_REVISTA PRIMARY KEY (ARRE_ID_ARTICULO_REVISTA),
+   CONSTRAINT FK_ARRE_REVISTA  FOREIGN KEY (REVI_ID_REVISTA) REFERENCES REVISTA (REVI_ID_REVISTA) ON DELETE CASCADE,
+   CONSTRAINT FK_ARRE_ARTICULO FOREIGN KEY (ARTI_ID_AUTOR)   REFERENCES ARTICULO (ARTI_ID_AUTOR) ON DELETE RESTRICT,
+   CONSTRAINT UQ_ARRE_POSICION UNIQUE (REVI_ID_REVISTA, ARRE_POSICION_INDEX) DEFERRABLE INITIALLY DEFERRED,
+   CONSTRAINT UQ_ARRE_ARTICULO UNIQUE (REVI_ID_REVISTA, ARTI_ID_AUTOR),
+   CONSTRAINT CK_ARRE_POSICION CHECK (ARRE_POSICION_INDEX BETWEEN 1 AND 5),
+   CONSTRAINT CK_ARRE_EN_INDEX_CON_FECHA CHECK (ARRE_POSICION_INDEX IS NULL OR ARRE_FECHA_INDEX IS NOT NULL)
+);
+CREATE INDEX ARRE_REVISTA_FK  ON ARTICULO_REVISTA (REVI_ID_REVISTA);
+CREATE INDEX ARRE_ARTICULO_FK ON ARTICULO_REVISTA (ARTI_ID_AUTOR);
+
+CREATE OR REPLACE FUNCTION FN_ARRE_ARTICULO_APROBADO() RETURNS TRIGGER AS $$
+BEGIN
+   IF NEW.ARTI_ID_AUTOR IS NOT NULL AND NOT EXISTS (
+         SELECT 1 FROM ARTICULO WHERE ARTI_ID_AUTOR = NEW.ARTI_ID_AUTOR AND ARTI_STATUS = 'APROBADO') THEN
+      RAISE EXCEPTION 'Solo un artículo aprobado puede formar parte de una edición' USING ERRCODE = '23514';
+   END IF;
+   RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER TR_ARRE_ARTICULO_APROBADO
+   BEFORE INSERT OR UPDATE OF ARTI_ID_AUTOR ON ARTICULO_REVISTA
+   FOR EACH ROW EXECUTE FUNCTION FN_ARRE_ARTICULO_APROBADO();
+
+/*----------------------------------------------------------------------
+  4. ARTICULO_CURSO (nueva): cursos que se muestran con cada artículo del
+     índice. El panel sugiere cursos automáticamente (palabras clave y
+     título); lo que el administrador decide se guarda aquí y manda:
+     INCLUIDO = true lo muestra, false lo descarta aunque se sugiera.
+     Un artículo puede tener varios cursos: por eso es tabla y no columna.
+----------------------------------------------------------------------*/
+CREATE TABLE ARTICULO_CURSO (
+   ARCU_ID_ARTICULO_CURSO   SERIAL NOT NULL,
+   ARRE_ID_ARTICULO_REVISTA INT4   NOT NULL,
+   CURS_ID_CURSO            INT4   NOT NULL,
+   ARCU_INCLUIDO            BOOL   NOT NULL,
+   CONSTRAINT PK_ARTICULO_CURSO PRIMARY KEY (ARCU_ID_ARTICULO_CURSO),
+   CONSTRAINT FK_ARCU_ARTICULO_REVISTA FOREIGN KEY (ARRE_ID_ARTICULO_REVISTA)
+      REFERENCES ARTICULO_REVISTA (ARRE_ID_ARTICULO_REVISTA) ON DELETE CASCADE,
+   CONSTRAINT FK_ARCU_CURSO FOREIGN KEY (CURS_ID_CURSO) REFERENCES CURSO (CURS_ID_CURSO) ON DELETE CASCADE,
+   CONSTRAINT UQ_ARCU UNIQUE (ARRE_ID_ARTICULO_REVISTA, CURS_ID_CURSO)
+);
+CREATE INDEX ARCU_CURSO_FK ON ARTICULO_CURSO (CURS_ID_CURSO);

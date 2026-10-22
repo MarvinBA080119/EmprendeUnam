@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ----------------------------------------------------------------------------
 # Crea (o recrea) una base de la Revista EmprendeUNAM y carga, en este orden:
-#   1. database/EMP_FINAL_corregido.sql  (esquema: 50 tablas, llaves, triggers)
+#   1. database/EMP_FINAL_corregido.sql  (esquema: 52 tablas, llaves, triggers)
 #   2. database/datos_iniciales.sql      (catálogos y usuario administrador)
 # Después verifica los conteos esperados.
 #
@@ -101,7 +101,7 @@ verificar() {
         fallo=1
     fi
 }
-verificar "Tablas en public"   "select count(*) from information_schema.tables where table_schema = 'public' and table_type = 'BASE TABLE'" 50
+verificar "Tablas en public"   "select count(*) from information_schema.tables where table_schema = 'public' and table_type = 'BASE TABLE'" 52
 verificar "Filas en tema"      "select count(*) from tema" 13
 verificar "Filas en rol"       "select count(*) from rol" 4
 verificar "Filas en privilegio" "select count(*) from privilegio" 12

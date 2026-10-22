@@ -56,14 +56,8 @@ class EnviarArticuloRequest extends FormRequest
             'coautores.*.segundo_apellido' => ['exclude_unless:tiene_coautores,true', 'nullable', 'string', 'max:100'],
             'coautores.*.correo' => ['exclude_unless:tiene_coautores,true', 'required', 'string', 'email:rfc', 'max:254', 'distinct:ignore_case'],
             'coautores.*.institucion' => ['exclude_unless:tiene_coautores,true', 'required', 'string', 'max:100'],
-            'pdf' => [
-                'required', 'file', 'mimetypes:application/pdf', 'max:'.config('emprende.pdf_max_kb'),
-                function (string $atributo, mixed $archivo, Closure $falla) {
-                    if ($archivo instanceof UploadedFile && ! $this->empiezaConPdf($archivo)) {
-                        $falla('El archivo no es un PDF válido.');
-                    }
-                },
-            ],
+            'pdf' => $this->reglasPdf(),
+            'carta_cesion' => $this->reglasPdf(),
         ];
     }
 
@@ -103,6 +97,9 @@ class EnviarArticuloRequest extends FormRequest
             'coautores.max' => 'Solo se admite un coautor por artículo (hasta dos personas autoras).',
             'pdf.mimetypes' => 'El archivo debe ser un PDF.',
             'pdf.max' => 'El PDF no debe pesar más de '.round(config('emprende.pdf_max_kb') / 1024).' MB.',
+            'carta_cesion.required' => 'Sube la carta de cesión de derechos firmada, en PDF.',
+            'carta_cesion.mimetypes' => 'La carta de cesión debe ser un PDF.',
+            'carta_cesion.max' => 'La carta de cesión no debe pesar más de '.round(config('emprende.pdf_max_kb') / 1024).' MB.',
         ];
     }
 
@@ -120,6 +117,7 @@ class EnviarArticuloRequest extends FormRequest
             'coautores.*.correo' => 'correo del coautor',
             'coautores.*.institucion' => 'institución del coautor',
             'pdf' => 'archivo PDF',
+            'carta_cesion' => 'carta de cesión',
         ];
     }
 
@@ -128,6 +126,19 @@ class EnviarArticuloRequest extends FormRequest
         $texto = trim($texto);
 
         return $texto === '' ? 0 : count(preg_split('/\s+/u', $texto));
+    }
+
+    /** PDF real: tipo por contenido (finfo), firma %PDF y tamaño máximo. */
+    private function reglasPdf(): array
+    {
+        return [
+            'required', 'file', 'mimetypes:application/pdf', 'max:'.config('emprende.pdf_max_kb'),
+            function (string $atributo, mixed $archivo, Closure $falla) {
+                if ($archivo instanceof UploadedFile && ! $this->empiezaConPdf($archivo)) {
+                    $falla('El archivo no es un PDF válido.');
+                }
+            },
+        ];
     }
 
     private function empiezaConPdf(UploadedFile $archivo): bool

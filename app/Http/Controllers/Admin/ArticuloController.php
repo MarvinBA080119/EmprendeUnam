@@ -63,6 +63,19 @@ class ArticuloController extends Controller
         );
     }
 
+    /** Carta de cesión de derechos firmada que subió el autor. */
+    public function cartaCesion(Articulo $articulo): StreamedResponse
+    {
+        $carta = $articulo->cartaCesion;
+        abort_unless($carta && Storage::disk('local')->exists($carta->cons_url_archivo), 404, 'El artículo no tiene carta de cesión.');
+
+        return Storage::disk('local')->download(
+            $carta->cons_url_archivo,
+            "carta-cesion-articulo-{$articulo->arti_id_autor}.pdf",
+            ['Content-Type' => 'application/pdf'],
+        );
+    }
+
     public function aprobar(Request $request, Articulo $articulo): RedirectResponse
     {
         $constancia = $this->constancias->aprobar($articulo, $request->user());

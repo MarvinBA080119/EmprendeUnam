@@ -24,6 +24,8 @@ Route::middleware('privilegio:ENVIAR_ARTICULO')->group(function () {
     Route::get('/carta-cesion', [ArticuloController::class, 'cartaCesion'])->name('carta-cesion');
 });
 
-Route::get('/articulos/{articulo}/constancia', [ConstanciaController::class, 'descargar'])
-    ->middleware('privilegio:DESCARGAR_CONSTANCIA')
-    ->name('articulos.constancia');
+Route::middleware('privilegio:DESCARGAR_CONSTANCIA')->group(function () {
+    Route::get('/articulos/{articulo}/constancia', [ConstanciaController::class, 'descargar'])->name('articulos.constancia');
+    Route::get('/articulos/{articulo}/carta-agradecimiento', [ConstanciaController::class, 'agradecimiento'])
+        ->name('articulos.agradecimiento');
+});
