@@ -16,6 +16,7 @@ Route::middleware('privilegio:CONSULTAR_ARTICULOS_PROPIOS')->group(function () {
     Route::get('/', [PanelController::class, 'index'])->name('panel');
     Route::get('/articulos/{articulo}/pdf', [ArticuloController::class, 'pdf'])->name('articulos.pdf');
     Route::get('/articulos/{articulo}/aprobado', [ArticuloController::class, 'aprobado'])->name('articulos.aprobado');
+    Route::get('/articulos/{articulo}/carta-cesion', [ArticuloController::class, 'cartaCesionFirmada'])->name('articulos.cesion');
 });
 
 Route::middleware('privilegio:ENVIAR_ARTICULO')->group(function () {

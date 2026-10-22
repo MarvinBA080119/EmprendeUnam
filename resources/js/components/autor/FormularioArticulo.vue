@@ -113,7 +113,7 @@ function validar() {
             }
         });
     }
-    if (!archivos.pdf) e.pdf = 'Selecciona el archivo PDF del artículo.';
+    if (!archivos.pdf) e.pdf = 'Selecciona el archivo del artículo (Word o PDF).';
     else if (erroresLocales.value.pdf) e.pdf = erroresLocales.value.pdf;
     if (!archivos.carta_cesion) e.carta_cesion = 'Sube la carta de cesión de derechos firmada, en PDF.';
     else if (erroresLocales.value.carta_cesion) e.carta_cesion = erroresLocales.value.carta_cesion;
@@ -148,7 +148,7 @@ async function enviar(evento) {
             </span>
         </div>
         <div v-else-if="hayErroresServidor" class="alert alert-danger" role="alert">
-            <span class="alert-texto">Revisa los datos marcados. Por seguridad, vuelve a seleccionar los archivos PDF.</span>
+            <span class="alert-texto">Revisa los datos marcados. Por seguridad, vuelve a seleccionar los archivos.</span>
         </div>
 
         <section class="emp-bloque" aria-labelledby="bloque-datos">
@@ -263,7 +263,7 @@ async function enviar(evento) {
         <section class="emp-bloque" aria-labelledby="bloque-archivo">
             <div class="emp-bloque__texto">
                 <h2 id="bloque-archivo" class="emp-bloque__titulo">Archivos</h2>
-                <p>El artículo completo y la carta de cesión de derechos firmada, en PDF de máximo {{ pdfMaxMb }} MB cada uno.</p>
+                <p>El artículo en Word (.docx) o PDF, como texto sin diseño: el equipo editorial lo maqueta. Y la carta de cesión de derechos firmada, en PDF. Máximo {{ pdfMaxMb }} MB cada uno.</p>
                 <p v-if="urlCartaCesion" class="emp-bloque__nota">
                     Descarga la carta, llénala, fírmala y súbela escaneada en PDF.
                     <a :href="urlCartaCesion" download>Descargar la carta (Word)</a>
@@ -271,7 +271,7 @@ async function enviar(evento) {
             </div>
             <div class="emp-bloque__campos">
                 <label class="form-label" for="pdf">Artículo</label>
-                <CampoPdf nombre="pdf" :max-kb="pdfMaxKb" titulo="Arrastra aquí el PDF del artículo" :error="error('pdf')"
+                <CampoPdf nombre="pdf" word :max-kb="pdfMaxKb" titulo="Arrastra aquí tu artículo" :error="error('pdf')"
                           @elegido="(d) => alElegirArchivo('pdf', d)" />
                 <label class="form-label mt-3" for="carta_cesion">Carta de cesión de derechos firmada</label>
                 <CampoPdf nombre="carta_cesion" :max-kb="pdfMaxKb" titulo="Arrastra aquí la carta firmada"

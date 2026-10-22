@@ -9,6 +9,7 @@ use App\Models\Articulo;
 use App\Models\Tema;
 use App\Services\ArticuloService;
 use App\Services\ConstanciaService;
+use App\Support\Manuscrito;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -58,8 +59,8 @@ class ArticuloController extends Controller
 
         return Storage::disk('local')->download(
             $articulo->arti_url_pdf,
-            "articulo-{$articulo->arti_id_autor}.pdf",
-            ['Content-Type' => 'application/pdf'],
+            Manuscrito::nombreDescarga($articulo->arti_url_pdf, $articulo->arti_id_autor),
+            ['Content-Type' => Manuscrito::tipoContenido($articulo->arti_url_pdf)],
         );
     }
 

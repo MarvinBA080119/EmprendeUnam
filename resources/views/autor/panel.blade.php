@@ -36,7 +36,7 @@
             <span class="emp-vacio-grande__icono" aria-hidden="true"><x-icono nombre="articulos" :tamano="22" /></span>
             <h2 class="emp-vacio-grande__titulo">Aún no has enviado artículos</h2>
             <p class="emp-vacio-grande__texto">
-                Envía tu artículo en PDF con título, resumen de hasta 50 palabras, tema y cinco palabras clave.
+                Envía tu artículo en Word o PDF con título, resumen de hasta 50 palabras, tema y cinco palabras clave.
                 Aquí verás su estado y, cuando se apruebe, tu constancia.
             </p>
             <a href="{{ route('autor.articulos.create') }}" class="btn btn-primary"><x-icono nombre="mas" :tamano="14" /> Enviar mi primer artículo</a>
@@ -73,14 +73,14 @@
                             <x-insignia :estatus="$articulo->arti_status" />
                             <div class="emp-envio__acciones">
                                 <a href="{{ route('autor.articulos.pdf', $articulo) }}" class="btn btn-quieto btn-sm">
-                                    <x-icono nombre="descargar" :tamano="14" /> <span>PDF<span class="visually-hidden"> de «{{ $articulo->arti_titulo }}»</span></span>
+                                    <x-icono nombre="descargar" :tamano="14" /> <span>Archivo<span class="visually-hidden"> de «{{ $articulo->arti_titulo }}»</span></span>
                                 </a>
                                 @if ($articulo->arti_status === $Estatus::APROBADO && $articulo->constancia)
                                     <a href="{{ route('autor.articulos.constancia', $articulo) }}" class="btn btn-secondary btn-sm">
                                         Descargar constancia<span class="visually-hidden"> de «{{ $articulo->arti_titulo }}»</span>
                                     </a>
                                 @endif
-                                @if ($articulo->arti_status === $Estatus::APROBADO && ($articulo->cartaAgradecimiento || $articulo->entradasRevista->isNotEmpty()))
+                                @if ($articulo->arti_status === $Estatus::APROBADO)
                                     <a href="{{ route('autor.articulos.agradecimiento', $articulo) }}" class="btn btn-secondary btn-sm">
                                         Carta de agradecimiento<span class="visually-hidden"> de «{{ $articulo->arti_titulo }}»</span>
                                     </a>

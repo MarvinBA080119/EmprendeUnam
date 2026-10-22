@@ -170,7 +170,44 @@ class EnviarArticuloTest extends TestCase
     {
         $this->actingAs($this->crearAutor())
             ->enviar(pdf: $this->pdfDePrueba(kb: 7200))
-            ->assertSessionHasErrors(['pdf' => 'El PDF no debe pesar más de 7 MB.']);
+            ->assertSessionHasErrors(['pdf' => 'El archivo no debe pesar más de 7 MB.']);
+    }
+
+    /** .docx mínimo (un ZIP con word/document.xml); con $macros agrega vbaProject.bin como un .docm. */
+    private function wordDePrueba(bool $macros = false): UploadedFile
+    {
+        $ruta = tempnam(sys_get_temp_dir(), 'docx');
+        $zip = new \ZipArchive;
+        $zip->open($ruta, \ZipArchive::OVERWRITE);
+        $zip->addFromString('[Content_Types].xml', '<Types/>');
+        $zip->addFromString('word/document.xml', '<w:document><w:body><w:p><w:r><w:t>Texto</w:t></w:r></w:p></w:body></w:document>');
+        if ($macros) {
+            $zip->addFromString('word/vbaProject.bin', 'macro');
+        }
+        $zip->close();
+
+        return new UploadedFile($ruta, 'articulo.docx', null, null, true);
+    }
+
+    public function test_acepta_el_articulo_en_word_y_lo_entrega_como_docx(): void
+    {
+        $autor = $this->crearAutor();
+        $this->actingAs($autor)->enviar(pdf: $this->wordDePrueba())->assertRedirect('/autor');
+
+        $articulo = Articulo::latest('arti_id_autor')->firstOrFail();
+        $this->assertStringEndsWith('.docx', $articulo->arti_url_pdf);
+        Storage::disk('local')->assertExists($articulo->arti_url_pdf);
+
+        $respuesta = $this->get("/autor/articulos/{$articulo->arti_id_autor}/pdf")->assertOk();
+        $this->assertStringContainsString('wordprocessingml', $respuesta->headers->get('Content-Type'));
+        $this->assertStringContainsString('.docx', $respuesta->headers->get('Content-Disposition'));
+    }
+
+    public function test_rechaza_un_word_con_macros(): void
+    {
+        $this->actingAs($this->crearAutor())
+            ->enviar(pdf: $this->wordDePrueba(macros: true))
+            ->assertSessionHasErrors('pdf');
     }
 
     public function test_el_resumen_es_obligatorio_y_de_maximo_50_palabras(): void

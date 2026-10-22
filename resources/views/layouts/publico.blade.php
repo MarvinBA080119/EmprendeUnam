@@ -29,7 +29,7 @@
                     </p>
                     <ol class="emp-pasos">
                         <li><strong>Regístrate</strong><span>El equipo editorial revisa y activa tu cuenta.</span></li>
-                        <li><strong>Envía tu artículo</strong><span>En PDF, con resumen de hasta 50 palabras y cinco palabras clave.</span></li>
+                        <li><strong>Envía tu artículo</strong><span>En Word o PDF, con resumen de hasta 50 palabras y cinco palabras clave.</span></li>
                         <li><strong>Recibe el dictamen</strong><span>Te avisamos por correo; si no se aprueba, te decimos por qué.</span></li>
                         <li><strong>Descarga tu constancia</strong><span>Con un folio que cualquiera puede verificar en línea.</span></li>
                     </ol>

@@ -96,36 +96,57 @@ class DocumentosTest extends TestCase
         $this->get("/admin/articulos/{$articulo->arti_id_autor}/carta-cesion")->assertOk()->assertDownload();
     }
 
-    public function test_la_carta_de_agradecimiento_espera_a_que_el_articulo_salga_en_un_numero(): void
+    public function test_al_aprobar_se_emite_la_carta_de_agradecimiento_y_se_ofrecen_las_cartas(): void
     {
         [$autor, $articulo] = $this->aprobado();
 
-        $this->actingAs($autor)->get('/autor')->assertDontSee('Carta de agradecimiento');
-        $this->get("/autor/articulos/{$articulo->arti_id_autor}/carta-agradecimiento")->assertSessionHasErrors('articulo');
-
-        $this->enNumero($articulo, visible: false);
-        $this->get("/autor/articulos/{$articulo->arti_id_autor}/carta-agradecimiento")->assertSessionHasErrors('articulo');
-        $this->assertNull($articulo->fresh()->cartaAgradecimiento);
-    }
-
-    public function test_con_el_articulo_en_un_numero_visible_el_autor_descarga_su_carta(): void
-    {
-        [$autor, $articulo] = $this->aprobado();
-        $this->enNumero($articulo);
+        $carta = $articulo->cartaAgradecimiento;
+        $this->assertNotNull($carta, 'Se emite en la misma aprobación.');
+        $this->assertSame('AGR-'.now()->year.'-0001', $carta->cons_folio);
+        Storage::disk('local')->assertExists($carta->cons_url_archivo);
 
         $this->actingAs($autor)->get('/autor')->assertSee('Carta de agradecimiento');
+        $this->get("/autor/articulos/{$articulo->arti_id_autor}/aprobado")
+            ->assertOk()
+            ->assertSee('Tus cartas')
+            ->assertSee(route('autor.carta-cesion'), false)
+            ->assertSee(route('autor.articulos.cesion', $articulo), false);
+
         $this->get("/autor/articulos/{$articulo->arti_id_autor}/carta-agradecimiento")->assertOk()->assertDownload();
-
-        $carta = $articulo->fresh()->cartaAgradecimiento;
-        $this->assertSame(TipoDocumento::AGRADECIMIENTO, $carta->cons_tipo);
-        $this->assertSame('AGR-'.now()->year.'-0001', $carta->cons_folio);
-
-        // La segunda descarga entrega la misma carta.
-        $this->get("/autor/articulos/{$articulo->arti_id_autor}/carta-agradecimiento")->assertOk();
-        $this->assertSame(1, Constancia::where('arti_id_autor', $articulo->arti_id_autor)->deTipo(TipoDocumento::AGRADECIMIENTO)->count());
-
-        // Se verifica en línea con su folio.
+        $this->get("/autor/articulos/{$articulo->arti_id_autor}/carta-cesion")->assertOk()->assertDownload();
         $this->get("/constancias/verificar/{$carta->cons_folio}")->assertSee('Carta de agradecimiento válida');
+    }
+
+    public function test_la_carta_menciona_el_numero_cuando_el_articulo_sale_en_uno_visible(): void
+    {
+        [$autor, $articulo] = $this->aprobado();
+        $servicio = app(ConstanciaService::class);
+        $folio = $articulo->cartaAgradecimiento->cons_folio;
+
+        $this->assertNull($servicio->contenidoAgradecimiento($articulo)['numero']);
+
+        $this->enNumero($articulo, visible: false);
+        $this->assertNull($servicio->contenidoAgradecimiento($articulo)['numero'], 'Un número oculto no cuenta.');
+
+        Revista::query()->update(['revi_visible' => true]);
+        $contenido = $servicio->contenidoAgradecimiento($articulo);
+        $this->assertSame('220', $contenido['numero']);
+        $this->assertSame('julio-agosto de 2026', $contenido['periodo']);
+
+        // La misma carta: no cambia el folio ni se duplica.
+        $this->actingAs($autor)->get("/autor/articulos/{$articulo->arti_id_autor}/carta-agradecimiento")->assertOk();
+        $this->assertSame($folio, $articulo->fresh()->cartaAgradecimiento->cons_folio);
+        $this->assertSame(1, Constancia::where('arti_id_autor', $articulo->arti_id_autor)->deTipo(TipoDocumento::AGRADECIMIENTO)->count());
+    }
+
+    public function test_un_articulo_en_revision_no_tiene_carta_de_agradecimiento(): void
+    {
+        $autor = $this->crearAutor();
+        $articulo = $this->enviarArticulo($autor);
+
+        $this->actingAs($autor)
+            ->get("/autor/articulos/{$articulo->arti_id_autor}/carta-agradecimiento")
+            ->assertSessionHasErrors('articulo');
     }
 
     public function test_otro_autor_no_descarga_la_carta_ajena(): void
@@ -140,9 +161,7 @@ class DocumentosTest extends TestCase
 
     public function test_el_folio_de_agradecimiento_no_altera_el_de_las_constancias(): void
     {
-        [, $articulo] = $this->aprobado();
-        $this->enNumero($articulo);
-        app(ConstanciaService::class)->agradecimiento($articulo);
+        $this->aprobado();
 
         $this->assertSame('EMP-'.now()->year.'-0002', app(ConstanciaService::class)->siguienteFolio(now()->year));
     }

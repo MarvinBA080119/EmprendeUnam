@@ -2681,3 +2681,72 @@ a.emp-fila:hover .emp-fila__lado .emp-icono {
     flex: none;
     margin-top: -0.25rem;
 }
+
+/* Cartas del autor en la pantalla de artículo aprobado */
+.emp-documentos {
+    width: 100%;
+    margin-top: 2rem;
+    text-align: left;
+}
+
+.emp-documentos__titulo {
+    margin: 0 0 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.emp-documentos__lista {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--emp-n-150);
+}
+
+.emp-documentos__lista > li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--emp-n-100);
+}
+
+.emp-documentos__lista strong {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.emp-documentos__lista span {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--emp-n-600);
+    text-wrap: pretty;
+}
+
+.emp-documentos__lista .btn {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.emp-documentos__acciones {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.375rem;
+}
+
+@media (max-width: 575.98px) {
+    .emp-documentos__lista > li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .emp-documentos__acciones {
+        justify-content: flex-start;
+    }
+}

@@ -8,7 +8,7 @@
     y desde su panel envía el PDF con su resumen, 5 palabras clave y coautor. Esta
     página conserva los lineamientos y lleva a ese flujo.
 
-    «Formato» se ajustó al sistema (PDF de hasta 7 MB, no Word). «Revisión por
+    «Formato» se ajustó al sistema (Word .docx o PDF de hasta 7 MB). «Revisión por
     pares» y «Compromiso UNAM» conservan el texto original del sitio.
 --}}
 @php
@@ -49,7 +49,7 @@
 
                 <div class="lineamiento">
                     <h2>Formato</h2>
-                    <p>Sube tu documento en formato PDF (máximo {{ $maxMb }} MB), omitiendo datos de identificación en el archivo.</p>
+                    <p>Sube tu documento en Word (.docx) o PDF (máximo {{ $maxMb }} MB), como texto sin diseño y omitiendo datos de identificación en el archivo.</p>
                 </div>
 
                 <div class="lineamiento lineamiento--compromiso">
@@ -86,7 +86,7 @@
                         <li>
                             <strong>Envíe su artículo desde su panel:</strong>
                             título, resumen (máximo 50 palabras), tema, cinco palabras clave, un coautor
-                            (si lo tiene) y el archivo PDF.
+                            (si lo tiene) y el archivo en Word o PDF.
                         </li>
                         <li>
                             <strong>Dé seguimiento.</strong>
