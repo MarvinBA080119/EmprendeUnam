@@ -8,6 +8,7 @@ use App\Http\Requests\Autor\EnviarArticuloRequest;
 use App\Models\Articulo;
 use App\Models\Tema;
 use App\Services\ArticuloService;
+use App\Support\Manuscrito;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -46,7 +47,7 @@ class ArticuloController extends Controller
     {
         Gate::authorize('descargar', $articulo);
 
-        return $this->descargar($articulo->arti_url_pdf, "articulo-{$articulo->arti_id_autor}.pdf");
+        return $this->descargar($articulo->arti_url_pdf, Manuscrito::nombreDescarga($articulo->arti_url_pdf, $articulo->arti_id_autor));
     }
 
     /** Plantilla en Word de la carta de cesión de derechos, para llenarla y firmarla. */
@@ -59,19 +60,29 @@ class ArticuloController extends Controller
         );
     }
 
+    /** La carta de cesión firmada que el autor envió con su artículo. */
+    public function cartaCesionFirmada(Articulo $articulo): StreamedResponse
+    {
+        Gate::authorize('descargar', $articulo);
+        $carta = $articulo->cartaCesion;
+        abort_if($carta === null, 404, 'Este artículo no tiene carta de cesión.');
+
+        return $this->descargar($carta->cons_url_archivo, "carta-cesion-articulo-{$articulo->arti_id_autor}.pdf");
+    }
+
     /** Pantalla de agradecimiento de un artículo aprobado. */
     public function aprobado(Articulo $articulo): View
     {
         Gate::authorize('ver', $articulo);
         abort_unless($articulo->arti_status === EstatusArticulo::APROBADO, 404);
 
-        return view('autor.articulos.aprobado', ['articulo' => $articulo->load('constancia')]);
+        return view('autor.articulos.aprobado', ['articulo' => $articulo->load(['constancia', 'cartaCesion'])]);
     }
 
     private function descargar(string $ruta, string $nombre): StreamedResponse
     {
         abort_unless(Storage::disk('local')->exists($ruta), 404, 'El archivo no está disponible.');
 
-        return Storage::disk('local')->download($ruta, $nombre, ['Content-Type' => 'application/pdf']);
+        return Storage::disk('local')->download($ruta, $nombre, ['Content-Type' => Manuscrito::tipoContenido($ruta)]);
     }
 }

@@ -40,6 +40,41 @@
             <p class="emp-logro__nota">Puedes descargarla de nuevo cuando quieras desde tu historial.</p>
         @endif
 
+        <section class="emp-documentos" aria-labelledby="titulo-documentos">
+            <h2 id="titulo-documentos" class="emp-documentos__titulo">Tus cartas</h2>
+            <ul class="emp-documentos__lista">
+                <li>
+                    <div>
+                        <strong>Carta de agradecimiento</strong>
+                        <span>De la dirección editorial. Cuando tu artículo salga en un número, la carta mencionará el número y el bimestre.</span>
+                    </div>
+                    <a href="{{ route('autor.articulos.agradecimiento', $articulo) }}" class="btn btn-secondary btn-sm">
+                        <x-icono nombre="descargar" :tamano="14" /> Descargar
+                    </a>
+                </li>
+                <li>
+                    <div>
+                        <strong>Carta de cesión de derechos</strong>
+                        <span>
+                            @if ($articulo->cartaCesion)
+                                La copia firmada que enviaste con tu artículo. También puedes bajar el formato en blanco.
+                            @else
+                                Descarga el formato, llénalo y fírmalo.
+                            @endif
+                        </span>
+                    </div>
+                    <div class="emp-documentos__acciones">
+                        @if ($articulo->cartaCesion)
+                            <a href="{{ route('autor.articulos.cesion', $articulo) }}" class="btn btn-secondary btn-sm">
+                                <x-icono nombre="descargar" :tamano="14" /> Copia firmada
+                            </a>
+                        @endif
+                        <a href="{{ route('autor.carta-cesion') }}" class="btn btn-quieto btn-sm">Formato (Word)</a>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
         <a class="emp-encabezado__volver mt-3" href="{{ route('autor.panel') }}"><x-icono nombre="atras" :tamano="14" /> Volver a mis artículos</a>
     </div>
 @endsection

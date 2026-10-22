@@ -83,6 +83,20 @@ class EdicionTest extends TestCase
         $this->actingAs($this->crearAutor())->get('/admin/ediciones')->assertForbidden();
     }
 
+    public function test_las_pantallas_del_gestor_se_abren_vacias_y_con_datos(): void
+    {
+        $admin = $this->administrador();
+        $this->actingAs($admin)->get('/admin/ediciones')->assertOk()->assertSee('Registrar número');
+        $this->actingAs($admin)->get('/admin/ediciones/nuevo')->assertOk()->assertSee('(obligatoria)');
+
+        $revista = $this->crearNumero();
+        $this->agregar($revista, 2);
+
+        $this->actingAs($admin)->get('/admin/ediciones')->assertOk()->assertSee('Número principal');
+        $this->actingAs($admin)->get("/admin/ediciones/{$revista->revi_id_revista}")->assertOk()->assertSee('Guardar destacados');
+        $this->actingAs($admin)->get("/admin/ediciones/{$revista->revi_id_revista}/editar")->assertOk()->assertDontSee('(obligatoria)');
+    }
+
     public function test_registra_un_numero_con_portada_pdf_y_flipbook(): void
     {
         $revista = $this->crearNumero();
@@ -241,6 +255,112 @@ class EdicionTest extends TestCase
             ->assertSee('https://flipbook.ejemplo.mx/220', false)
             ->assertSeeInOrder(['Artículo 3', 'Artículo 1', 'Artículo 2', 'Artículo 4', 'Artículo 5'])
             ->assertDontSee('Artículo 6');
+    }
+
+    public function test_al_ponerlo_como_principal_el_inicio_cambia_portada_pdf_y_ebook_aunque_falten_destacados(): void
+    {
+        $revista = $this->crearNumero();
+        $this->post("/admin/ediciones/{$revista->revi_id_revista}/portada")->assertRedirect();
+        auth()->logout();
+
+        $this->get('/')->assertOk()
+            ->assertSee('No. 220')
+            ->assertSee('Diferenciación para generar ventajas')
+            ->assertSee(route('edicion.portada', $revista), false)
+            ->assertSee(route('edicion.numero', $revista), false)
+            ->assertSee('https://flipbook.ejemplo.mx/220', false)
+            ->assertDontSee('Artículo principal');
+    }
+
+    public function test_el_numero_que_deja_de_ser_principal_pasa_al_historico(): void
+    {
+        $anterior = $this->crearNumero(['titulo' => 'Número anterior']);
+        $nuevo = $this->crearNumero(['numero' => '221', 'periodo' => 'septiembre-octubre', 'titulo' => 'Número nuevo']);
+        $this->post("/admin/ediciones/{$anterior->revi_id_revista}/portada");
+        $this->post("/admin/ediciones/{$nuevo->revi_id_revista}/portada");
+        auth()->logout();
+
+        $this->get('/historico')->assertOk()
+            ->assertSee('Número anterior')
+            ->assertSee(route('edicion.portada', $anterior), false)
+            ->assertSee(route('edicion.numero', $anterior), false)
+            ->assertDontSee('Número nuevo');
+        $this->get('/')->assertSee('Número nuevo');
+    }
+
+    /** @param  array<string, string>  $archivos  nombre => contenido */
+    private function zip(array $archivos): UploadedFile
+    {
+        $ruta = tempnam(sys_get_temp_dir(), 'zip');
+        $zip = new \ZipArchive;
+        $zip->open($ruta, \ZipArchive::OVERWRITE);
+        foreach ($archivos as $nombre => $contenido) {
+            $zip->addFromString($nombre, $contenido);
+        }
+        $zip->close();
+
+        return new UploadedFile($ruta, 'articulos.zip', null, null, true);
+    }
+
+    public function test_el_zip_vincula_cada_pdf_con_su_articulo_por_numero_o_por_titulo(): void
+    {
+        $revista = $this->crearNumero();
+        $porNumero = $this->enviarArticulo($this->crearAutor(), ['titulo' => 'Finanzas sanas en la microempresa']);
+        $porTitulo = $this->enviarArticulo($this->crearAutor(), ['titulo' => 'Logística inversa en talleres']);
+        foreach ([$porNumero, $porTitulo] as $articulo) {
+            app(ConstanciaService::class)->aprobar($articulo, $this->administrador());
+        }
+        $pdf = "%PDF-1.4\n%%EOF\n";
+
+        $this->actingAs($this->administrador())->post("/admin/ediciones/{$revista->revi_id_revista}/zip", [
+            'zip' => $this->zip([
+                "maquetados/{$porNumero->arti_id_autor}-finanzas.pdf" => $pdf,
+                'Logistica inversa en talleres.pdf' => $pdf,
+                'otro-articulo.pdf' => $pdf,
+                'falso.pdf' => 'no soy pdf',
+                '../../escapar.pdf' => $pdf,
+                'notas.txt' => 'hola',
+            ]),
+        ])->assertRedirect()->assertSessionHas('exito', 'Se vincularon 2 PDF con sus artículos.');
+
+        $entradas = $revista->articulos()->with('articulo.palabras')->get()->keyBy('arti_id_autor');
+        $this->assertCount(2, $entradas);
+        foreach ([$porNumero, $porTitulo] as $articulo) {
+            $entrada = $entradas[$articulo->arti_id_autor];
+            Storage::disk('local')->assertExists($entrada->arre_url_pdf);
+            $this->assertSame($articulo->arti_titulo, $entrada->arre_titulo);
+        }
+        // Las palabras clave del artículo del sistema quedan disponibles para sugerir cursos.
+        $this->assertCount(5, $entradas[$porNumero->arti_id_autor]->articulo->palabras);
+
+        $resultado = session('zip_resultado');
+        $this->assertContains('otro-articulo.pdf', $resultado['no_reconocidos']);
+        $this->assertContains('notas.txt (no es PDF)', $resultado['no_reconocidos']);
+        $this->assertTrue(collect($resultado['no_reconocidos'])->contains(fn ($n) => str_starts_with($n, 'escapar.pdf') || str_starts_with($n, 'falso.pdf')));
+        Storage::disk('local')->assertMissing('escapar.pdf');
+    }
+
+    public function test_un_zip_invalido_no_rompe_nada(): void
+    {
+        $revista = $this->crearNumero();
+        $falso = tempnam(sys_get_temp_dir(), 'zip');
+        file_put_contents($falso, 'no soy zip');
+
+        $this->actingAs($this->administrador())
+            ->post("/admin/ediciones/{$revista->revi_id_revista}/zip", ['zip' => new UploadedFile($falso, 'a.zip', null, null, true)])
+            ->assertSessionHasErrors('zip');
+    }
+
+    public function test_descarga_los_manuscritos_aprobados_sin_numero_con_su_id(): void
+    {
+        $articulo = $this->enviarArticulo($this->crearAutor(), ['titulo' => 'Finanzas sanas']);
+        app(ConstanciaService::class)->aprobar($articulo, $this->administrador());
+
+        $respuesta = $this->actingAs($this->administrador())->get('/admin/ediciones/manuscritos')->assertOk();
+        $zip = new \ZipArchive;
+        $zip->open($respuesta->baseResponse->getFile()->getPathname());
+        $this->assertSame("{$articulo->arti_id_autor}-finanzas-sanas.pdf", $zip->getNameIndex(0));
+        $zip->close();
     }
 
     public function test_eliminar_un_numero_borra_sus_articulos_y_archivos(): void

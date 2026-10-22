@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@php($editando = $entrada->exists)
+@php $editando = $entrada->exists; @endphp
 
 @section('titulo', $editando ? 'Editar artículo del número' : 'Agregar artículo al número')
 
@@ -18,7 +18,7 @@
                     @method('PUT')
                 @endif
 
-                @php($elegido = (string) old('arti_id_autor', $entrada->arti_id_autor))
+                @php $elegido = (string) old('arti_id_autor', $entrada->arti_id_autor); @endphp
                 <div class="mb-3">
                     <label for="campo-arti_id_autor" class="form-label">Artículo del sistema <span class="emp-opcional">(opcional)</span></label>
                     <select id="campo-arti_id_autor" name="arti_id_autor" aria-describedby="campo-arti-ayuda"
@@ -66,26 +66,31 @@
                 <fieldset class="mb-4" aria-describedby="cursos-ayuda">
                     <legend class="form-label fs-6 mb-1">Cursos que se muestran con el artículo</legend>
                     <p id="cursos-ayuda" class="form-text mt-0">
-                        Los marcados como «sugerido» se relacionan por palabras clave y título. Marca o desmarca los que
-                        quieras: tu elección manda sobre la sugerencia.@unless ($editando) Las sugerencias aparecen al guardar.@endunless
+                        Los «sugeridos» comparten palabras clave o palabras del título con el artículo. Marca o desmarca
+                        los que quieras: tu elección manda sobre la sugerencia.@unless ($editando) Las sugerencias aparecen al guardar.@endunless
                     </p>
                     @foreach ($sugeridos as $sugerido)
                         <input type="hidden" name="sugeridos[]" value="{{ $sugerido }}">
                     @endforeach
-                    @forelse ($cursos as $curso)
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="cursos[]" value="{{ $curso->curs_id_curso }}"
-                                   id="curso-{{ $curso->curs_id_curso }}" @checked(in_array($curso->curs_id_curso, $marcados, true))>
-                            <label class="form-check-label" for="curso-{{ $curso->curs_id_curso }}">
-                                {{ $curso->curs_nombre_curso }} <span class="text-body-secondary">· {{ $curso->curs_institucion }}</span>
-                                @if (in_array($curso->curs_id_curso, $sugeridos, true))
-                                    <span class="emp-insignia emp-insignia-revision ms-1">Sugerido</span>
-                                @endif
-                            </label>
-                        </div>
-                    @empty
+                    @if ($cursos->isEmpty())
                         <p class="text-body-secondary mb-0">No hay cursos vigentes. Publícalos en <a href="{{ route('admin.cursos.index') }}">Cursos</a>.</p>
-                    @endforelse
+                    @else
+                        <div class="emp-cursos-elegir">
+                            @foreach ($cursos->sortByDesc(fn ($c) => in_array($c->curs_id_curso, $sugeridos, true)) as $curso)
+                                @php $sugerido = in_array($curso->curs_id_curso, $sugeridos, true); @endphp
+                                <input class="emp-cursos-elegir__opcion" type="checkbox" name="cursos[]" value="{{ $curso->curs_id_curso }}"
+                                       id="curso-{{ $curso->curs_id_curso }}" @checked(in_array($curso->curs_id_curso, $marcados, true))>
+                                <label for="curso-{{ $curso->curs_id_curso }}" @class(['is-sugerido' => $sugerido])>
+                                    <x-icono nombre="check" :tamano="12" class="emp-cursos-elegir__marca" />
+                                    <span>{{ $curso->curs_nombre_curso }}</span>
+                                    <span class="emp-cursos-elegir__inst">{{ $curso->curs_institucion }}</span>
+                                    @if ($sugerido)
+                                        <span class="emp-cursos-elegir__sugerido">Sugerido</span>
+                                    @endif
+                                </label>
+                            @endforeach
+                        </div>
+                    @endif
                     @error('cursos.*')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror

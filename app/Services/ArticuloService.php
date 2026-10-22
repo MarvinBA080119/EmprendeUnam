@@ -14,6 +14,7 @@ use App\Models\Constancia;
 use App\Models\Persona;
 use App\Models\TipoComunicacion;
 use App\Models\Usuario;
+use App\Support\Manuscrito;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -52,7 +53,8 @@ class ArticuloService
                 $id = (int) DB::selectOne(
                     "select nextval(pg_get_serial_sequence('articulo', 'arti_id_autor')) as id"
                 )->id;
-                $ruta = config('emprende.carpeta_articulos')."/{$id}.pdf";
+                $extension = Manuscrito::detectar($pdf->getRealPath()) ?? 'pdf';
+                $ruta = config('emprende.carpeta_articulos')."/{$id}.{$extension}";
 
                 $articulo = (new Articulo)->forceFill([
                     'arti_id_autor' => $id,
@@ -67,7 +69,7 @@ class ArticuloService
                 $articulo->save();
 
                 if ($disco->putFileAs(dirname($ruta), $pdf, basename($ruta)) === false) {
-                    throw new \RuntimeException('No se pudo guardar el PDF del artículo.');
+                    throw new \RuntimeException('No se pudo guardar el archivo del artículo.');
                 }
 
                 $rutaCesion = config('emprende.carpeta_cesiones')."/{$id}.pdf";
@@ -130,8 +132,6 @@ class ArticuloService
             ->with([
                 'tema',
                 'constancia',
-                'cartaAgradecimiento',
-                'entradasRevista' => fn ($q) => $q->whereHas('revista', fn ($r) => $r->where('revi_visible', true)),
                 'autores' => fn ($q) => $q->where('autor.auto_id_autor', $idAutor),
             ])
             ->orderByDesc('arti_fecha_registro')

@@ -33,11 +33,13 @@
                         <span>Número completo (PDF)</span>
                     </a>
 
+                    @if (! empty($config['ebook_url']))
                     <a href="{{ asset($config['ebook_url']) }}"
                        class="btn btn-outline-dark rounded-0 btn-lux btn-lux--rojo"
                        target="_blank" rel="noopener">
                         <span>Ver en eBook</span>
                     </a>
+                    @endif
                 </div>
 
             </div>
@@ -87,6 +89,8 @@
             <!-- ═════════ COLUMNA PRINCIPAL · FEED ═════════ -->
             <div class="col-lg-8">
 
+                {{-- Sin destacados elegidos todavía (gestor de portada), el número principal se muestra solo con su portada. --}}
+                @if ($articulo_principal)
                 <!-- ── Artículo principal ── -->
                 <p class="feed-label">Artículo principal</p>
 
@@ -217,6 +221,7 @@
                     </article>
 
                 @endforeach
+                @endif
 
             </div>
 

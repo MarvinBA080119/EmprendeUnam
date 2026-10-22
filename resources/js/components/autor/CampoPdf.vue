@@ -2,16 +2,23 @@
 import { computed, ref } from 'vue';
 
 /**
- * Zona para elegir o arrastrar un PDF. Revisa en el navegador el tamaño y la
- * firma %PDF (el servidor vuelve a validarlo) y avisa al formulario con
- * «elegido» (archivo y error local).
+ * Zona para elegir o arrastrar un archivo: PDF o, con «word», también .docx.
+ * Revisa en el navegador el tamaño y la firma del contenido (%PDF o ZIP de
+ * Word; el servidor vuelve a validarlo) y avisa al formulario con «elegido»
+ * (archivo y error local).
  */
 const props = defineProps({
     nombre: { type: String, required: true },
     maxKb: { type: Number, required: true },
     titulo: { type: String, default: 'Arrastra tu PDF aquí' },
     error: { type: String, default: null },
+    word: { type: Boolean, default: false },
 });
+
+const aceptar = computed(() => (props.word
+    ? 'application/pdf,.pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx'
+    : 'application/pdf,.pdf'));
+const tipos = computed(() => (props.word ? 'Word (.docx) o PDF' : 'solo PDF'));
 
 const emit = defineEmits(['elegido']);
 
@@ -33,11 +40,17 @@ async function alElegir() {
         return;
     }
     if (elegido.size > props.maxKb * 1024) {
-        emit('elegido', { archivo: elegido, error: `El PDF no debe pesar más de ${maxMb.value} MB.` });
+        emit('elegido', { archivo: elegido, error: `El archivo no debe pesar más de ${maxMb.value} MB.` });
         return;
     }
     const inicio = await elegido.slice(0, 4).text();
-    emit('elegido', { archivo: elegido, error: inicio === '%PDF' ? null : 'El archivo no es un PDF válido.' });
+    const esPdf = inicio === '%PDF';
+    const esWord = props.word && inicio === 'PK\u0003\u0004' && /\.docx$/i.test(elegido.name);
+    emit('elegido', {
+        archivo: elegido,
+        error: esPdf || esWord ? null
+            : props.word ? 'Sube un documento de Word (.docx) o un PDF.' : 'El archivo no es un PDF válido.',
+    });
 }
 
 // Arrastrar y soltar: el archivo pasa al mismo campo del formulario.
@@ -58,7 +71,7 @@ defineExpose({ enfocar: () => campo.value?.focus() });
              :class="{ 'is-arrastrando': arrastrando, 'is-invalid': error, 'tiene-archivo': archivo && !error }"
              @dragenter.prevent="arrastrando = true" @dragover.prevent="arrastrando = true"
              @dragleave.prevent="arrastrando = false" @drop.prevent="alSoltar">
-            <input :id="nombre" ref="campo" class="emp-archivo__campo" :name="nombre" type="file" accept="application/pdf,.pdf"
+            <input :id="nombre" ref="campo" class="emp-archivo__campo" :name="nombre" type="file" :accept="aceptar"
                    required :aria-describedby="`${nombre}-ayuda ${nombre}-error`" @change="alElegir" />
             <label :for="nombre" class="emp-archivo__zona">
                 <span class="emp-archivo__icono" aria-hidden="true">
@@ -73,7 +86,7 @@ defineExpose({ enfocar: () => campo.value?.focus() });
                 </span>
                 <span v-else class="emp-archivo__texto">
                     <strong>{{ titulo }}</strong>
-                    <span :id="`${nombre}-ayuda`">o <span class="emp-archivo__accion">elige un archivo</span> · solo PDF, máximo {{ maxMb }} MB</span>
+                    <span :id="`${nombre}-ayuda`">o <span class="emp-archivo__accion">elige un archivo</span> · {{ tipos }}, máximo {{ maxMb }} MB</span>
                 </span>
             </label>
         </div>

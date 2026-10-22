@@ -1,6 +1,7 @@
 {{--
-    Carta de agradecimiento al autor cuyo artículo salió en un número de la
-    revista (formato de la dirección editorial). Tamaño carta, DejaVu
+    Carta de agradecimiento al autor de un artículo aprobado (formato de la
+    dirección editorial). Menciona el número y el bimestre cuando el artículo
+    ya salió en un número visible. Tamaño carta, DejaVu
     (incluida en dompdf). Las imágenes llegan como data URI.
 --}}
 @php
@@ -60,8 +61,12 @@
     <div class="cuerpo">
         <p>
             Por este medio {{ $varios ? 'les' : 'le' }} agradezco su valiosa contribución a nuestras publicaciones con el
-            artículo <span class="articulo">{{ $titulo }}</span> que se incorporó en el número {{ $numero }}
-            correspondiente al bimestre {{ $periodo }} en la revista
+            artículo <span class="articulo">{{ $titulo }}</span>
+            @if ($numero)
+                que se incorporó en el número {{ $numero }} correspondiente al bimestre {{ $periodo }} en la revista
+            @else
+                que fue aprobado para su publicación en la revista
+            @endif
             <span class="revista-nombre">Emprendedores al servicio de la pequeña y mediana empresa</span>.
         </p>
         <p>

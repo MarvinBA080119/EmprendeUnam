@@ -3,63 +3,127 @@
 @php
     $total = $articulos->count();
     $mostrados = $articulos->whereNotNull('arre_fecha_index')->count();
+    $conPdf = $articulos->whereNotNull('arre_url_pdf')->count();
     $requeridos = min(\App\Models\ArticuloRevista::POSICIONES, $total);
+    $porPosicion = $articulos->whereNotNull('arre_posicion_index')->keyBy('arre_posicion_index');
+    $zip = session('zip_resultado');
 @endphp
 
 @section('titulo', 'Número '.$revista->revi_num_edicion)
 
 @section('contenido')
-    <x-encabezado :titulo="'No. '.$revista->revi_num_edicion.' · '.$revista->revi_titulo" :volver="route('admin.ediciones.index')" volver-texto="Portada del sitio">
-        <p class="emp-encabezado__meta">
-            @if ($revista->revi_en_portada)
-                <span class="emp-insignia emp-insignia-aprobado">En portada</span>
-            @elseif ($revista->revi_visible)
-                <span class="emp-insignia emp-insignia-revision">Visible</span>
-            @else
-                <span class="emp-insignia emp-insignia-rechazado">Oculto</span>
-            @endif
-            <span>{{ $revista->revi_mes }} {{ $revista->revi_anio }}</span>
-            <span>Publicado el <span class="emp-num">{{ $revista->revi_fecha_publicacion->format('d/m/Y') }}</span></span>
-        </p>
-        <x-slot:acciones>
-            <a href="{{ route('admin.ediciones.edit', $revista) }}" class="btn btn-secondary">Editar número</a>
-            <a href="{{ route('admin.ediciones.articulos.create', $revista) }}" class="btn btn-primary">
-                <x-icono nombre="mas" :tamano="14" /> Agregar artículo
-            </a>
-        </x-slot:acciones>
-    </x-encabezado>
+    <header class="emp-numero-cabeza">
+        <a class="emp-encabezado__volver" href="{{ route('admin.ediciones.index') }}"><x-icono nombre="atras" :tamano="14" /> Portada del sitio</a>
+        <div class="emp-numero-cabeza__fila">
+            <x-portada-numero :revista="$revista" class="emp-portada--chica" />
+            <div class="emp-numero-cabeza__texto">
+                <p class="emp-encabezado__meta">
+                    @if ($revista->revi_en_portada)
+                        <span class="emp-insignia emp-insignia-aprobado">Principal</span>
+                    @elseif ($revista->revi_visible)
+                        <span class="emp-insignia emp-insignia-rechazado">Histórico</span>
+                    @else
+                        <span class="emp-insignia emp-insignia-revision">En preparación</span>
+                    @endif
+                    <span>No. {{ $revista->revi_num_edicion }} · {{ $revista->revi_mes }} {{ $revista->revi_anio }}</span>
+                    <span>Publicado el <span class="emp-num">{{ $revista->revi_fecha_publicacion->format('d/m/Y') }}</span></span>
+                </p>
+                <h1 class="emp-titulo">{{ $revista->revi_titulo }}</h1>
+            </div>
+            <div class="emp-encabezado__acciones">
+                <a href="{{ route('admin.ediciones.edit', $revista) }}" class="btn btn-secondary">Editar número</a>
+                @if ($revista->revi_visible && ! $revista->revi_en_portada)
+                    <form method="POST" action="{{ route('admin.ediciones.portada', $revista) }}"
+                          data-confirmar="¿Hacer principal el número {{ $revista->revi_num_edicion }}? Aparecerá en el inicio del sitio y el número principal actual pasará al histórico."
+                          data-confirmar-boton="Hacer principal">
+                        @csrf
+                        <button type="submit" class="btn btn-primary">Hacer principal</button>
+                    </form>
+                @elseif ($revista->revi_en_portada)
+                    <a href="{{ route('inicio') }}" class="btn btn-secondary" target="_blank" rel="noopener">Ver el inicio <x-icono nombre="externo" :tamano="12" /></a>
+                @endif
+            </div>
+        </div>
+    </header>
 
     @error('revista')
         <div class="alert alert-danger" role="alert"><span class="alert-texto">{{ $message }}</span></div>
     @enderror
-
-    @if (! $revista->revi_en_portada)
+    @unless ($revista->revi_visible)
         <div class="alert alert-info" role="status">
-            <span class="alert-texto">
-                @if ($revista->revi_visible)
-                    Este número no está en portada: sus artículos no se ven en el inicio del sitio.
-                @else
-                    Este número está oculto. Márcalo como visible (Editar número) para poder ponerlo en portada.
-                @endif
-            </span>
-            @if ($revista->revi_visible)
-                <form method="POST" action="{{ route('admin.ediciones.portada', $revista) }}" class="ms-auto"
-                      data-confirmar="¿Poner este número en portada? Sustituye al que está ahora en el inicio del sitio."
-                      data-confirmar-boton="Poner en portada">
-                    @csrf
-                    <button type="submit" class="btn btn-secondary btn-sm">Poner en portada</button>
-                </form>
-            @endif
+            <span class="alert-texto">Este número está en preparación (oculto). Márcalo como visible en «Editar número» para poder hacerlo principal.</span>
         </div>
-    @endif
+    @endunless
 
-    <section class="emp-seccion" aria-labelledby="titulo-indice">
-        <h2 id="titulo-indice" class="emp-seccion__titulo">Artículos del número e índice del inicio</h2>
+    {{-- Archivos del número y carga de los PDF maquetados ------------------- --}}
+    <section class="emp-seccion" aria-labelledby="titulo-archivos">
+        <h2 id="titulo-archivos" class="emp-seccion__titulo">Archivos del número</h2>
+        <div class="emp-archivos emp-archivos--fila">
+            <x-estado-archivo nombre="Portada" :estado="$revista->revi_url_portada ? 'listo' : 'falta'" />
+            <x-estado-archivo nombre="PDF completo" :estado="$revista->revi_url_revista_pdf ? 'listo' : 'falta'">
+                @if ($revista->revi_url_revista_pdf)<a href="{{ route('edicion.numero', $revista) }}" target="_blank" rel="noopener">Abrir</a>@endif
+            </x-estado-archivo>
+            <x-estado-archivo nombre="eBook" :estado="$revista->revi_url_flipbook ? 'listo' : 'opcional'">
+                @if ($revista->revi_url_flipbook)<a href="{{ $revista->revi_url_flipbook }}" target="_blank" rel="noopener">Abrir</a>@else Sin enlace @endif
+            </x-estado-archivo>
+            <x-estado-archivo nombre="PDF de artículos" :estado="$total && $conPdf === $total ? 'listo' : 'falta'" :detalle="$conPdf.' de '.$total" />
+        </div>
+
+        <form method="POST" action="{{ route('admin.ediciones.zip', $revista) }}" enctype="multipart/form-data" class="emp-zip" novalidate>
+            @csrf
+            <label for="campo-zip" class="emp-zip__zona" data-zona-archivo>
+                <span class="emp-archivo__icono" aria-hidden="true"><x-icono nombre="articulos" :tamano="18" /></span>
+                <span class="emp-zip__texto">
+                    <strong data-zona-nombre>Sube el .zip con los PDF maquetados</strong>
+                    <span>Cada PDF se vincula con su artículo por el número al inicio del nombre (12-titulo.pdf) o por su título.</span>
+                </span>
+            </label>
+            <input id="campo-zip" name="zip" type="file" accept=".zip,application/zip" class="visually-hidden" required>
+            <div class="emp-zip__acciones">
+                @if ($pendientesDeMaquetar > 0)
+                    <a href="{{ route('admin.ediciones.manuscritos') }}" class="btn btn-quieto">
+                        <x-icono nombre="descargar" :tamano="14" /> Manuscritos aprobados ({{ $pendientesDeMaquetar }})
+                    </a>
+                @endif
+                <button type="submit" class="btn btn-secondary" data-texto-enviando="Vinculando…">Vincular PDF</button>
+            </div>
+        </form>
+        @error('zip')
+            <div class="invalid-feedback d-block">{{ $message }}</div>
+        @enderror
+
+        @if ($zip)
+            <div class="emp-zip-resultado" role="status">
+                @foreach (['agregados' => 'Agregados al número', 'vinculados' => 'Vinculados', 'no_reconocidos' => 'Sin reconocer'] as $clave => $rotulo)
+                    @if (! empty($zip[$clave]))
+                        <div>
+                            <p class="emp-zip-resultado__rotulo">{{ $rotulo }} <span class="emp-num">({{ count($zip[$clave]) }})</span></p>
+                            <ul>
+                                @foreach ($zip[$clave] as $linea)
+                                    <li>{{ $linea }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                @endforeach
+                @if (! empty($zip['no_reconocidos']))
+                    <p class="emp-zip-resultado__nota">Renombra los que no se reconocieron con el número del artículo al inicio, o súbelos desde «Editar» en cada artículo.</p>
+                @endif
+            </div>
+        @endif
+    </section>
+
+    {{-- Destacados del inicio ---------------------------------------------- --}}
+    <section class="emp-seccion" aria-labelledby="titulo-destacados">
+        <div class="emp-seccion__cabeza">
+            <h2 id="titulo-destacados" class="emp-seccion__titulo">Destacados del inicio</h2>
+            <a href="{{ route('admin.ediciones.articulos.create', $revista) }}" class="btn btn-secondary btn-sm"><x-icono nombre="mas" :tamano="14" /> Agregar artículo</a>
+        </div>
         <p class="emp-seccion__texto">
-            Elige {{ $requeridos === 5 ? 'los 5 artículos' : 'los artículos' }} que se ven en el inicio y su posición
-            (la 1 es el artículo principal). Cuando quieras rotarlos, cambia algunos por los que aún no se han mostrado.
+            Elige {{ $requeridos === 5 ? '1 artículo principal y 4 secundarios' : 'la posición de cada artículo' }}. El esquema
+            reproduce el acomodo del inicio. Para rotarlos, cambia algunos por los que aún no se han mostrado.
             @if ($total > 0)
-                Se han mostrado <strong>{{ $mostrados }} de {{ $total }}</strong>.
+                Se han mostrado <strong class="emp-num">{{ $mostrados }} de {{ $total }}</strong>.
             @endif
         </p>
 
@@ -68,87 +132,105 @@
         @enderror
 
         @if ($articulos->isEmpty())
-            <p class="emp-vacio">Este número aún no tiene artículos. <a href="{{ route('admin.ediciones.articulos.create', $revista) }}">Agrega el primero</a>.</p>
+            <p class="emp-vacio">
+                Este número aún no tiene artículos. Sube el .zip con los PDF maquetados o
+                <a href="{{ route('admin.ediciones.articulos.create', $revista) }}">agrega uno a mano</a>.
+            </p>
         @else
-            <form id="form-indice" method="POST" action="{{ route('admin.ediciones.indice', $revista) }}">
-                @csrf
-                <div class="emp-marco-tabla">
-                    <div class="table-responsive">
-                        <table class="table emp-tabla align-middle">
-                            <caption class="visually-hidden">Artículos del número {{ $revista->revi_num_edicion }}</caption>
-                            <thead>
-                                <tr>
-                                    <th scope="col" style="width: 10.5rem;">Posición</th>
-                                    <th scope="col">Artículo</th>
-                                    <th scope="col">En el inicio</th>
-                                    <th scope="col">Cursos</th>
-                                    <th scope="col"><span class="visually-hidden">Acciones</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($articulos as $entrada)
-                                    @php($id = $entrada->arre_id_articulo_revista)
-                                    <tr>
-                                        <td>
-                                            <label for="posicion-{{ $id }}" class="visually-hidden">Posición de «{{ $entrada->arre_titulo }}»</label>
-                                            <select id="posicion-{{ $id }}" name="posiciones[{{ $id }}]" class="form-select form-select-sm">
-                                                <option value="">No se muestra</option>
-                                                @for ($p = 1; $p <= \App\Models\ArticuloRevista::POSICIONES; $p++)
-                                                    <option value="{{ $p }}" @selected((int) old("posiciones.$id", $entrada->arre_posicion_index) === $p)>
-                                                        {{ $p }}{{ $p === 1 ? ' · principal' : '' }}
-                                                    </option>
-                                                @endfor
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <span class="d-block fw-medium">{{ $entrada->arre_titulo }}</span>
-                                            <span class="text-body-secondary small">
-                                                {{ $entrada->arre_seccion ? $entrada->arre_seccion.' · ' : '' }}{{ $entrada->arre_autores }}
-                                                @if ($entrada->arti_id_autor) · artículo del sistema @endif
-                                            </span>
-                                        </td>
-                                        <td class="text-nowrap">
-                                            @if ($entrada->arre_posicion_index)
-                                                <span class="emp-insignia emp-insignia-aprobado">Desde {{ $entrada->arre_fecha_index->format('d/m/Y') }}</span>
-                                            @elseif ($entrada->arre_fecha_index)
-                                                <span class="emp-insignia emp-insignia-revision">Mostrado el {{ $entrada->arre_fecha_index->format('d/m/Y') }}</span>
-                                            @else
-                                                <span class="emp-insignia emp-insignia-rechazado">Pendiente</span>
-                                            @endif
-                                        </td>
-                                        <td class="small">
-                                            @forelse ($cursos[$id] as $curso)
-                                                <span class="d-block">{{ $curso->curs_nombre_curso }}</span>
-                                            @empty
-                                                <span class="text-body-secondary">Sin cursos</span>
-                                            @endforelse
-                                        </td>
-                                        <td class="text-end">
-                                            <div class="d-flex justify-content-end gap-2">
-                                                <a href="{{ route('admin.ediciones.articulos.edit', [$revista, $entrada]) }}" class="btn btn-secondary btn-sm">
-                                                    Editar<span class="visually-hidden"> «{{ $entrada->arre_titulo }}»</span>
-                                                </a>
-                                                <button type="submit" form="quitar-{{ $id }}" class="btn btn-quieto btn-sm">
-                                                    Quitar<span class="visually-hidden"> «{{ $entrada->arre_titulo }}»</span>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+            <div class="emp-esquema" data-esquema aria-hidden="true">
+                @for ($p = 1; $p <= \App\Models\ArticuloRevista::POSICIONES; $p++)
+                    @php $ocupa = $porPosicion->get($p); @endphp
+                    <div @class(['emp-esquema__casilla', 'emp-esquema__casilla--principal' => $p === 1, 'is-vacia' => ! $ocupa]) data-casilla="{{ $p }}">
+                        <span class="emp-esquema__rotulo">{{ $p === 1 ? 'Principal' : 'Secundario '.($p - 1) }}</span>
+                        <span class="emp-esquema__titulo" data-casilla-titulo>{{ $ocupa?->arre_titulo ?? 'Sin elegir' }}</span>
+                        <span class="emp-esquema__cursos" data-casilla-cursos>
+                            @if ($ocupa)
+                                {{ $cursos[$ocupa->arre_id_articulo_revista]->count() }} {{ $cursos[$ocupa->arre_id_articulo_revista]->count() === 1 ? 'curso' : 'cursos' }}
+                            @endif
+                        </span>
                     </div>
-                </div>
-                <div class="emp-formulario__acciones">
-                    <button type="submit" class="btn btn-primary">Guardar índice</button>
+                @endfor
+            </div>
+
+            <form id="form-indice" method="POST" action="{{ route('admin.ediciones.indice', $revista) }}" data-form-destacados data-requeridos="{{ $requeridos }}">
+                @csrf
+                <ul class="emp-numero-articulos">
+                    @foreach ($articulos as $entrada)
+                        @php
+                            $id = $entrada->arre_id_articulo_revista;
+                            $actual = (int) old("posiciones.$id", $entrada->arre_posicion_index);
+                            $susCursos = $cursos[$id];
+                        @endphp
+                        <li class="emp-numero-articulo" data-articulo="{{ $id }}" data-titulo="{{ $entrada->arre_titulo }}"
+                            data-cursos="{{ $susCursos->count() }}">
+                            <div class="emp-numero-articulo__principal">
+                                <span class="emp-numero-articulo__miniatura" aria-hidden="true">
+                                    @if ($entrada->arre_url_imagen)
+                                        <img src="{{ route('edicion.articulo.imagen', $entrada) }}" alt="" loading="lazy">
+                                    @endif
+                                </span>
+                                <div class="emp-numero-articulo__texto">
+                                    <p class="emp-numero-articulo__titulo">{{ $entrada->arre_titulo }}</p>
+                                    <p class="emp-numero-articulo__meta">
+                                        {{ $entrada->arre_seccion ? $entrada->arre_seccion.' · ' : '' }}{{ $entrada->arre_autores }}
+                                    </p>
+                                    <p class="emp-numero-articulo__estados">
+                                        @if ($entrada->arre_url_pdf)
+                                            <span class="emp-insignia emp-insignia-aprobado">PDF maquetado</span>
+                                        @else
+                                            <span class="emp-insignia emp-insignia-revision">Sin PDF</span>
+                                        @endif
+                                        @if ($entrada->arre_posicion_index)
+                                            <span class="emp-insignia emp-insignia-aprobado">En el inicio desde {{ $entrada->arre_fecha_index->format('d/m/Y') }}</span>
+                                        @elseif ($entrada->arre_fecha_index)
+                                            <span class="emp-insignia emp-insignia-rechazado">Mostrado el {{ $entrada->arre_fecha_index->format('d/m/Y') }}</span>
+                                        @else
+                                            <span class="emp-insignia emp-insignia-revision">Pendiente de mostrar</span>
+                                        @endif
+                                    </p>
+                                    @if ($susCursos->isNotEmpty())
+                                        <ul class="emp-chips" aria-label="Cursos de «{{ $entrada->arre_titulo }}»">
+                                            @foreach ($susCursos as $curso)
+                                                <li class="emp-chip">{{ $curso->curs_nombre_curso }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                </div>
+                                <div class="emp-numero-articulo__acciones">
+                                    <a href="{{ route('admin.ediciones.articulos.edit', [$revista, $entrada]) }}" class="btn btn-secondary btn-sm">
+                                        Editar y cursos<span class="visually-hidden"> de «{{ $entrada->arre_titulo }}»</span>
+                                    </a>
+                                    <button type="submit" form="quitar-{{ $id }}" class="btn btn-quieto btn-sm">
+                                        Quitar<span class="visually-hidden"> «{{ $entrada->arre_titulo }}»</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <fieldset class="emp-posiciones">
+                                <legend class="visually-hidden">Lugar de «{{ $entrada->arre_titulo }}» en el inicio</legend>
+                                @foreach (['' => 'No se muestra', 1 => 'Principal', 2 => '2', 3 => '3', 4 => '4', 5 => '5'] as $valor => $texto)
+                                    <input type="radio" class="emp-posiciones__opcion" name="posiciones[{{ $id }}]" value="{{ $valor }}"
+                                           id="pos-{{ $id }}-{{ $valor === '' ? 'no' : $valor }}" @checked($valor === '' ? ! $actual : $actual === $valor)>
+                                    <label for="pos-{{ $id }}-{{ $valor === '' ? 'no' : $valor }}">
+                                        @if (is_int($valor) && $valor > 1)<span class="visually-hidden">Secundario </span>{{ $valor - 1 }}@else{{ $texto }}@endif
+                                    </label>
+                                @endforeach
+                            </fieldset>
+                        </li>
+                    @endforeach
+                </ul>
+                <div class="emp-destacados-pie">
+                    <p class="emp-destacados-pie__conteo" data-conteo-destacados aria-live="polite">
+                        {{ $porPosicion->count() }} de {{ $requeridos }} elegidos
+                    </p>
+                    <button type="submit" class="btn btn-primary" data-texto-enviando="Guardando…">Guardar destacados</button>
                 </div>
             </form>
 
-            {{-- Formularios de «Quitar» fuera del formulario del índice (no se anidan). --}}
+            {{-- Formularios de «Quitar» fuera del de destacados (no se anidan). --}}
             @foreach ($articulos as $entrada)
                 <form id="quitar-{{ $entrada->arre_id_articulo_revista }}" method="POST" hidden
                       action="{{ route('admin.ediciones.articulos.destroy', [$revista, $entrada]) }}"
-                      data-confirmar="¿Quitar «{{ $entrada->arre_titulo }}» del número? Se borran su PDF, su imagen y sus cursos."
+                      data-confirmar="¿Quitar «{{ $entrada->arre_titulo }}» del número? Se borran su PDF maquetado, su imagen y sus cursos."
                       data-confirmar-boton="Quitar artículo" data-destructivo>
                     @csrf
                     @method('DELETE')

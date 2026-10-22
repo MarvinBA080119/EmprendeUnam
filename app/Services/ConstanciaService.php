@@ -66,6 +66,9 @@ class ConstanciaService
                     'cons_tipo' => TipoDocumento::CONSTANCIA,
                 ]);
 
+                // La carta de agradecimiento queda lista para el autor desde la aprobación.
+                $this->emitirAgradecimiento($articulo);
+
                 return [$articulo, $constancia];
             });
         } catch (Throwable $e) {
@@ -132,57 +135,74 @@ class ConstanciaService
     }
 
     /**
-     * Carta de agradecimiento del artículo: la devuelve si ya existe o la
-     * genera (folio AGR-AAAA-NNNN y PDF) si el artículo aprobado forma parte
-     * de un número visible.
+     * Carta de agradecimiento del artículo aprobado, lista para descargar: se
+     * emite al aprobar (folio AGR-AAAA-NNNN) y su PDF se vuelve a generar con
+     * los datos vigentes, así menciona el número y el bimestre en cuanto el
+     * artículo sale en un número visible. El folio y la fecha no cambian.
      *
-     * @throws ValidationException si el artículo aún no sale en un número.
+     * @throws ValidationException si el artículo no está aprobado.
      */
     public function agradecimiento(Articulo $articulo): Constancia
+    {
+        if ($articulo->arti_status !== EstatusArticulo::APROBADO) {
+            throw ValidationException::withMessages([
+                'articulo' => 'La carta de agradecimiento se entrega cuando el artículo es aprobado.',
+            ]);
+        }
+
+        $carta = $articulo->cartaAgradecimiento()->first()
+            ?? DB::transaction(fn () => $this->emitirAgradecimiento(
+                Articulo::whereKey($articulo->getKey())->lockForUpdate()->firstOrFail(),
+            ));
+
+        Storage::disk('local')->put($carta->cons_url_archivo, $this->generarAgradecimiento($articulo, $carta));
+
+        return $carta;
+    }
+
+    /**
+     * Datos de la carta: «numero» y «periodo» quedan nulos mientras el
+     * artículo no salga en un número visible.
+     *
+     * @return array{titulo: string, autores: list<string>, numero: ?string, periodo: ?string}
+     */
+    public function contenidoAgradecimiento(Articulo $articulo): array
+    {
+        $articulo->load(['autores' => fn ($q) => $q->orderByDesc('autor_articulo.auar_principal'), 'autores.persona']);
+        $revista = $this->numeroDe($articulo)?->revista;
+
+        return [
+            'titulo' => $articulo->arti_titulo,
+            'autores' => $articulo->autores->map(fn ($a) => $a->persona?->nombre_completo)->filter()->values()->all(),
+            'numero' => $revista?->revi_num_edicion,
+            'periodo' => $revista ? trim("{$revista->revi_mes} de {$revista->revi_anio}") : null,
+        ];
+    }
+
+    /**
+     * Registra la carta (fila y PDF). Debe llamarse dentro de la transacción,
+     * con el artículo bloqueado: así dos solicitudes no emiten dos folios.
+     */
+    private function emitirAgradecimiento(Articulo $articulo): Constancia
     {
         if ($existente = $articulo->cartaAgradecimiento()->first()) {
             return $existente;
         }
 
-        $disco = Storage::disk('local');
-        $ruta = null;
+        $hoy = today();
+        $folio = $this->siguienteFolio((int) $hoy->year, config('emprende.folio_prefijo_agradecimiento'));
 
-        try {
-            return DB::transaction(function () use ($articulo, $disco, &$ruta) {
-                $articulo = Articulo::whereKey($articulo->getKey())->lockForUpdate()->firstOrFail();
+        $carta = Constancia::create([
+            'arti_id_autor' => $articulo->arti_id_autor,
+            'cons_fecha_emision' => $hoy,
+            'cons_url_archivo' => config('emprende.carpeta_agradecimientos')."/{$folio}.pdf",
+            'cons_folio' => $folio,
+            'cons_tipo' => TipoDocumento::AGRADECIMIENTO,
+        ]);
 
-                if ($existente = $articulo->cartaAgradecimiento()->first()) {
-                    return $existente;
-                }
+        Storage::disk('local')->put($carta->cons_url_archivo, $this->generarAgradecimiento($articulo, $carta));
 
-                $entrada = $articulo->arti_status === EstatusArticulo::APROBADO ? $this->numeroDe($articulo) : null;
-                if ($entrada === null) {
-                    throw ValidationException::withMessages([
-                        'articulo' => 'La carta de agradecimiento estará disponible cuando el artículo salga en un número de la revista.',
-                    ]);
-                }
-
-                $hoy = today();
-                $folio = $this->siguienteFolio((int) $hoy->year, config('emprende.folio_prefijo_agradecimiento'));
-                $ruta = config('emprende.carpeta_agradecimientos')."/{$folio}.pdf";
-
-                $disco->put($ruta, $this->generarAgradecimiento($articulo, $entrada, $folio, $hoy));
-
-                return Constancia::create([
-                    'arti_id_autor' => $articulo->arti_id_autor,
-                    'cons_fecha_emision' => $hoy,
-                    'cons_url_archivo' => $ruta,
-                    'cons_folio' => $folio,
-                    'cons_tipo' => TipoDocumento::AGRADECIMIENTO,
-                ]);
-            });
-        } catch (Throwable $e) {
-            if ($ruta !== null) {
-                $disco->delete($ruta);
-            }
-
-            throw $e;
-        }
+        return $carta;
     }
 
     public function buscarPorFolio(string $folio): ?Constancia
@@ -197,21 +217,16 @@ class ConstanciaService
     }
 
     /** PDF de la carta de agradecimiento (resources/views/pdf/agradecimiento.blade.php). */
-    private function generarAgradecimiento(Articulo $articulo, ArticuloRevista $entrada, string $folio, Carbon $fecha): string
+    private function generarAgradecimiento(Articulo $articulo, Constancia $carta): string
     {
-        $articulo->load(['autores' => fn ($q) => $q->orderByDesc('autor_articulo.auar_principal'), 'autores.persona']);
         $imagen = fn (string $archivo) => 'data:image/png;base64,'.base64_encode(
             (string) file_get_contents(resource_path("plantillas/agradecimiento/{$archivo}"))
         );
 
-        return Pdf::loadView('pdf.agradecimiento', [
-            'titulo' => $articulo->arti_titulo,
-            'autores' => $articulo->autores->map(fn ($a) => $a->persona?->nombre_completo)->filter()->values()->all(),
-            'numero' => $entrada->revista->revi_num_edicion,
-            'periodo' => trim("{$entrada->revista->revi_mes} de {$entrada->revista->revi_anio}"),
-            'fecha' => $fecha->locale('es')->translatedFormat('j \d\e F \d\e Y'),
-            'folio' => $folio,
-            'urlVerificacion' => $this->urlVerificacion($folio),
+        return Pdf::loadView('pdf.agradecimiento', $this->contenidoAgradecimiento($articulo) + [
+            'fecha' => $carta->cons_fecha_emision->locale('es')->translatedFormat('j \\d\\e F \\d\\e Y'),
+            'folio' => $carta->cons_folio,
+            'urlVerificacion' => $this->urlVerificacion($carta->cons_folio),
             'firma' => config('emprende.agradecimiento_firma'),
             'logoFca' => $imagen('logo_fca.png'),
             'escudoUnam' => $imagen('escudo_unam.png'),
