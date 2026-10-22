@@ -53,6 +53,10 @@ class NewsletterController extends Controller
             return view('sitio.newsletter_estado', ['estado' => 'invalido']);
         }
 
+        if ($this->newsletter->confirmacionVencida($persona)) {
+            return view('sitio.newsletter_estado', ['estado' => 'vencido', 'persona' => $persona]);
+        }
+
         $confirmada = $this->newsletter->confirmar($persona);
 
         return view('sitio.newsletter_estado', [

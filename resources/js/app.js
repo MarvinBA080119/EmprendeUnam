@@ -1,5 +1,7 @@
 import 'bootstrap';
+import { iniciarAvisos } from './avisos';
 import { montarIslas } from './islas';
+import { vigilarInactividad } from './sesion';
 
 // Tipografías instaladas localmente (sin CDN): Geist para la interfaz y
 // Newsreader, con tamaño óptico, para los títulos grandes.
@@ -22,11 +24,19 @@ document.addEventListener('click', (evento) => {
     boton.setAttribute('aria-pressed', String(visible));
 });
 
-// Formularios que piden confirmación (el texto viene escapado en data-confirmar).
-document.addEventListener('submit', (evento) => {
-    const formulario = evento.target.closest('form[data-confirmar]');
-    if (formulario && !window.confirm(formulario.dataset.confirmar)) {
-        evento.preventDefault();
+// Notificaciones, diálogo de confirmación (form[data-confirmar]) y estado de
+// envío de los formularios.
+iniciarAvisos();
+
+// Cierre de sesión por inactividad (solo en los paneles con sesión).
+vigilarInactividad();
+
+// Páginas con datos de la cuenta o del acceso: si el navegador las restaura de
+// su memoria con «Atrás», se vuelven a pedir al servidor (que decide si la
+// sesión sigue abierta).
+window.addEventListener('pageshow', (evento) => {
+    if (evento.persisted && document.body.hasAttribute('data-privada')) {
+        window.location.reload();
     }
 });
 

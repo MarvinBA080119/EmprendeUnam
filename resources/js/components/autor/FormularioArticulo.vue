@@ -160,7 +160,7 @@ async function enviar(evento) {
 </script>
 
 <template>
-    <form ref="formulario" class="emp-envio-form" :action="accion" method="POST" enctype="multipart/form-data" novalidate @submit="enviar">
+    <form ref="formulario" class="emp-envio-form" :action="accion" method="POST" enctype="multipart/form-data" novalidate data-sin-carga @submit="enviar">
         <input type="hidden" name="_token" :value="csrf" />
 
         <div v-if="totalErroresLocales > 0" class="alert alert-danger" role="alert">

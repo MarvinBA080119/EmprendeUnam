@@ -65,7 +65,16 @@
             <!-- ═════════ FORMULARIO ═════════ -->
             <div class="col-lg-8">
 
-                <form class="form-lux" id="formSuscripcion" method="POST" action="{{ route('newsletter.suscribir') }}" novalidate>
+                @if (session('exito'))
+                    <x-sitio.aviso-enviado id="avisoSuscripcion" etiqueta="Newsletter" titulo="Revise su correo">
+                        <p>{{ session('exito') }}</p>
+                        <p>Su suscripción queda pendiente hasta que abra el enlace del correo. Si no lo ve, revise la
+                            carpeta de correo no deseado.</p>
+                    </x-sitio.aviso-enviado>
+                @endif
+
+                <form class="form-lux" id="formSuscripcion" method="POST" action="{{ route('newsletter.suscribir') }}" novalidate
+                      data-envio-unico>
                     @csrf
 
                     @if (session('exito') || session('aviso'))
@@ -109,7 +118,7 @@
                         <input type="text" id="sitioWeb" name="sitio_web" tabindex="-1" autocomplete="off">
                     </div>
 
-                    <button type="submit" class="btn-enviar">Completar registro</button>
+                    <button type="submit" class="btn-enviar" data-texto-enviando="Enviando…">Completar registro</button>
 
                     <p class="form-nota">
                         Te enviaremos un correo para confirmar tu suscripción. Cada aviso incluye un enlace

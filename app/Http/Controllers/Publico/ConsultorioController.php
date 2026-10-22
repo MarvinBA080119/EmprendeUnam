@@ -32,9 +32,10 @@ class ConsultorioController extends Controller
             $this->consultorio->enviar($request->validated(), (string) $request->ip());
         }
 
-        return redirect()->to(route('consultorio').'#enviar')->with(
-            'exito',
-            "Consulta recibida: «{$request->validated('asunto')}». El comité editorial responderá en un plazo no mayor a cinco días hábiles.",
-        );
+        $asunto = $request->validated('asunto');
+
+        return redirect()->to(route('consultorio').'#enviar')
+            ->with('exito', "Consulta recibida: «{$asunto}». El comité editorial responderá en un plazo no mayor a cinco días hábiles.")
+            ->with('consulta_enviada', $asunto);
     }
 }

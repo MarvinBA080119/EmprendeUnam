@@ -20,9 +20,9 @@
         <a class="dropdown-item" href="{{ route('inicio') }}" target="_blank" rel="noopener">
             <x-icono nombre="externo" :tamano="14" /> Ver el sitio de la revista
         </a>
-        <form method="POST" action="{{ route('logout') }}">
+        <form method="POST" action="{{ route('logout') }}" data-cierra-sesion>
             @csrf
-            <button type="submit" class="dropdown-item">
+            <button type="submit" class="dropdown-item" data-texto-enviando="Cerrando sesión…">
                 <x-icono nombre="salir" :tamano="14" /> Cerrar sesión
             </button>
         </form>

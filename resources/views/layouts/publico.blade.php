@@ -12,8 +12,9 @@
     <title>@hasSection('titulo')@yield('titulo') · @endif{{ config('app.name') }}</title>
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
 </head>
-<body class="emp-acceso">
+<body class="emp-acceso" data-privada>
     <a class="emp-saltar" href="#contenido">Saltar al contenido</a>
+    <x-alertas />
 
     <x-cabecera :inicio="route('inicio')" />
 
@@ -57,7 +58,6 @@
             </div>
 
             <div @class(['emp-acceso__columna', 'emp-acceso__columna--ancha' => $ancho])>
-                <x-alertas />
                 @if ($errors->count() > 1)
                     <div class="alert alert-danger" role="alert">
                         <span class="alert-texto">Revisa los {{ $errors->count() }} campos marcados.</span>

@@ -23,6 +23,9 @@ return [
     // Remitente que aparece en las respuestas del consultorio.
     'remitente_consultorio' => 'Consultorio EmprendeUNAM',
 
+    // Horas que vale el enlace de confirmación del newsletter (doble confirmación).
+    'newsletter_horas_confirmacion' => (int) env('EMPRENDE_NEWSLETTER_HORAS', 48),
+
     // Registros por página en listados.
     'por_pagina' => 10,
 

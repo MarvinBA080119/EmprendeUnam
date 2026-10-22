@@ -96,13 +96,13 @@ class LoginTest extends TestCase
     {
         $this->actingAs($this->crearAutor())
             ->post('/cerrar-sesion')
-            ->assertRedirect('/');
+            ->assertRedirect('/iniciar-sesion');
 
         $this->assertGuest();
     }
 
-    public function test_quien_ya_inicio_sesion_va_a_su_panel_desde_el_login(): void
+    public function test_quien_ya_inicio_sesion_va_a_su_panel_desde_el_registro(): void
     {
-        $this->actingAs($this->administrador())->get('/iniciar-sesion')->assertRedirect('/admin');
+        $this->actingAs($this->administrador())->get('/registro')->assertRedirect('/admin');
     }
 }

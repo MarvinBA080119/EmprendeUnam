@@ -114,6 +114,21 @@ class NewsletterService
     }
 
     /**
+     * El enlace de confirmación vale emprende.newsletter_horas_confirmacion
+     * horas desde la (re)suscripción. Si venció, la suscripción sigue pendiente:
+     * al suscribirse otra vez se genera un enlace nuevo. El enlace de baja, que
+     * usa el mismo token, nunca vence.
+     */
+    public function confirmacionVencida(Persona $persona): bool
+    {
+        $horas = (int) config('emprende.newsletter_horas_confirmacion', 48);
+
+        return $persona->pers_fecha_confirmacion === null
+            && $persona->pers_fecha_suscripcion !== null
+            && $persona->pers_fecha_suscripcion->lt(now()->subHours($horas));
+    }
+
+    /**
      * Confirma la suscripción (enlace del correo).
      *
      * @return bool false si ya estaba confirmada.
@@ -184,7 +199,7 @@ class NewsletterService
 
     public const ESTADOS = [
         'activo' => 'Activo',
-        'sin_confirmar' => 'Sin confirmar',
+        'sin_confirmar' => 'Pendiente de confirmación',
         'baja' => 'Dado de baja',
     ];
 

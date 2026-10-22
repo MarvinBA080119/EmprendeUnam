@@ -90,7 +90,8 @@
                     <p class="emp-accion__texto">El dictamen es definitivo y se avisa al autor por correo.</p>
 
                     <form method="POST" action="{{ route('admin.articulos.aprobar', $articulo) }}"
-                          data-confirmar="¿Aprobar el artículo y generar su constancia? Esta acción no se puede deshacer.">
+                          data-confirmar="¿Aprobar el artículo y generar su constancia? Esta acción no se puede deshacer."
+                          data-confirmar-boton="Aprobar y generar constancia">
                         @csrf
                         <button type="submit" class="btn btn-primary w-100">Aprobar y generar constancia</button>
                         <p class="form-text mb-0">Se genera la constancia con folio único.</p>
@@ -99,7 +100,8 @@
                     <div class="emp-accion__separador"><span>o</span></div>
 
                     <form method="POST" action="{{ route('admin.articulos.rechazar', $articulo) }}"
-                          data-confirmar="¿Rechazar el artículo? El rechazo es definitivo.">
+                          data-confirmar="¿Rechazar el artículo? El rechazo es definitivo."
+                          data-confirmar-boton="Rechazar artículo" data-destructivo>
                         @csrf
                         <div class="mb-3">
                             <label for="comentario" class="form-label">Motivo del rechazo</label>

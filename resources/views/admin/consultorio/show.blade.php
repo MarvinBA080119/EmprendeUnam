@@ -66,7 +66,8 @@
                     <div class="emp-accion__separador"><span>o</span></div>
 
                     <form method="POST" action="{{ route('admin.consultorio.rechazar', $mensaje) }}"
-                          data-confirmar="¿Rechazar este mensaje? No se responderá ni se publicará.">
+                          data-confirmar="¿Rechazar este mensaje? No se responderá ni se publicará."
+                          data-confirmar-boton="Rechazar mensaje" data-destructivo>
                         @csrf
                         <button type="submit" class="btn btn-secondary w-100">Rechazar mensaje</button>
                         <p class="form-text mb-0">Un mensaje rechazado no se responde ni se publica.</p>

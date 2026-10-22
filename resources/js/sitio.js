@@ -23,9 +23,12 @@ import '@fontsource/barlow/latin-400-italic.css';
 import '../css/sitio/styles.css';
 import '../css/sitio/integracion.css';
 import './sitio/main.js';
+import { iniciarEnvios } from './sitio/envios.js';
 import { montarIslas } from './islas';
 
 window.bootstrap = bootstrap;
+
+iniciarEnvios();
 
 montarIslas({
     buscador: () => import('./components/publico/Buscador.vue'),

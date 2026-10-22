@@ -21,6 +21,7 @@
                     @case('confirmar_baja') ¿Dejar de recibir el newsletter? @break
                     @case('baja') Listo, {{ $persona->pers_nombre }} @break
                     @case('ya_baja') Ya estabas dado de baja @break
+                    @case('vencido') El enlace de confirmación venció @break
                     @default Este enlace ya no es válido
                 @endswitch
             </h1>
@@ -63,6 +64,15 @@
                         @case('ya_baja')
                             <p class="consultorio__entrada">El correo <strong>{{ $correo }}</strong> no recibe avisos del newsletter.</p>
                             <a href="{{ route('suscripcion') }}" class="btn-lux"><span>Volver a suscribirme</span></a>
+                            @break
+
+                        @case('vencido')
+                            <p class="consultorio__entrada">
+                                Por seguridad, el enlace vale {{ config('emprende.newsletter_horas_confirmacion') }} horas.
+                                Tu suscripción con <strong>{{ $correo }}</strong> sigue pendiente de confirmación:
+                                vuelve a suscribirte y te enviaremos un enlace nuevo.
+                            </p>
+                            <a href="{{ route('suscripcion') }}" class="btn-enviar">Enviarme un enlace nuevo</a>
                             @break
 
                         @default
