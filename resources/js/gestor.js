@@ -178,13 +178,17 @@ function destacados() {
         requestAnimationFrame(() => (arrastrado.desdeCasilla ? fuente : fila(id)).classList.add('is-arrastrado'));
     };
 
-    formulario.querySelectorAll('[data-asa]').forEach((asa) => {
-        asa.addEventListener('dragstart', (evento) => {
-            const elemento = asa.closest('[data-articulo]');
+    // Todo el recuadro del artículo se arrastra (el asa solo lo indica).
+    formulario.querySelectorAll('[data-articulo][draggable]').forEach((elemento) => {
+        // Los enlaces y la miniatura de adentro no se arrastran solos: así,
+        // empezar a arrastrar sobre ellos mueve la fila completa.
+        elemento.querySelectorAll('a, img').forEach((interno) => interno.setAttribute('draggable', 'false'));
+        elemento.addEventListener('dragstart', (evento) => {
+            if (evento.target !== elemento) return;
             evento.dataTransfer.setDragImage(elemento, 24, 24);
-            empezar(evento, elemento.dataset.articulo, asa);
+            empezar(evento, elemento.dataset.articulo, elemento);
         });
-        asa.addEventListener('dragend', terminar);
+        elemento.addEventListener('dragend', terminar);
     });
 
     esquema.querySelectorAll('[data-casilla]').forEach((casilla) => {
@@ -231,7 +235,31 @@ function destacados() {
     dibujar(null);
 }
 
+/** eBook del número: un flipbook generado, ninguno u otro enlace https. */
+function ebook() {
+    const caja = document.querySelector('[data-ebook]');
+    if (!caja) return;
+    const origen = caja.querySelector('[data-ebook-origen]');
+    const enlace = caja.querySelector('[data-ebook-enlace]');
+    origen.hidden = false;
+
+    const aplicar = (cambio) => {
+        const otro = origen.value === 'otro';
+        enlace.hidden = !otro;
+        if (!cambio) return;
+        if (otro) {
+            if (enlace.value.startsWith('/flipbook/')) enlace.value = '';
+            enlace.focus();
+        } else {
+            enlace.value = origen.value;
+        }
+    };
+    origen.addEventListener('change', () => aplicar(true));
+    aplicar(false);
+}
+
 export function iniciarGestor() {
+    ebook();
     vistaPortada();
     estadoArchivos();
     destacados();

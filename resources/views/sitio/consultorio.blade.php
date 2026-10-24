@@ -14,7 +14,7 @@
 @php
     $tituloPagina = 'Consultorio';
     $paginaId = 'consultorio';
-    $recursos = ['resources/css/sitio/premium_sections.css', 'resources/css/sitio/formularios_media.css'];
+    $recursos = ['resources/css/sitio/premium_sections.css', 'resources/css/sitio/formularios_media.css', 'resources/js/sitio/interacciones.js'];
     $total = count($consultas);
 @endphp
 
@@ -56,7 +56,7 @@
 
             @foreach ($consultas as $consulta)
 
-                <article class="consulta">
+                <article class="consulta" data-tarjeta>
 
                     <!-- Cabecera: número, estado y firma -->
                     <div class="consulta__cabecera">

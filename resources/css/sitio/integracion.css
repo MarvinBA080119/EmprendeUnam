@@ -135,3 +135,71 @@ mark.resaltado {
   font-size: .9rem;
   line-height: 1.5;
 }
+
+/* Textos largos en las tarjetas: ninguna palabra se sale de su recuadro.
+   El título se recorta a 3 renglones (4 el principal) y la descripción a 4,
+   con puntos suspensivos; el artículo completo está en su PDF. */
+.post__title,
+.post__excerpt,
+.post__meta,
+.post .eyebrow,
+.curso-vip__nombre,
+.consulta__asunto,
+.consulta__firma,
+.consulta__pregunta,
+.consulta__cuerpo {
+  overflow-wrap: anywhere;
+}
+
+.post__title,
+.post__excerpt {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post__title { -webkit-line-clamp: 3; line-clamp: 3; }
+.post__title--mayor { -webkit-line-clamp: 4; line-clamp: 4; }
+.post__excerpt { -webkit-line-clamp: 4; line-clamp: 4; }
+
+.post .row > [class*="col-"] { min-width: 0; }
+
+/* La tarjeta completa abre el artículo: el enlace del título se extiende a
+   todo el recuadro (imagen y texto). Los demás enlaces quedan por encima. */
+.post > .row,
+.buscador__resultados .post {
+  position: relative;
+}
+
+.post__title a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.post__more,
+.post__meta a,
+.post__excerpt a {
+  position: relative;
+  z-index: 2;
+}
+
+.post > .row:hover .post__title a,
+.buscador__resultados .post:hover .post__title a {
+  color: var(--rojo);
+}
+
+.post__title a:focus-visible {
+  outline: none;
+}
+
+.post__title a:focus-visible::after {
+  outline: 2px solid var(--negro);
+  outline-offset: 4px;
+}
+
+/* Consultorio: toda la tarjeta abre y cierra la respuesta */
+.consulta[data-tarjeta] { cursor: pointer; }
+.consulta[data-tarjeta]:has(details[open]) { cursor: auto; }
+.consulta[data-tarjeta]:hover .consulta__abrir { color: var(--rojo); }

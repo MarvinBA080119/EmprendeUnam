@@ -1,0 +1,216 @@
+/**
+ * ============================================================================
+ * EMPRENDEDORES — Cabecera (Lujo Editorial Extremo)
+ * ============================================================================
+ * Réplica de la franja de logos del sitio: fondo blanco, filetes negros de
+ * un pixel y un único acento carmín. Los escudos van en negro y el logo de
+ * la revista en rojo; ninguno lleva filtro CSS (alteraría el carmín).
+ *
+ * Tipografías: Playfair Display (folio) · Inter (etiquetas)
+ * ============================================================================
+ */
+
+#hdr {
+    --tinta:    #0A0A0A;
+    --carmin:   #C8102E;
+    --blanco:   #FFFFFF;
+    --niebla:   #8A8A8A;
+    --filete:   #E2E2E2;
+    --fd:       'Playfair Display', Georgia, serif;
+    --fu:       'Inter', 'Helvetica Neue', Arial, sans-serif;
+}
+
+#hdr {
+    position: relative;
+    z-index: 900;
+    width: 100%;
+    background: var(--blanco);
+    /* Doble filete inferior: negro de 1px y carmín de 2px. Es el mismo remate
+       del sitio y basta como acento; no hay sombra difusa. */
+    border-bottom: 1px solid var(--tinta);
+    -webkit-user-select: none;
+       -moz-user-select: none;
+            user-select: none;
+}
+
+#hdr::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -3px;
+    height: 2px;
+    background: var(--carmin);
+}
+
+.hdr-inner {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+       -ms-flex-align: center;
+          align-items: center;
+    gap: 10px;
+    padding: 5px 12px;
+    min-height: 46px;
+    max-width: 1720px;
+    margin: 0 auto;
+}
+
+/* ── Escudos institucionales (negro) ─────────────────────────────────────── */
+.hdr-escudos {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+       -ms-flex-align: center;
+          align-items: center;
+    gap: 10px;
+    -ms-flex-negative: 0;
+        flex-shrink: 0;
+}
+
+/* ── Separador vertical entre institución y publicación ──────────────────── */
+.hdr-filete {
+    display: block;
+    width: 1px;
+    height: 26px;
+    background: var(--filete);
+    -ms-flex-negative: 0;
+        flex-shrink: 0;
+}
+
+/* ── Logo Emprende UNAM (carmín + negro) ─────────────────────────────────────
+   Es horizontal (2.38:1) y a dos líneas: por eso sus alturas quedan un poco
+   por debajo de las de los escudos; a la misma altura pesaría más que ellos. */
+.hdr-marca {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+       -ms-flex-align: center;
+          align-items: center;
+    -ms-flex-negative: 0;
+        flex-shrink: 0;
+}
+
+.hdr-logo {
+    width: auto;
+    -o-object-fit: contain;
+       object-fit: contain;
+    display: block;
+    -ms-flex-negative: 0;
+        flex-shrink: 0;
+}
+
+.hdr-logo--unam { height: 32px; }
+.hdr-logo--fca  { height: 29px; }
+.hdr-logo--emp  { height: 30px; }
+
+/* ── Folio editorial ─────────────────────────────────────────────────────── */
+.hdr-folio {
+    margin-left: auto;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: baseline;
+       -ms-flex-align: baseline;
+          align-items: baseline;
+    gap: 7px;
+    -ms-flex-negative: 0;
+        flex-shrink: 0;
+}
+
+.hdr-folio__rule {
+    display: none;
+    width: 34px;
+    height: 1px;
+    background: var(--carmin);
+    -ms-flex-item-align: center;
+        align-self: center;
+}
+
+.hdr-folio__etq {
+    font-family: var(--fu);
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--niebla);
+}
+
+.hdr-folio__num {
+    font-family: var(--fd);
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--tinta);
+    letter-spacing: .01em;
+}
+
+/* ── Tablet ──────────────────────────────────────────────────────────────── */
+@media (min-width: 600px) {
+    .hdr-inner { padding: 7px 22px; min-height: 60px; gap: 16px; }
+    .hdr-escudos { gap: 16px; }
+    .hdr-filete { height: 34px; }
+
+    .hdr-logo--unam { height: 42px; }
+    .hdr-logo--fca  { height: 38px; }
+    .hdr-logo--emp  { height: 38px; }
+
+    .hdr-folio__rule { display: block; }
+    .hdr-folio__etq  { font-size: 9px; }
+    .hdr-folio__num  { font-size: 25px; }
+}
+
+/* ── Escritorio ──────────────────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+    .hdr-inner { padding: 9px 34px; min-height: 74px; gap: 22px; }
+    .hdr-escudos { gap: 22px; }
+    .hdr-filete { height: 46px; }
+
+    .hdr-logo--unam { height: 54px; }
+    .hdr-logo--fca  { height: 49px; }
+    .hdr-logo--emp  { height: 48px; }
+
+    .hdr-folio { gap: 10px; }
+    .hdr-folio__rule { width: 48px; }
+    .hdr-folio__etq  { font-size: 9px; letter-spacing: .26em; }
+    .hdr-folio__num  { font-size: 31px; }
+}
+
+@media (min-width: 1440px) {
+    .hdr-inner { min-height: 82px; padding: 10px 46px; }
+    .hdr-logo--unam { height: 60px; }
+    .hdr-logo--fca  { height: 55px; }
+    .hdr-logo--emp  { height: 54px; }
+    .hdr-folio__num { font-size: 34px; }
+}
+
+/* ── Móvil: el folio se comprime pero se queda; equilibra la franja ─────── */
+@media (max-width: 599px) {
+    .hdr-inner { gap: 9px; padding: 5px 11px; }
+    .hdr-escudos { gap: 9px; }
+    .hdr-folio { gap: 5px; }
+    .hdr-folio__etq { font-size: 7px; letter-spacing: .18em; }
+    .hdr-folio__num { font-size: 17px; }
+}
+
+/* Móvil muy estrecho: el folio estorba y se retira */
+@media (max-width: 359px) {
+    .hdr-folio { display: none; }
+    .hdr-inner { gap: 7px; }
+    .hdr-escudos { gap: 7px; }
+    .hdr-logo--unam { height: 27px; }
+    .hdr-logo--fca  { height: 25px; }
+    .hdr-logo--emp  { height: 25px; }
+}
+
+/* Pantallas bajas (teléfono en horizontal): la franja se comprime para
+   devolverle alto a la hoja. Sincronizado con --hdr-h:40px de prestige.css. */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hdr-inner { min-height: 40px; padding-top: 3px; padding-bottom: 3px; }
+    .hdr-filete { height: 22px; }
+    .hdr-logo--unam { height: 28px; }
+    .hdr-logo--fca  { height: 25px; }
+    .hdr-logo--emp  { height: 26px; }
+    .hdr-folio__num { font-size: 18px; }
+}

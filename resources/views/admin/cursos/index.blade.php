@@ -68,7 +68,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-quieto btn-sm">
-                                                Eliminar<span class="visually-hidden"> «{{ $curso->curs_nombre_curso }}»</span>
+                                                <x-icono nombre="borrar" :tamano="12" /> Eliminar<span class="visually-hidden"> «{{ $curso->curs_nombre_curso }}»</span>
                                             </button>
                                         </form>
                                     </div>

@@ -1,0 +1,603 @@
+/**
+ * ============================================================================
+ * EMPRENDEDORES — Visor (Lujo Editorial Extremo · StPageFlip)
+ * ============================================================================
+ * Misma gramática visual del sitio de la revista:
+ *
+ *   NEGRO   #0A0A0A  barra de herramientas, cabeceras de panel, texto
+ *   BLANCO  #FFFFFF  páginas, paneles, superficies de lectura
+ *   CARMÍN  #C8102E  acento único: estado activo, numeración, filetes
+ *   GRISES            jerarquía tipográfica y filetes de un pixel
+ *
+ * El fondo de lectura se conserva (img/diseno/fondo_revista.jpg) y sólo se le
+ * añade un viñeteado gris muy tenue para que el pliego se despegue del papel.
+ *
+ * Tipografías: Playfair Display (cifras y titulares) · Inter (interfaz)
+ * ============================================================================
+ */
+
+:root {
+    /* ► NEGROS */
+    --tinta:       #0A0A0A;   /* negro institucional */
+    --tinta-2:     #161616;   /* negro elevado (hover sobre negro) */
+    --grafito:     #3A3A3A;   /* gris oscuro: texto corrido sobre blanco */
+
+    /* ► GRISES */
+    --plomo:       #6B6B6B;   /* gris medio: metadatos */
+    --niebla:      #8A8A8A;   /* gris claro: etiquetas */
+    --filete:      #E2E2E2;   /* filete de un pixel */
+    --filete-2:    #CFCFCF;   /* filete de contorno */
+    --papel:       #F6F6F6;   /* gris de fondo sutil */
+
+    /* ► CARMÍN — acento único */
+    --carmin:      #C8102E;
+    --carmin-alto: #A50D26;   /* presionado */
+    --carmin-vel:  rgba(200,16,46,.12);
+
+    --blanco:      #FFFFFF;
+    --w90:         rgba(255,255,255,.90);
+    --w70:         rgba(255,255,255,.70);
+    --w45:         rgba(255,255,255,.45);
+    --w22:         rgba(255,255,255,.22);
+    --w10:         rgba(255,255,255,.10);
+
+    --fd:          'Playfair Display', Georgia, serif;
+    --fu:          'Inter', 'Helvetica Neue', Arial, sans-serif;
+    --ease:        cubic-bezier(.22,1,.36,1);
+
+    --hdr-h:       46px;
+    --tb-h:        48px;
+}
+
+
+/* === 1. RESET + ANTI-COPIA === */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{height:100%;overflow:hidden;position:fixed;width:100%}
+body{
+    font-family:var(--fu);color:var(--tinta);background:var(--tinta);
+    width:100%;height:100%;overflow:hidden;position:fixed;top:0;left:0;
+    -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+    -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none
+}
+#copy-shield{position:fixed;inset:0;z-index:50;pointer-events:none}
+
+
+/* === 2. PRELOADER (negro · carmín) === */
+#preloader{
+    position:fixed;z-index:9999;inset:0;
+    background:var(--tinta);
+    display:flex;align-items:center;justify-content:center;
+    opacity:1;
+    /* El velo se va en 350 ms por encima de una revista que ya está
+       apareciendo. Ese breve solape es el fundido; no hace falta más. */
+    transition:opacity .35s ease-out
+}
+#preloader.is-out{opacity:0;pointer-events:none}
+
+.pl-center{
+    text-align:center;display:flex;flex-direction:column;align-items:center;
+    transition:opacity .2s ease, transform .25s ease-out
+}
+/* El wordmark se retira primero, para que el velo no se lleve texto consigo */
+#preloader.is-leaving .pl-center{opacity:0;transform:translateY(-5px)}
+/* Filete carmín superior: el mismo remate de la cabecera, a escala de marca */
+.pl-rule{width:56px;height:2px;background:var(--carmin);margin-bottom:20px}
+.pl-sub{
+    font-family:var(--fu);font-size:9px;font-weight:500;
+    letter-spacing:.42em;text-transform:uppercase;color:var(--w45);
+    margin-bottom:9px;text-indent:.42em
+}
+.pl-title{
+    font-family:var(--fd);font-size:26px;font-weight:400;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--blanco);
+    line-height:1.1;text-indent:.16em
+}
+.pl-bar{width:110px;height:1px;background:var(--w10);margin-top:26px;overflow:hidden}
+.pl-bar__fill{display:block;width:0;height:100%;background:var(--carmin);animation:loadbar 2.5s var(--ease) forwards}
+
+
+/* === 3. ESCENARIO === */
+#stage{
+    /* Arranca invisible y .revealed lo sube mientras el velo aún cubre.
+       Sólo opacidad: sin desenfoque ni escalado, que es lo que hacía que la
+       entrada pareciera una diapositiva en lugar de una página que carga. */
+    opacity:0;
+    transition:opacity .35s ease-out;
+    position:absolute;top:var(--hdr-h);left:0;width:100%;
+    height:calc(100% - var(--hdr-h) - var(--tb-h));
+    overflow:hidden;
+    display:-webkit-box;display:-ms-flexbox;display:flex;
+    -webkit-box-align:center;-ms-flex-align:center;align-items:center;
+    -webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;
+    background:url('../img/diseno/fondo_revista.jpg') center center / cover no-repeat;
+    background-color:#EDEDED
+}
+/* Viñeteado: gris muy tenue en las esquinas para dar profundidad al fondo
+   sin ensuciarlo. Va por encima del fondo y por debajo del pliego. */
+#stage::before{
+    content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(ellipse at center,
+        rgba(10,10,10,0) 42%,
+        rgba(10,10,10,.07) 78%,
+        rgba(10,10,10,.16) 100%)
+}
+#stage.zoom-on{
+    overflow:auto;-webkit-overflow-scrolling:touch;cursor:grab;
+    -webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;
+    -webkit-box-pack:start;-ms-flex-pack:start;justify-content:flex-start
+}
+#stage.zoom-on::before{display:none}
+#stage.zoom-on:active{cursor:grabbing}
+
+
+/* === 4. ZOOM WRAPPER === */
+#zoom-wrap{
+    position:relative;z-index:1;
+    transition:transform .35s var(--ease), opacity .3s ease;
+    transform-origin:center center;
+    display:-webkit-box;display:-ms-flexbox;display:flex;
+    -webkit-box-align:center;-ms-flex-align:center;align-items:center;
+    -webkit-box-pack:center;-ms-flex-pack:center;justify-content:center
+}
+
+
+/* ============================================================================
+   === 5. PLIEGO (StPageFlip) ===
+   ============================================================================ */
+#magazine{
+    background:transparent;
+    backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    margin:0 auto
+}
+
+.stf__parent{
+    position:relative;display:block;box-sizing:border-box;
+    margin:0 auto;background:transparent
+}
+.stf__wrapper{position:relative;box-sizing:border-box;background:transparent}
+.stf__block{background:transparent;overflow:hidden;position:relative}
+
+/* Sombra de hoja: cae seca y baja, como papel apoyado, no como caja flotante */
+.stf__item{
+    box-shadow:
+        0 1px 2px rgba(10,10,10,.10),
+        0 10px 28px rgba(10,10,10,.20),
+        0 26px 60px rgba(10,10,10,.14)
+}
+
+/* Página: blanco puro, sin crema. El sitio no usa cálidos. */
+.pg{
+    background:var(--blanco);
+    overflow:hidden;position:relative;
+    width:100%;height:100%;display:block
+}
+
+.pg-img{
+    width:100%;height:100%;
+    object-fit:contain;object-position:center center;display:block;
+    -webkit-user-select:none;user-select:none;-webkit-user-drag:none;
+    pointer-events:none;
+    image-rendering:-webkit-optimize-contrast;
+    transform:translateZ(0);-webkit-transform:translateZ(0);
+    backface-visibility:hidden;-webkit-backface-visibility:hidden
+}
+
+/* ── Lomo central ─────────────────────────────────────────────────────────
+   Degradado gris en el borde interior de cada hoja: da el hundimiento del
+   libro abierto. Se retira en modo retrato (una sola página). */
+.stf__item.--right .pg::before,
+.stf__item.--left  .pg::before{
+    content:'';position:absolute;top:0;bottom:0;width:40px;
+    pointer-events:none;z-index:3
+}
+.stf__item.--right .pg::before{
+    left:0;
+    background:linear-gradient(to right,
+        rgba(10,10,10,.22), rgba(10,10,10,.07) 45%, rgba(10,10,10,0) 100%)
+}
+.stf__item.--left .pg::before{
+    right:0;
+    background:linear-gradient(to left,
+        rgba(10,10,10,.22), rgba(10,10,10,.07) 45%, rgba(10,10,10,0) 100%)
+}
+.stf__wrapper.--portrait .pg::before{display:none}
+
+.pg--void{
+    display:flex;align-items:center;justify-content:center;
+    background:var(--blanco);color:var(--plomo);
+    font-family:var(--fu);font-size:12px;text-align:center;padding:22px;
+    border:1px solid var(--filete-2)
+}
+.pg--void code{background:var(--papel);padding:1px 5px;color:var(--tinta)}
+
+.stf__outerShadow,.stf__innerShadow{position:absolute;top:0;pointer-events:none}
+
+
+/* ============================================================================
+   === 5b. CENTRADO DEL PLIEGO ===
+   ============================================================================
+   Con showCover activo, la portada y la contraportada se muestran solas: la
+   biblioteca las coloca en una mitad del bloque de dos páginas y el libro
+   queda descuadrado respecto a la pantalla. Se compensa desplazando el bloque
+   media página al lado contrario. Las clases las pone reader.js.
+   No se aplica en retrato (una sola página, ya centrada) ni con zoom activo. */
+#magazine{transition:transform .42s var(--ease)}
+#stage.pliego-solo-der #magazine{transform:translateX(-25%)}  /* portada sola a la derecha */
+#stage.pliego-solo-izq #magazine{transform:translateX(25%)}   /* contraportada sola a la izquierda */
+#stage.zoom-on #magazine{transform:none}
+
+@media (prefers-reduced-motion: reduce){
+    #magazine{transition:none}
+    .pl-bar__fill{animation:none;width:100%}
+}
+
+
+/* === 6. BARRA DE HERRAMIENTAS (negro · carmín) === */
+#toolbar{
+    position:fixed;bottom:0;left:0;width:100%;height:var(--tb-h);z-index:800;
+    background:var(--tinta);
+    border-top:2px solid var(--carmin);
+    display:flex;align-items:center;justify-content:center;
+    gap:5px;padding:0 4px;padding-bottom:env(safe-area-inset-bottom,0)
+}
+
+.bt{
+    display:inline-flex;align-items:center;justify-content:center;
+    background:none;border:none;color:var(--blanco);cursor:pointer;outline:none;
+    -webkit-tap-highlight-color:transparent;
+    transition:color .22s,opacity .22s,background .22s,border-color .22s,transform .12s;
+    text-decoration:none
+}
+.bt:focus-visible{outline:2px solid var(--carmin);outline-offset:2px}
+
+/* Flechas de paso */
+.bt--nav{width:38px;height:38px;opacity:.55}
+.bt--nav:hover,.bt--nav:active{opacity:1}
+.bt-chevron{
+    display:block;width:9px;height:9px;
+    border-top:1.5px solid currentColor;border-right:1.5px solid currentColor
+}
+.bt-chevron--l{transform:rotate(-135deg);margin-left:3px}
+.bt-chevron--r{transform:rotate(45deg);margin-right:3px}
+
+/* Botones de acción: contorno gris tenue; al pulsar, relleno carmín */
+.bt--act{
+    padding:5px 7px;
+    border:1px solid var(--w22);
+    color:var(--w90);
+    background:transparent
+}
+.bt--act:hover,.bt--act:active{
+    border-color:var(--blanco);background:var(--tinta-2);color:var(--blanco)
+}
+.bt--act.is-active,
+.bt--act.is-active-2{
+    background:var(--carmin);border-color:var(--carmin);color:var(--blanco)
+}
+.bt--act.is-active-2{background:var(--carmin-alto);border-color:var(--carmin-alto)}
+.bt--act.is-active .zoom-v,
+.bt--act.is-active-2 .zoom-v{display:none}
+.bt-svg{flex-shrink:0}
+
+/* Folio: la cifra actual manda, el total se apaga a gris */
+.bt-counter{display:flex;align-items:baseline;gap:4px;padding:0 8px}
+.bt-counter__n{
+    font-family:var(--fd);font-size:17px;font-weight:400;
+    color:var(--blanco);min-width:14px;text-align:center
+}
+#pg-max{color:var(--w45);font-size:14px}
+.bt-counter__sep{font-family:var(--fu);font-size:10px;color:var(--w22)}
+
+.bt--act.is-bookmarked{border-color:var(--carmin);color:var(--carmin)}
+.bt--act.is-bookmarked #bk-path{fill:var(--carmin);stroke:var(--carmin)}
+
+
+/* === 7. VELO === */
+.panel-overlay{
+    position:fixed;inset:0;z-index:1000;
+    background:rgba(10,10,10,.62);opacity:0;visibility:hidden;
+    transition:opacity .3s ease,visibility .3s ease
+}
+.panel-overlay.is-open{opacity:1;visibility:visible}
+
+
+/* ============================================================================
+   === 8 y 9. PANELES — blanco · texto negro · acento carmín ===
+   ============================================================================ */
+.spanel,.ipanel{
+    position:fixed;z-index:1001;top:var(--hdr-h);left:3%;right:3%;
+    background:var(--blanco);
+    border:1px solid var(--tinta);
+    display:flex;flex-direction:column;
+    opacity:0;visibility:hidden;transform:translateY(-14px);
+    transition:opacity .3s var(--ease),visibility .3s var(--ease),transform .3s var(--ease);
+    box-shadow:0 24px 60px rgba(10,10,10,.30)
+}
+.spanel{max-height:70vh}
+.ipanel{max-height:75vh}
+.spanel.is-open,.ipanel.is-open{opacity:1;visibility:visible;transform:translateY(0)}
+
+/* Cabecera de panel: franja negra rematada en carmín */
+.spanel__head,.ipanel__head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:11px 15px;
+    background:var(--tinta);
+    border-bottom:2px solid var(--carmin);
+    flex-shrink:0
+}
+.spanel__title,.ipanel__title{
+    font-family:var(--fu);font-size:9px;font-weight:500;
+    letter-spacing:.24em;text-transform:uppercase;color:var(--blanco)
+}
+.spanel__close,.ipanel__close{
+    background:none;border:none;color:var(--w70);font-size:21px;
+    cursor:pointer;padding:0 4px;line-height:1;transition:color .2s
+}
+.spanel__close:hover,.ipanel__close:hover{color:var(--carmin)}
+
+/* ── Ir a página ─────────────────────────────────────────────────────────── */
+.spanel__body{
+    padding:11px 15px;background:var(--papel);
+    border-bottom:1px solid var(--filete);flex-shrink:0
+}
+.spanel__input-row{display:flex;align-items:center;gap:9px}
+.spanel__input{
+    width:84px;padding:6px 8px;
+    background:var(--blanco);
+    border:1px solid var(--filete-2);
+    color:var(--tinta);
+    font-family:var(--fd);font-size:18px;font-weight:400;
+    text-align:center;outline:none;-webkit-appearance:none;-moz-appearance:textfield;
+    -webkit-user-select:text;user-select:text;
+    transition:border-color .2s
+}
+.spanel__input:focus{border-color:var(--carmin)}
+.spanel__input::-webkit-inner-spin-button,
+.spanel__input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.spanel__input::placeholder{color:var(--niebla);font-family:var(--fu);font-size:12px}
+
+.spanel__go{
+    padding:8px 18px;
+    background:var(--tinta);border:1px solid var(--tinta);color:var(--blanco);
+    font-family:var(--fu);font-size:9px;font-weight:500;letter-spacing:.2em;
+    text-transform:uppercase;cursor:pointer;
+    transition:background .22s,border-color .22s
+}
+.spanel__go:hover{background:var(--carmin);border-color:var(--carmin)}
+.spanel__go:active{background:var(--carmin-alto);border-color:var(--carmin-alto)}
+
+@media(max-width:767px){ .spanel__body{display:none} }
+
+/* ── Retícula de miniaturas ──────────────────────────────────────────────── */
+.spanel__grid-wrap{
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
+    flex:1;min-height:0;background:var(--blanco)
+}
+.spanel__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:10px}
+.sp-thumb{
+    position:relative;background:var(--papel);
+    border:1px solid var(--filete);
+    cursor:pointer;padding:0;overflow:hidden;aspect-ratio:.65;
+    transition:border-color .2s,box-shadow .2s
+}
+.sp-thumb:hover,.sp-thumb:focus{
+    border-color:var(--tinta);outline:none;
+    box-shadow:0 6px 16px rgba(10,10,10,.16)
+}
+.sp-thumb.is-current{
+    border-color:var(--carmin);
+    box-shadow:0 0 0 1px var(--carmin) inset
+}
+.sp-thumb__img{width:100%;height:100%;object-fit:cover;display:block}
+.sp-thumb__num{
+    position:absolute;bottom:0;left:0;right:0;
+    background:var(--tinta);color:var(--blanco);
+    font-family:var(--fd);font-size:11px;font-weight:400;
+    text-align:center;padding:2px 0
+}
+.sp-thumb.is-current .sp-thumb__num{background:var(--carmin)}
+
+.sp-thumb__bk{
+    position:absolute;top:4px;right:4px;
+    font-size:12px;color:var(--carmin);
+    display:none;text-shadow:0 1px 3px rgba(255,255,255,.95);
+    pointer-events:none
+}
+.sp-thumb.is-bookmarked .sp-thumb__bk{display:block}
+
+/* ── Índice ──────────────────────────────────────────────────────────────── */
+.ipanel__list{
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
+    flex:1;min-height:0;background:var(--blanco)
+}
+.ipanel__item{
+    display:flex;align-items:center;gap:10px;
+    padding:12px 15px;
+    border-bottom:1px solid var(--filete);
+    transition:background .2s
+}
+.ipanel__item:last-child{border-bottom:none}
+.ipanel__item:hover{background:var(--papel)}
+
+.ipanel__link{
+    flex:1;min-width:0;
+    display:flex;align-items:baseline;gap:12px;
+    background:none;border:none;color:var(--tinta);
+    cursor:pointer;text-align:left;padding:0;font-family:var(--fu)
+}
+.ipanel__link:hover .ipanel__sec-title{color:var(--carmin)}
+
+/* Numeración: cifra Playfair en carmín. El índice sí es una secuencia, así
+   que numerar aporta orden real y no adorno. */
+.ipanel__num{
+    font-family:var(--fd);font-size:20px;font-weight:400;
+    color:var(--carmin);
+    min-width:26px;text-align:right;flex-shrink:0;line-height:1
+}
+.ipanel__text{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ipanel__sec-title{
+    font-size:12.5px;font-weight:400;color:var(--tinta);
+    line-height:1.45;transition:color .2s
+}
+.ipanel__sec-page{
+    font-family:var(--fu);font-size:8px;font-weight:500;
+    color:var(--plomo);letter-spacing:.18em;text-transform:uppercase
+}
+
+/* Descarga: contorno negro que se llena de carmín */
+.ipanel__dl{
+    display:flex;align-items:center;gap:5px;flex-shrink:0;
+    padding:6px 11px;
+    background:var(--blanco);
+    border:1px solid var(--tinta);
+    color:var(--tinta);
+    font-family:var(--fu);font-size:8px;font-weight:500;
+    letter-spacing:.18em;text-transform:uppercase;text-decoration:none;
+    transition:border-color .22s,color .22s,background .22s
+}
+.ipanel__dl:hover{
+    background:var(--carmin);border-color:var(--carmin);
+    color:var(--blanco);text-decoration:none
+}
+.ipanel__dl:active{background:var(--carmin-alto);border-color:var(--carmin-alto);color:var(--blanco)}
+
+
+/* === 10. AVISO DE ZOOM === */
+#zoom-tip{
+    position:fixed;top:calc(var(--hdr-h) + 10px);left:50%;
+    transform:translateX(-50%) translateY(-14px);z-index:850;
+    background:var(--tinta);
+    border-left:2px solid var(--carmin);
+    padding:8px 18px;text-align:center;
+    opacity:0;visibility:hidden;transition:all .32s ease;pointer-events:none
+}
+#zoom-tip.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+#zoom-tip span{
+    display:block;font-family:var(--fu);font-size:9px;font-weight:500;
+    letter-spacing:.24em;color:var(--blanco)
+}
+#zoom-tip small{
+    display:block;font-family:var(--fu);font-size:8px;
+    color:var(--w45);margin-top:3px;letter-spacing:.04em
+}
+
+
+/* === 11. ANIMACIONES === */
+@keyframes loadbar{0%{width:0}60%{width:70%}100%{width:100%}}
+
+/* Entrada del escenario. Las clases las encadena reader.js: primero
+   .revealed (sube bajo el velo) y al final .reveal-done, que corta la
+   transición para que no vuelva a dispararse en ningún reflow posterior. */
+#stage.revealed{opacity:1}
+#stage.reveal-done{transition:none}
+
+/* La cabecera y la barra entran con la revista, no antes.
+   El transition:none del estado .cargando es deliberado: al ponerse la clase
+   la interfaz se apaga de golpe (invisible bajo el velo, no se percibe) y sólo
+   la REAPARICIÓN se anima. Sin eso, la cabecera se ve bajar y volver a subir. */
+#hdr,#toolbar{transition:opacity .35s ease-out}
+body.cargando #hdr,
+body.cargando #toolbar{opacity:0;transition:none}
+
+/* Sin movimiento: la revista aparece de una vez, sin desenfoque ni retardo */
+@media (prefers-reduced-motion: reduce){
+    #stage{transition:none;opacity:0}
+    #stage.revealed{opacity:1}
+    #preloader,.pl-center,#hdr,#toolbar{transition:none}
+    body.cargando #hdr,body.cargando #toolbar{opacity:1}
+}
+
+
+/* === 12. ADAPTATIVO === */
+@media(min-width:600px){
+    :root{--hdr-h:60px;--tb-h:52px}
+    #toolbar{gap:8px;padding:0 8px}
+    .bt--act{padding:6px 9px}
+    .bt-counter__n{font-size:19px}
+    #pg-max{font-size:15px}
+    .spanel,.ipanel{left:8%;right:8%}
+    .spanel__grid{grid-template-columns:repeat(5,1fr);gap:7px;padding:11px}
+    .ipanel__sec-title{font-size:13px}
+    .pl-title{font-size:34px}
+    .pl-sub{font-size:10px}
+}
+@media(min-width:1024px){
+    :root{--hdr-h:74px;--tb-h:54px}
+    #toolbar{gap:14px}
+    .bt--nav{width:44px;height:44px}
+    .bt-chevron{width:11px;height:11px}
+    .bt--act{padding:7px 11px}
+    .bt-counter__n{font-size:22px}
+    #pg-max{font-size:17px}
+    .spanel,.ipanel{left:15%;right:15%;max-height:66vh}
+    .spanel__grid{grid-template-columns:repeat(6,1fr);gap:9px;padding:13px}
+    .ipanel__item{padding:13px 20px;gap:14px}
+    .ipanel__num{font-size:23px;min-width:32px}
+    .ipanel__sec-title{font-size:14px}
+    .ipanel__dl{padding:7px 14px}
+    .pl-title{font-size:42px}
+}
+@media(min-width:1440px){
+    :root{--hdr-h:82px}
+    #toolbar{gap:20px}
+    .bt--act{padding:8px 13px}
+    .spanel,.ipanel{left:20%;right:20%}
+    .spanel__grid{grid-template-columns:repeat(8,1fr)}
+}
+
+/* === 13. UTILIDADES === */
+.bt--nav[aria-hidden="true"]{visibility:hidden;pointer-events:none}
+
+/* Móvil compacto */
+@media(max-width:599px){
+    :root{--hdr-h:46px;--tb-h:46px}
+    #toolbar{gap:3px;padding:0 3px}
+    .bt--nav{width:34px;height:34px}
+    .bt--act{padding:5px 6px}
+    .bt-counter{padding:0 4px}
+    .bt-counter__n{font-size:15px}
+    #pg-max{font-size:12px}
+    .spanel,.ipanel{left:2%;right:2%;max-height:80vh}
+    .spanel__grid{grid-template-columns:repeat(3,1fr);gap:5px;padding:8px}
+    .ipanel__item{padding:11px 13px;gap:9px}
+    .ipanel__num{font-size:17px;min-width:20px}
+    .pl-title{font-size:23px}
+}
+@media(max-width:360px){
+    .spanel__grid{grid-template-columns:repeat(2,1fr)}
+    .bt--nav{width:30px;height:30px}
+}
+/* Pantallas bajas (teléfono en horizontal): cabecera y barra comprimidas para
+   devolverle alto a la hoja. Sincronizado con la regla equivalente de
+   header.css (.hdr-inner{min-height:40px}). */
+@media(max-height:500px) and (orientation:landscape){
+    :root{--hdr-h:40px;--tb-h:42px}
+    .bt--nav{width:32px;height:32px}
+    .bt--act{padding:4px 6px}
+    .spanel,.ipanel{max-height:82vh}
+}
+
+
+/* ============================================================================
+   === 13b. ZOOM — el pliego deja de capturar gestos ===
+   ============================================================================
+   StPageFlip escucha mouse y touch sobre su propio contenedor. Con el zoom
+   puesto eso compite con el paneo: al arrastrar para recorrer la hoja, la
+   librería interpretaba el gesto como un volteo y cambiaba de página sola.
+   Mientras dura el zoom, #magazine deja de recibir eventos: los gestos caen
+   en #stage, que es donde vive el paneo. Al salir del zoom el volteo por
+   arrastre vuelve solo. El ancla y el margen de compensación están en
+   applyZoom() de reader.js.
+
+   La escala no se anima: el scroll se fija sobre el área final y una
+   transición de transform haría que la hoja «resbalara» hasta su sitio. */
+#stage.zoom-on #magazine{pointer-events:none}
+#stage.zoom-on{cursor:grab;touch-action:none}
+#stage.zoom-on.is-grabbing{cursor:grabbing}
+
+
+/* === 14. TRANSICIONES DE RECREACIÓN === */
+#zoom-wrap.is-swapping{opacity:0;pointer-events:none;transition:opacity .2s ease}
+#zoom-wrap{transition:opacity .3s ease}
+.stf__parent canvas{pointer-events:none}
+@media (pointer: coarse){ .stf__parent .stf__cornerSquare{display:none} }

@@ -8,6 +8,14 @@
 - [ ] **Límites de subida del servidor.** El PDF completo admite 50 MB y el PDF diseñado de un artículo 30 MB (`EMPRENDE_PDF_DISENO_MAX_KB`); en las VM hay que subir `upload_max_filesize` (55M), `post_max_size` (60M) y `client_max_body_size` / `LimitRequestBody` (Nginx/Apache) al menos a eso (ver README).
 - [ ] **Correo de la cuenta Diseño.** Se pondrá uno `@fca.unam.mx`. Mientras tanto la cuenta puede crearse con un correo provisional y cambiarse después con `php artisan emprende:crear-diseno` (Enter conserva lo demás). Cambiar también la contraseña que se compartió por chat.
 
+## Generador de flipbooks (2026-10-24)
+
+- [x] Se guardan en `storage/app/private/flipbooks/{numero}` y se sirven por la ruta `/flipbook/{numero}` (no en `public/`): así no se publica un flipbook que ningún número visible usa.
+- [x] El índice del visor se arma con los artículos del número y sus páginas en el gestor (`articulo_revista`); «Actualizar índice» lo rehace.
+- [x] Al terminar, si el número existe en el gestor con el eBook vacío, se liga solo (`revi_url_flipbook = /flipbook/{numero}`); si ya tenía otro enlace, no se toca y se ofrece «Usar en el No. X».
+- [x] Logo `emprendeunam.png` y `fondo_revista.jpg` del visor: opcionales; se toman de `resources/flipbook/plantilla/img/diseno/` o, si no están, de `public/img/`.
+- [ ] Instalar `poppler-utils` en las dos VM (sin él, el generador avisa que no puede convertir).
+
 ## Pendientes de definir
 
 - [ ] Formato y firma de la constancia (por ahora, ejemplo provisional con la tipografía DejaVu de dompdf).

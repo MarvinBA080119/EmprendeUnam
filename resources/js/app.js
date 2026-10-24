@@ -1,5 +1,6 @@
 import 'bootstrap';
 import { vigilarArchivos } from './archivos';
+import { iniciarFlipbook } from './flipbook';
 import { iniciarArticuloNumero } from './articulo-numero';
 import { iniciarAvisos } from './avisos';
 import { iniciarGestor } from './gestor';
@@ -40,6 +41,9 @@ iniciarGestor();
 
 // Artículo del número: autollenado, PDF del sistema y cursos.
 iniciarArticuloNumero();
+
+// Generador de flipbooks: subida, avance y vista previa.
+iniciarFlipbook();
 
 // Mesa de diseño: subida del PDF diseñado con avance y arrastrar y soltar.
 iniciarMesa();

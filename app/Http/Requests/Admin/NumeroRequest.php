@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Services\FlipbookService;
 use Illuminate\Foundation\Http\FormRequest;
 
 /** Alta o cambio de un número de la revista (gestor de portada). */
@@ -31,7 +32,20 @@ class NumeroRequest extends FormRequest
             'anio' => ['required', 'digits:4'],
             'periodo' => ['required', 'string', 'max:20'],
             'fecha_publicacion' => ['required', 'date'],
-            'flipbook' => ['nullable', 'url:https', 'max:256'],
+            // Un flipbook generado (/flipbook/220) o un enlace externo https://.
+            'flipbook' => ['nullable', 'string', 'max:256', function (string $atributo, mixed $valor, \Closure $falla) {
+                $propio = FlipbookService::numeroDeRuta((string) $valor);
+                if ($propio !== null) {
+                    if (app(FlipbookService::class)->manifiesto($propio) === null) {
+                        $falla("El flipbook del número {$propio} ya no existe. Genéralo de nuevo en Flipbooks.");
+                    }
+
+                    return;
+                }
+                if (! filter_var($valor, FILTER_VALIDATE_URL) || ! str_starts_with((string) $valor, 'https://')) {
+                    $falla('El enlace del Flipbook debe empezar con https://');
+                }
+            }],
             'visible' => ['boolean'],
             'portada' => [$creando ? 'required' : 'nullable', 'file', 'mimetypes:image/jpeg,image/png,image/webp', 'max:'.self::IMAGEN_MAX_KB],
             'pdf' => [$creando ? 'required' : 'nullable', 'file', 'mimetypes:application/pdf', 'max:'.config('emprende.pdf_max_revista_kb')],

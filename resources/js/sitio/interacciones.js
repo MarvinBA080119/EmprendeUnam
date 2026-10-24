@@ -15,6 +15,25 @@
     initTabsLineamientos();
     initYouTube();
     initBento();
+    initConsultas();
+  }
+
+  /* ----------------------------------------------------------------------
+     Consultorio: un clic en cualquier parte de la tarjeta abre o cierra la
+     respuesta (el <details> sigue funcionando solo, sin JavaScript). No se
+     toca si el clic fue en un enlace, en el propio resumen o al seleccionar
+     texto de la respuesta abierta.
+     ---------------------------------------------------------------------- */
+  function initConsultas() {
+    document.querySelectorAll('.consulta[data-tarjeta]').forEach(function (tarjeta) {
+      var detalle = tarjeta.querySelector('details');
+      if (!detalle) { return; }
+      tarjeta.addEventListener('click', function (evento) {
+        if (evento.target.closest('a, summary, button, .consulta__cuerpo')) { return; }
+        if (String(window.getSelection && window.getSelection()).trim() !== '') { return; }
+        detalle.open = !detalle.open;
+      });
+    });
   }
 
   /* ----------------------------------------------------------------------

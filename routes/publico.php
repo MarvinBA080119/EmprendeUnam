@@ -10,6 +10,7 @@ use App\Http\Controllers\Publico\BuscadorController;
 use App\Http\Controllers\Publico\ConsultorioController;
 use App\Http\Controllers\Publico\CursoController;
 use App\Http\Controllers\Publico\EdicionArchivoController;
+use App\Http\Controllers\Publico\FlipbookController;
 use App\Http\Controllers\Publico\InicioController;
 use App\Http\Controllers\Publico\NewsletterController;
 use App\Http\Controllers\Publico\PaginaController;
@@ -81,3 +82,8 @@ foreach ([
 Route::get('diezdediez-detalle.php', fn () => request()->filled('tema')
     ? redirect()->route('diezdediez.tema', ['tema' => (string) request()->query('tema')], 301)
     : redirect()->route('diezdediez', [], 301));
+
+// Flipbooks generados (visor estático guardado en storage/app/private/flipbooks).
+Route::get('/flipbook/{numero}/{ruta?}', [FlipbookController::class, 'ver'])
+    ->where(['numero' => '[0-9]{1,4}', 'ruta' => '.*'])
+    ->name('flipbook.ver');

@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\AutorController;
 use App\Http\Controllers\Admin\ConsultorioController;
 use App\Http\Controllers\Admin\CursoController;
 use App\Http\Controllers\Admin\EdicionController;
+use App\Http\Controllers\Admin\FlipbookController;
 use App\Http\Controllers\Admin\ManuscritoController;
 use App\Http\Controllers\Admin\NewsletterController;
 use App\Http\Controllers\Admin\PanelController;
@@ -88,4 +89,15 @@ Route::middleware('privilegio:DICTAMINAR_ARTICULO')->group(function () {
     Route::get('/ediciones/{revista}/articulos/{entrada}/editar', [ArticuloNumeroController::class, 'edit'])->name('ediciones.articulos.edit');
     Route::put('/ediciones/{revista}/articulos/{entrada}', [ArticuloNumeroController::class, 'update'])->name('ediciones.articulos.update');
     Route::delete('/ediciones/{revista}/articulos/{entrada}', [ArticuloNumeroController::class, 'destroy'])->name('ediciones.articulos.destroy');
+});
+
+// Generador de flipbooks (mismo privilegio que el gestor de portada).
+Route::middleware('privilegio:DICTAMINAR_ARTICULO')->prefix('flipbooks')->name('flipbooks.')->where(['numero' => '[0-9]{1,4}'])->group(function () {
+    Route::get('/', [FlipbookController::class, 'index'])->name('index');
+    Route::post('/', [FlipbookController::class, 'store'])->name('store');
+    Route::get('/{numero}/estado', [FlipbookController::class, 'estado'])->name('estado');
+    Route::get('/{numero}/miniatura/{pagina}', [FlipbookController::class, 'miniatura'])->whereNumber('pagina')->name('miniatura');
+    Route::post('/{numero}/usar', [FlipbookController::class, 'usar'])->name('usar');
+    Route::post('/{numero}/indice', [FlipbookController::class, 'indice'])->name('indice');
+    Route::delete('/{numero}', [FlipbookController::class, 'destroy'])->name('destroy');
 });
