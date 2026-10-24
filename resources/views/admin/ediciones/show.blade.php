@@ -60,10 +60,16 @@
         <div class="emp-archivos emp-archivos--fila">
             <x-estado-archivo nombre="Portada" :estado="$revista->revi_url_portada ? 'listo' : 'falta'" />
             <x-estado-archivo nombre="PDF completo" :estado="$revista->revi_url_revista_pdf ? 'listo' : 'falta'">
-                @if ($revista->revi_url_revista_pdf)<a href="{{ route('edicion.numero', $revista) }}" target="_blank" rel="noopener">Abrir</a>@endif
+                @if ($revista->revi_url_revista_pdf)
+                    <a href="{{ route('edicion.numero', $revista) }}" target="_blank" rel="noopener">Abrir <x-icono nombre="externo" :tamano="10" /></a>
+                @endif
             </x-estado-archivo>
             <x-estado-archivo nombre="eBook" :estado="$revista->revi_url_flipbook ? 'listo' : 'opcional'">
-                @if ($revista->revi_url_flipbook)<a href="{{ $revista->revi_url_flipbook }}" target="_blank" rel="noopener">Abrir</a>@else Sin enlace @endif
+                @if ($revista->revi_url_flipbook)
+                    <a href="{{ $revista->revi_url_flipbook }}" target="_blank" rel="noopener">Abrir <x-icono nombre="externo" :tamano="10" /></a>
+                @else
+                    Sin enlace
+                @endif
             </x-estado-archivo>
             <x-estado-archivo nombre="PDF de artículos" :estado="$total && $conPdf === $total ? 'listo' : 'falta'" :detalle="$conPdf.' de '.$total" />
         </div>
@@ -90,8 +96,9 @@
             <a href="{{ route('admin.ediciones.articulos.create', $revista) }}" class="btn btn-secondary btn-sm"><x-icono nombre="mas" :tamano="14" /> Agregar artículo</a>
         </div>
         <p class="emp-seccion__texto">
-            Elige {{ $requeridos === 5 ? '1 artículo principal y 4 secundarios' : 'la posición de cada artículo' }}. El esquema
-            reproduce el acomodo del inicio. Para rotarlos, cambia algunos por los que aún no se han mostrado.
+            Elige {{ $requeridos === 5 ? '1 artículo principal y 4 secundarios' : 'la posición de cada artículo' }}: arrastra un
+            artículo a una casilla del esquema (o entre casillas para intercambiarlos) o usa los botones de posición. Para rotarlos,
+            cambia algunos por los que aún no se han mostrado.
             @if ($total > 0)
                 Se han mostrado <strong class="emp-num">{{ $mostrados }} de {{ $total }}</strong>.
             @endif
@@ -107,10 +114,11 @@
                 <a href="{{ route('admin.ediciones.articulos.create', $revista) }}">Agrega el primero</a>: elige un artículo aprobado y su PDF diseñado se liga solo.
             </p>
         @else
-            <div class="emp-esquema" data-esquema aria-hidden="true">
+            <div class="emp-esquema" data-esquema aria-label="Esquema del inicio" role="group">
                 @for ($p = 1; $p <= \App\Models\ArticuloRevista::POSICIONES; $p++)
                     @php $ocupa = $porPosicion->get($p); @endphp
-                    <div @class(['emp-esquema__casilla', 'emp-esquema__casilla--principal' => $p === 1, 'is-vacia' => ! $ocupa]) data-casilla="{{ $p }}">
+                    <div @class(['emp-esquema__casilla', 'emp-esquema__casilla--principal' => $p === 1, 'is-vacia' => ! $ocupa]) data-casilla="{{ $p }}"
+                         data-rotulo="{{ $p === 1 ? 'Principal' : 'Secundario '.($p - 1) }}">
                         <span class="emp-esquema__rotulo">{{ $p === 1 ? 'Principal' : 'Secundario '.($p - 1) }}</span>
                         <span class="emp-esquema__titulo" data-casilla-titulo>{{ $ocupa?->arre_titulo ?? 'Sin elegir' }}</span>
                         <span class="emp-esquema__cursos" data-casilla-cursos>
@@ -134,14 +142,17 @@
                         <li class="emp-numero-articulo" data-articulo="{{ $id }}" data-titulo="{{ $entrada->arre_titulo }}"
                             data-cursos="{{ $susCursos->count() }}">
                             <div class="emp-numero-articulo__principal">
+                                <span class="emp-asa" data-asa draggable="true" title="Arrastrar a una casilla del esquema" aria-hidden="true">
+                                    <x-icono nombre="asa" :tamano="14" />
+                                </span>
                                 <span class="emp-numero-articulo__miniatura" aria-hidden="true">
                                     @if ($entrada->arre_url_imagen)
                                         <img src="{{ route('edicion.articulo.imagen', $entrada) }}" alt="" loading="lazy">
                                     @endif
                                 </span>
                                 <div class="emp-numero-articulo__texto">
-                                    <p class="emp-numero-articulo__titulo">{{ $entrada->arre_titulo }}</p>
-                                    <p class="emp-numero-articulo__meta">
+                                    <p class="emp-numero-articulo__titulo" title="{{ $entrada->arre_titulo }}">{{ $entrada->arre_titulo }}</p>
+                                    <p class="emp-numero-articulo__meta" title="{{ $entrada->arre_seccion ? $entrada->arre_seccion.' · ' : '' }}{{ $entrada->arre_autores }}">
                                         {{ $entrada->arre_seccion ? $entrada->arre_seccion.' · ' : '' }}{{ $entrada->arre_autores }}
                                     </p>
                                     <p class="emp-numero-articulo__estados">
@@ -176,7 +187,7 @@
                                         Editar y cursos<span class="visually-hidden"> de «{{ $entrada->arre_titulo }}»</span>
                                     </a>
                                     <button type="submit" form="quitar-{{ $id }}" class="btn btn-quieto btn-sm">
-                                        Quitar<span class="visually-hidden"> «{{ $entrada->arre_titulo }}»</span>
+                                        <x-icono nombre="quitar" :tamano="12" /> Quitar<span class="visually-hidden"> «{{ $entrada->arre_titulo }}»</span>
                                     </button>
                                 </div>
                             </div>
@@ -193,6 +204,7 @@
                         </li>
                     @endforeach
                 </ul>
+                <p class="visually-hidden" data-anuncio-destacados aria-live="polite"></p>
                 <div class="emp-destacados-pie">
                     <p class="emp-destacados-pie__conteo" data-conteo-destacados aria-live="polite">
                         {{ $porPosicion->count() }} de {{ $requeridos }} elegidos
@@ -222,7 +234,7 @@
               data-confirmar-boton="Eliminar número" data-destructivo>
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-quieto">Eliminar número</button>
+            <button type="submit" class="btn btn-quieto"><x-icono nombre="borrar" :tamano="14" /> Eliminar número</button>
         </form>
     </section>
 @endsection

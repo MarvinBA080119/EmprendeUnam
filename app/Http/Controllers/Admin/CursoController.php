@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CursoRequest;
 use App\Models\Curso;
 use App\Services\CursoService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -29,9 +30,19 @@ class CursoController extends Controller
         return view('admin.cursos.formulario', ['curso' => new Curso]);
     }
 
-    public function store(CursoRequest $request): RedirectResponse
+    /** Desde el formulario de un artículo del número llega por JavaScript y responde JSON. */
+    public function store(CursoRequest $request): RedirectResponse|JsonResponse
     {
         $curso = $this->cursos->crear($request->validated(), $request->user());
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'id' => $curso->curs_id_curso,
+                'nombre' => $curso->curs_nombre_curso,
+                'institucion' => $curso->curs_institucion,
+                'vigente' => $curso->curs_fecha->gte(today()),
+            ], 201);
+        }
 
         return redirect()->route('admin.cursos.index')->with('exito', "Se publicó el curso «{$curso->curs_nombre_curso}».");
     }

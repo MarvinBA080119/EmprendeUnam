@@ -530,6 +530,20 @@ El único momento con movimiento propio: un sello circular azul con palomita bla
 ### Gestor de portada
 Superficie de operación. El número principal se presenta con su portada en miniatura (proporción 7:9, radio 6px, hilo azul al 8% y una sombra baja) junto al título en Newsreader; debajo, el estado de cada archivo en una rejilla entre hilos: nombre en 13px/500 seguido de su insignia con texto (Listo azul, Falta café, Opcional neutra) y un detalle en 12px con números tabulares. Los demás números van en galería de portadas. En el formulario, la vista previa de la portada ocupa la columna derecha y cambia al elegir el archivo. En la pantalla del número, el esquema reproduce el acomodo del inicio (principal grande en hueso, cuatro secundarios en blanco con hilo) y se actualiza al mover las posiciones, que son radios segmentados («No se muestra · Principal · 1–4»); la casilla que cambia se tiñe de café claro 700ms. El pie con el conteo y «Guardar destacados» queda fijo al fondo. Los cursos son fichas marcables; las sugeridas llevan la insignia «Sugerido».
 
+### Artículo del número (formulario)
+- **Autollenado:** al elegir un artículo aprobado, los campos que se llenan destellan café papel 1.1s y un renglón con palomita café dice qué se llenó.
+- **Origen del PDF:** dos renglones marcables (radio dentro de una caja de 10px con hilo; la elegida en café papel con borde café bruma): «Usar el PDF del sistema» con el estado del diseño y «Subir un PDF solo para este número». Con el primero, el campo de archivo queda deshabilitado al 55%.
+- **Cursos:** fichas marcables (con «+» gris que pasa a palomita café al marcarla); las sugeridas llevan «Sugerido». Al final, «Agregar otro curso» como ficha punteada en café. El diálogo (32rem) busca entre los vigentes, lista nombre, institución y «Agregar / Agregado», y debajo de un separador «¿No está en la lista?» registra uno nuevo.
+
+### Destacados: arrastrar y soltar
+Asa de seis puntos a la izquierda de cada artículo (gris `emp-n-400`, más oscura al pasar sobre la fila, café sobre café papel al pasar sobre ella; cursor de mano). Al arrastrar, las casillas del esquema se vuelven punteadas y la que queda bajo el puntero toma borde café y fondo café papel; lo arrastrado baja a 45% de opacidad. La página se desplaza sola cerca de los bordes. En pantallas táctiles el asa no aparece.
+
+### Indicadores de interacción
+Lo que se pulsa se distingue del texto sin ruido: el botón quieto sin ícono lleva subrayado tenue `emp-n-300` que se vuelve café bruma; con ícono, el ícono sube de 70% a 100% de opacidad al pasar. Los enlaces dentro de párrafos y estados de archivo van en café con subrayado café bruma. Las opciones no elegidas de segmentos y posiciones toman un velo blanco al pasar. «Volver» adelanta su flecha 2px. Acciones discretas con ícono mínimo: «Quitar» (×), «Eliminar número» (bote).
+
+### Textos largos
+Títulos de página y párrafos se parten donde haga falta (`overflow-wrap: anywhere`) y crecen; en listas, títulos y metadatos se recortan a 2 renglones (3 en la mesa de diseño y el número principal) con puntos suspensivos y el texto completo en `title`.
+
 ### Mesa de diseño
 Superficie de operación para la cuenta Diseño, con el mismo saludo de los paneles (fecha, «Mesa de diseño» en Display y una frase con lo pendiente) y un solo primario: descargar los textos pendientes en .zip.
 - **Avance:** debajo del saludo, «4 de 9 artículos diseñados» y una tira con un pliego por artículo aprobado (10 × 24px, radio 3px): azul si ya tiene PDF diseñado, hueso con hilo café si falta. Con más de 40 artículos se vuelve una barra continua. Lo mismo encabeza «Manuscritos y diseños» del administrador.

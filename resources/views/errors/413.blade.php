@@ -3,5 +3,5 @@
 @section('codigo', '413')
 @section('titulo', 'Archivo demasiado grande')
 @section('mensaje')
-El archivo supera el tamaño permitido. Los artículos se reciben en PDF de hasta 7 MB.
+El archivo supera el tamaño permitido. Regresa y elige uno más ligero: el límite de cada campo aparece junto a él.
 @endsection

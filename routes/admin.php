@@ -82,6 +82,7 @@ Route::middleware('privilegio:DICTAMINAR_ARTICULO')->group(function () {
     Route::post('/ediciones/{revista}/portada', [EdicionController::class, 'portada'])->name('ediciones.portada');
     Route::post('/ediciones/{revista}/indice', [EdicionController::class, 'indice'])->name('ediciones.indice');
 
+    Route::get('/ediciones/{revista}/cursos-sugeridos', [ArticuloNumeroController::class, 'sugerencias'])->name('ediciones.cursos-sugeridos');
     Route::get('/ediciones/{revista}/articulos/nuevo', [ArticuloNumeroController::class, 'create'])->name('ediciones.articulos.create');
     Route::post('/ediciones/{revista}/articulos', [ArticuloNumeroController::class, 'store'])->name('ediciones.articulos.store');
     Route::get('/ediciones/{revista}/articulos/{entrada}/editar', [ArticuloNumeroController::class, 'edit'])->name('ediciones.articulos.edit');

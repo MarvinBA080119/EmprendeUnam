@@ -7,11 +7,13 @@ use App\Http\Middleware\SinCache;
 use App\Http\Middleware\TienePrivilegio;
 use App\Models\Usuario;
 use App\Services\AccesoService;
+use App\Support\AvisoArchivo;
 use App\Support\ErrorBaseDatos;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Exceptions\PostTooLargeException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -108,6 +110,17 @@ return Application::configure(basePath: dirname(__DIR__))
             }
 
             return null;
+        });
+
+        // Envío más pesado que post_max_size: en lugar de la página de error, se
+        // vuelve a la misma vista con una notificación (o JSON si la subida es
+        // por JavaScript, como en la mesa de diseño).
+        $exceptions->render(function (PostTooLargeException $e, Request $request) {
+            if ($request->expectsJson() || $request->hasHeader('X-Subida-Mesa')) {
+                return response()->json(['mensaje' => AvisoArchivo::mensaje()], 413);
+            }
+
+            return redirect()->to(AvisoArchivo::volver($request->headers->get('referer'), $request->getHost()));
         });
 
         $exceptions->render(function (QueryException $e, Request $request) {

@@ -99,7 +99,7 @@ return [
     'starts_with' => 'El campo :attribute debe comenzar con uno de los siguientes valores: :values.',
     'string' => 'El campo :attribute debe ser texto.',
     'unique' => 'El valor de :attribute ya está registrado.',
-    'uploaded' => 'No se pudo subir el archivo :attribute.',
+    'uploaded' => 'No se pudo subir el archivo :attribute: pesa más de lo que acepta el servidor. Elige uno más ligero.',
     'url' => 'El campo :attribute debe ser una URL válida.',
 
     'custom' => [],

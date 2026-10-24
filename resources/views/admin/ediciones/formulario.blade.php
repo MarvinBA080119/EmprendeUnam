@@ -60,6 +60,7 @@
                                   data-texto-nuevo="Por subir">{{ $guardado ? 'Guardado' : ($requerido ? 'Falta' : 'Sin archivo') }}</span>
                         </div>
                         <input id="campo-{{ $campo }}" name="{{ $campo }}" type="file" accept="{{ $acepta }}"
+                               data-max-kb="{{ config('emprende.pdf_max_revista_kb') }}"
                                aria-describedby="campo-{{ $campo }}-ayuda @error($campo) campo-{{ $campo }}-error @enderror"
                                @class(['form-control', 'is-invalid' => $errors->has($campo)]) data-archivo-estado>
                         <div id="campo-{{ $campo }}-ayuda" class="form-text" data-archivo-detalle>{{ $ayuda }}</div>
@@ -109,7 +110,7 @@
                 </span>
                 <span class="emp-portada-carga__cambiar">Cambiar portada</span>
             </label>
-            <input id="campo-portada" name="portada" type="file" accept="image/jpeg,image/png,image/webp" class="visually-hidden"
+            <input id="campo-portada" name="portada" type="file" accept="image/jpeg,image/png,image/webp" data-max-kb="{{ \App\Http\Requests\Admin\NumeroRequest::IMAGEN_MAX_KB }}" class="visually-hidden"
                    aria-describedby="portada-estado @error('portada') portada-error @enderror" @required(! $editando)>
             <p id="portada-estado" class="form-text" data-portada-estado>
                 {{ $editando && $revista->revi_url_portada ? 'Portada guardada. Elige otra para reemplazarla.' : 'Aún no hay portada.' }}

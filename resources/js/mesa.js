@@ -4,9 +4,8 @@
  * terminar, la página se recarga con el aviso y la fila resaltada.
  * Sin JavaScript, cada fila es un formulario normal con su botón «Enviar».
  */
+import { peso } from './archivos';
 import { confirmar } from './avisos';
-
-const peso = (bytes) => (bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`);
 
 function subir(fila, formulario, archivo) {
     const estado = fila.querySelector('[data-subida]');

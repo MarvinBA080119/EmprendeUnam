@@ -146,8 +146,9 @@ class EdicionService
                 ->whereNotNull('arti_id_autor')
                 ->when($actual?->exists, fn ($q) => $q->whereKeyNot($actual->getKey()))
                 ->pluck('arti_id_autor'))
+            ->with(['tema', 'palabras', 'autores.persona'])
             ->orderByDesc('arti_fecha_modificacion')
-            ->get(['arti_id_autor', 'arti_titulo', 'arti_url_pdf_diseno']);
+            ->get(['arti_id_autor', 'tema_id_tema', 'arti_titulo', 'arti_resumen', 'arti_url_pdf_diseno']);
     }
 
     /**
@@ -178,6 +179,16 @@ class EdicionService
                     'arre_autores' => ($datos['autores'] ?? null) ?: ($sistema ? $this->autoresDe($sistema) : ''),
                     'arre_paginas' => $datos['paginas'] ?? null,
                 ]);
+
+                // «PDF del sistema»: se publica el PDF diseñado del artículo; el
+                // que se hubiera subido en el número se quita y no se acepta otro.
+                if ($sistema && ($datos['fuente_pdf'] ?? null) === 'sistema') {
+                    $pdf = null;
+                    if ($entrada->arre_url_pdf) {
+                        $anteriores[] = $entrada->arre_url_pdf;
+                        $entrada->arre_url_pdf = null;
+                    }
+                }
 
                 foreach (['arre_url_pdf' => $pdf, 'arre_url_imagen' => $imagen] as $columna => $archivo) {
                     if ($archivo) {
@@ -258,18 +269,31 @@ class EdicionService
     }
 
     /**
-     * Cursos vigentes sugeridos para un artículo: comparten palabras clave con
-     * el artículo del sistema o palabras del título, la sección y la
-     * descripción con el nombre o las palabras clave del curso.
+     * Cursos vigentes sugeridos para un artículo del número: solo por
+     * coincidencias entre el título y las palabras clave del artículo y el
+     * nombre y las palabras clave del curso (sin sección, descripción ni
+     * institución).
      *
      * @return Collection<int, Curso> ordenados por coincidencias
      */
     public function sugeridos(ArticuloRevista $entrada): Collection
     {
-        $palabrasArticulo = $entrada->arti_id_autor
-            ? $entrada->articulo?->palabras->pluck('pala_descripcion')->map(fn ($p) => BuscadorService::normalizar($p))->all() ?? []
-            : [];
-        $terminos = $this->terminos(implode(' ', [$entrada->arre_titulo, $entrada->arre_seccion, $entrada->arre_descripcion]));
+        $palabras = $entrada->arti_id_autor ? ($entrada->articulo?->palabras->pluck('pala_descripcion')->all() ?? []) : [];
+
+        return $this->sugerirPara((string) $entrada->arre_titulo, $palabras);
+    }
+
+    /**
+     * Sugerencias para un título y unas palabras clave (también las usa el
+     * formulario para sugerir en vivo, antes de guardar).
+     *
+     * @param  list<string>  $palabrasArticulo
+     * @return Collection<int, Curso>
+     */
+    public function sugerirPara(string $titulo, array $palabrasArticulo): Collection
+    {
+        $palabrasArticulo = array_map(fn ($p) => BuscadorService::normalizar($p), $palabrasArticulo);
+        $terminos = $this->terminos($titulo.' '.implode(' ', $palabrasArticulo));
 
         return Curso::vigentes()->with('palabras')->get()
             ->map(function (Curso $curso) use ($palabrasArticulo, $terminos) {
@@ -284,6 +308,26 @@ class EdicionService
             ->sortByDesc('coincidencias')
             ->take(self::MAX_SUGERIDOS)
             ->values();
+    }
+
+    /**
+     * Datos de los artículos aprobados para llenar el formulario al elegirlos.
+     *
+     * @param  Collection<int, Articulo>  $articulos
+     * @return array<int, array{titulo: string, autores: string, seccion: ?string, descripcion: ?string, diseno: bool, palabras: list<string>}>
+     */
+    public function datosParaFormulario(Collection $articulos): array
+    {
+        return $articulos->mapWithKeys(fn (Articulo $a) => [$a->arti_id_autor => [
+            'titulo' => $a->arti_titulo,
+            'autores' => $a->autores
+                ->sortByDesc(fn ($autor) => (bool) $autor->pivot->auar_principal)
+                ->map(fn ($autor) => $autor->persona?->nombre_completo)->filter()->join(', '),
+            'seccion' => $a->tema?->tema_nombre,
+            'descripcion' => $a->arti_resumen ?: null,
+            'diseno' => $a->arti_url_pdf_diseno !== null,
+            'palabras' => $a->palabras->pluck('pala_descripcion')->values()->all(),
+        ]])->all();
     }
 
     /**

@@ -28,6 +28,7 @@ class ArticuloNumeroRequest extends FormRequest
             'descripcion' => ['nullable', 'string', 'max:500'],
             'autores' => [$delSistema ? 'nullable' : 'required', 'string', 'max:300'],
             'paginas' => ['nullable', 'string', 'max:15', 'regex:/^[0-9]+(\s*-\s*[0-9]+)?$/'],
+            'fuente_pdf' => ['nullable', Rule::in(['sistema', 'archivo'])],
             'pdf' => ['nullable', 'file', 'mimetypes:application/pdf', 'max:'.config('emprende.pdf_max_kb')],
             'imagen' => ['nullable', 'file', 'mimetypes:image/jpeg,image/png,image/webp', 'max:'.NumeroRequest::IMAGEN_MAX_KB],
             'cursos' => ['array'],

@@ -21,7 +21,7 @@
     </span>
 
     <div class="emp-mesa__texto">
-        <h2 class="emp-mesa__titulo">{{ $articulo->arti_titulo }}</h2>
+        <h2 class="emp-mesa__titulo" title="{{ $articulo->arti_titulo }}">{{ $articulo->arti_titulo }}</h2>
         <p class="emp-mesa__meta">
             @if ($articulo->tema)
                 <span class="emp-mesa__seccion">{{ $articulo->tema->tema_nombre }}</span>
