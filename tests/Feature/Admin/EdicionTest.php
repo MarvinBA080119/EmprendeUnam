@@ -223,6 +223,75 @@ class EdicionTest extends TestCase
         $this->assertDatabaseHas('articulo_curso', ['curs_id_curso' => $mercado->curs_id_curso, 'arcu_incluido' => true]);
     }
 
+    public function test_las_sugerencias_son_solo_por_titulo_y_palabras_clave(): void
+    {
+        $revista = $this->crearNumero();
+        $cursos = app(CursoService::class);
+        $porTitulo = $cursos->crear(['nombre' => 'Logística para talleres', 'institucion' => 'Incubadora X', 'fecha' => now()->addMonth()->toDateString(), 'url' => 'https://x.mx/a', 'palabras' => ['logística']]);
+        $porPalabra = $cursos->crear(['nombre' => 'Curso de impacto', 'institucion' => 'Incubadora X', 'fecha' => now()->addMonth()->toDateString(), 'url' => 'https://x.mx/b', 'palabras' => ['innovación']]);
+        // Misma institución que el artículo (FCA UNAM) y una palabra de la descripción: no basta.
+        $cursos->crear(['nombre' => 'Diplomado FCA UNAM', 'institucion' => 'FCA UNAM', 'fecha' => now()->addMonth()->toDateString(), 'url' => 'https://x.mx/c', 'palabras' => ['sostenible']]);
+
+        $articulo = $this->enviarArticulo($this->crearAutor(), ['titulo' => 'Logística inversa en talleres']);
+        app(ConstanciaService::class)->aprobar($articulo, $this->administrador());
+
+        $respuesta = $this->actingAs($this->administrador())
+            ->getJson("/admin/ediciones/{$revista->revi_id_revista}/cursos-sugeridos?arti_id_autor={$articulo->arti_id_autor}")
+            ->assertOk();
+
+        $this->assertEqualsCanonicalizing([$porTitulo->curs_id_curso, $porPalabra->curs_id_curso], collect($respuesta->json())->pluck('id')->all());
+    }
+
+    public function test_el_formulario_trae_los_datos_para_autollenar(): void
+    {
+        $revista = $this->crearNumero();
+        $articulo = $this->enviarArticulo($this->crearAutor(), ['titulo' => 'Logística inversa en talleres']);
+        app(ConstanciaService::class)->aprobar($articulo, $this->administrador());
+
+        $html = $this->actingAs($this->administrador())->get("/admin/ediciones/{$revista->revi_id_revista}/articulos/nuevo")->assertOk()->getContent();
+        preg_match('/<script type="application\/json" data-datos-articulos>(.*?)<\/script>/s', $html, $m);
+        $datos = json_decode($m[1], true);
+
+        $this->assertSame('Logística inversa en talleres', $datos[$articulo->arti_id_autor]['titulo']);
+        $this->assertSame('Ana López Ruiz', $datos[$articulo->arti_id_autor]['autores']);
+        $this->assertSame('Emprendimiento social', $datos[$articulo->arti_id_autor]['seccion']);
+        $this->assertNotEmpty($datos[$articulo->arti_id_autor]['descripcion']);
+        $this->assertFalse($datos[$articulo->arti_id_autor]['diseno']);
+    }
+
+    public function test_con_pdf_del_sistema_no_se_guarda_un_pdf_local(): void
+    {
+        $revista = $this->crearNumero();
+        $articulo = $this->enviarArticulo($this->crearAutor());
+        app(ConstanciaService::class)->aprobar($articulo, $this->administrador());
+        $url = "/admin/ediciones/{$revista->revi_id_revista}/articulos";
+
+        $this->actingAs($this->administrador())->post($url, [
+            'arti_id_autor' => $articulo->arti_id_autor, 'fuente_pdf' => 'archivo', 'pdf' => $this->pdfDePrueba('propio.pdf'),
+        ])->assertRedirect();
+        $entrada = $revista->articulos()->firstOrFail();
+        $propio = $entrada->arre_url_pdf;
+        Storage::disk('local')->assertExists($propio);
+
+        // Cambia a «PDF del sistema»: el local se quita y no se acepta otro.
+        $this->put("{$url}/{$entrada->arre_id_articulo_revista}", [
+            'arti_id_autor' => $articulo->arti_id_autor, 'fuente_pdf' => 'sistema', 'pdf' => $this->pdfDePrueba('otro.pdf'),
+        ])->assertRedirect();
+
+        $this->assertNull($entrada->fresh()->arre_url_pdf);
+        Storage::disk('local')->assertMissing($propio);
+    }
+
+    public function test_registra_un_curso_desde_el_formulario_y_responde_json(): void
+    {
+        $this->actingAs($this->administrador())->postJson('/admin/cursos', [
+            'nombre' => 'Crédito para pymes', 'institucion' => 'Nafin', 'fecha' => now()->addMonth()->toDateString(),
+            'url' => 'https://nafin.example/credito', 'palabras' => ['crédito', 'pymes'],
+        ])->assertCreated()->assertJson(['nombre' => 'Crédito para pymes', 'vigente' => true]);
+
+        $this->postJson('/admin/cursos', ['nombre' => ''])->assertStatus(422)->assertJsonValidationErrors(['nombre', 'url']);
+    }
+
     public function test_los_archivos_solo_se_ven_si_el_numero_es_visible(): void
     {
         $visible = $this->crearNumero();

@@ -1,4 +1,6 @@
 import 'bootstrap';
+import { vigilarArchivos } from './archivos';
+import { iniciarArticuloNumero } from './articulo-numero';
 import { iniciarAvisos } from './avisos';
 import { iniciarGestor } from './gestor';
 import { iniciarMesa } from './mesa';
@@ -30,8 +32,14 @@ document.addEventListener('click', (evento) => {
 // envío de los formularios.
 iniciarAvisos();
 
+// Límite de peso de los archivos, antes de enviar.
+vigilarArchivos();
+
 // Gestor de portada: vista previa, estado de archivos y destacados.
 iniciarGestor();
+
+// Artículo del número: autollenado, PDF del sistema y cursos.
+iniciarArticuloNumero();
 
 // Mesa de diseño: subida del PDF diseñado con avance y arrastrar y soltar.
 iniciarMesa();

@@ -32,6 +32,9 @@
         a.boton:hover { background: #553800; }
         a.boton:active { transform: scale(0.97); }
         a.boton:focus-visible { outline: 2px solid #664300; outline-offset: 2px; }
+        .acciones { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        a.boton--secundario { background: #fff; color: #001328; box-shadow: inset 0 0 0 1px #e2dcd2; }
+        a.boton--secundario:hover { background: #f7f5f1; }
         footer { padding: 1.25rem 1.5rem; font-size: 12px; color: #56626e; text-align: center; }
     </style>
 </head>
@@ -45,7 +48,19 @@
             <p class="codigo">Error @yield('codigo')</p>
             <h1>@yield('titulo')</h1>
             <p>@yield('mensaje')</p>
-            <a class="boton" href="{{ url('/') }}">Ir al inicio</a>
+            @php
+                // Regresar a la página de la que se vino (si es de este sitio) en lugar de mandar al inicio.
+                $previa = request()->headers->get('referer');
+                $previa = $previa && parse_url($previa, PHP_URL_HOST) === request()->getHost() && $previa !== request()->fullUrl() ? $previa : null;
+            @endphp
+            <div class="acciones">
+                @if ($previa)
+                    <a class="boton" href="{{ $previa }}">Regresar</a>
+                    <a class="boton boton--secundario" href="{{ url('/') }}">Ir al inicio</a>
+                @else
+                    <a class="boton" href="{{ url('/') }}">Ir al inicio</a>
+                @endif
+            </div>
         </div>
     </main>
     <footer>&copy; {{ now()->year }} Universidad Nacional Autónoma de México · Revista EmprendeUNAM</footer>

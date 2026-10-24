@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ArticuloNumeroRequest;
+use App\Models\Articulo;
 use App\Models\ArticuloRevista;
 use App\Models\Curso;
 use App\Models\Revista;
 use App\Services\EdicionService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -60,16 +62,38 @@ class ArticuloNumeroController extends Controller
         return redirect()->route('admin.ediciones.show', $revista)->with('exito', "Se quitó «{$titulo}» del número.");
     }
 
+    /**
+     * Cursos sugeridos en vivo mientras se llena el formulario: por el título
+     * escrito y las palabras clave del artículo del sistema elegido.
+     */
+    public function sugerencias(Request $request, Revista $revista): JsonResponse
+    {
+        $datos = $request->validate([
+            'titulo' => ['nullable', 'string', 'max:200'],
+            'arti_id_autor' => ['nullable', 'integer'],
+        ]);
+        $articulo = ! empty($datos['arti_id_autor']) ? Articulo::aprobados()->with('palabras')->find($datos['arti_id_autor']) : null;
+        $titulo = (string) (($datos['titulo'] ?? null) ?: $articulo?->arti_titulo);
+
+        return response()->json($this->ediciones
+            ->sugerirPara($titulo, $articulo?->palabras->pluck('pala_descripcion')->all() ?? [])
+            ->map(fn (Curso $c) => ['id' => $c->curs_id_curso, 'nombre' => $c->curs_nombre_curso, 'institucion' => $c->curs_institucion])
+            ->values());
+    }
+
     private function formulario(Revista $revista, ArticuloRevista $entrada): View
     {
         $entrada->loadMissing(['articulo', 'cursos']);
         $sugeridos = $entrada->exists ? $this->ediciones->sugeridos($entrada) : collect();
         $marcados = $entrada->exists ? $this->ediciones->cursosDe($entrada)->pluck('curs_id_curso')->all() : [];
 
+        $aprobados = $this->ediciones->aprobadosDisponibles($revista, $entrada);
+
         return view('admin.ediciones.articulo', [
             'revista' => $revista,
             'entrada' => $entrada,
-            'aprobados' => $this->ediciones->aprobadosDisponibles($revista, $entrada),
+            'aprobados' => $aprobados,
+            'datosArticulos' => $this->ediciones->datosParaFormulario($aprobados),
             'cursos' => Curso::vigentes()->orderBy('curs_nombre_curso')->get(),
             'sugeridos' => $sugeridos->pluck('curs_id_curso')->all(),
             'marcados' => array_map('intval', old('cursos', $marcados)),
