@@ -41,7 +41,8 @@ SELECT n, d FROM (VALUES
   ('Administrador',            'Todos los privilegios del sistema'),
   ('Autor',                    'Envía y consulta sus artículos y descarga su constancia'),
   ('Lector',                   'Permisos mínimos: consulta contenido público y escribe al consultorio'),
-  ('Suscriptor_newsletter',    'Permisos mínimos: se suscribe al newsletter')
+  ('Suscriptor_newsletter',    'Permisos mínimos: se suscribe al newsletter'),
+  ('Diseño',                   'Descarga los textos aprobados y sube el PDF diseñado de cada artículo')
 ) v(n, d)
 WHERE NOT EXISTS (SELECT 1 FROM ROL r WHERE r.ROL_NOMBRE = v.n);
 
@@ -58,7 +59,9 @@ SELECT n, d FROM (VALUES
   ('CONSULTAR_TODOS_ARTICULOS',     'Ver los artículos de todos los autores'),
   ('GESTIONAR_CONSULTORIO',         'Responder o rechazar mensajes del consultorio'),
   ('GESTIONAR_CURSOS',              'Crear, editar y eliminar cursos'),
-  ('CONSULTAR_SUSCRIPTORES',        'Consultar y exportar los suscriptores del newsletter')
+  ('CONSULTAR_SUSCRIPTORES',        'Consultar y exportar los suscriptores del newsletter'),
+  ('DESCARGAR_ORIGINALES',          'Descargar el texto original de los artículos aprobados'),
+  ('SUBIR_DISENO',                  'Subir el PDF diseñado de un artículo aprobado')
 ) v(n, d)
 WHERE NOT EXISTS (SELECT 1 FROM PRIVILEGIO p WHERE p.PRIV_NOMBRE = v.n);
 
@@ -74,6 +77,8 @@ SELECT r.ROL_ID_ROL, p.PRIV_ID_PRIVILEGIO
           ('CONSULTAR_CONTENIDO_PUBLICO','ENVIAR_MENSAJE_CONSULTORIO'))
     OR (r.ROL_NOMBRE = 'Suscriptor_newsletter' AND p.PRIV_NOMBRE IN
           ('CONSULTAR_CONTENIDO_PUBLICO','SUSCRIBIRSE_NEWSLETTER'))
+    OR (r.ROL_NOMBRE = 'Diseño' AND p.PRIV_NOMBRE IN
+          ('DESCARGAR_ORIGINALES','SUBIR_DISENO'))
 ON CONFLICT (ROL_ID_ROL, ROPR_ID_PRIVILEGIO) DO NOTHING;
 
 /*---------------- 3. Tipo de comunicación ----------------------------*/

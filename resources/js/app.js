@@ -1,6 +1,7 @@
 import 'bootstrap';
 import { iniciarAvisos } from './avisos';
 import { iniciarGestor } from './gestor';
+import { iniciarMesa } from './mesa';
 import { montarIslas } from './islas';
 import { vigilarInactividad } from './sesion';
 
@@ -31,6 +32,9 @@ iniciarAvisos();
 
 // Gestor de portada: vista previa, estado de archivos y destacados.
 iniciarGestor();
+
+// Mesa de diseño: subida del PDF diseñado con avance y arrastrar y soltar.
+iniciarMesa();
 
 // Cierre de sesión por inactividad (solo en los paneles con sesión).
 vigilarInactividad();

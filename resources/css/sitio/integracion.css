@@ -79,3 +79,59 @@ mark.resaltado {
 /* Enlaces de acción secundarios con la tipografía y color del sitio */
 .buscador__filtros .btn-link { color: var(--negro); font-size: .85rem; text-underline-offset: .25em; }
 .buscador__filtros .btn-link:hover { color: var(--rojo); }
+
+/* Franja de sesión: aparece solo con una sesión abierta y dice con qué cuenta.
+   Negro del sitio, texto blanco, mismo tracking en mayúsculas que el pie. */
+.sesion-sitio {
+  background: var(--negro);
+  color: var(--blanco);
+  font-size: .74rem;
+  letter-spacing: .04em;
+}
+
+.sesion-sitio__fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .35rem 1.25rem;
+  min-height: 2.25rem;
+  padding-block: .35rem;
+}
+
+.sesion-sitio__quien { display: inline-flex; align-items: center; gap: .4rem; }
+.sesion-sitio__panel { opacity: .7; }
+
+.sesion-sitio__acciones { display: inline-flex; align-items: center; gap: 1rem; }
+.sesion-sitio__acciones form { margin: 0; }
+
+.sesion-sitio__acciones a,
+.sesion-sitio__acciones button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--blanco);
+  font: inherit;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, .35);
+  text-underline-offset: .25em;
+  cursor: pointer;
+}
+
+.sesion-sitio__acciones a:hover,
+.sesion-sitio__acciones button:hover { text-decoration-color: var(--rojo); }
+
+.sesion-sitio__acciones a:focus-visible,
+.sesion-sitio__acciones button:focus-visible { outline: 2px solid var(--blanco); outline-offset: 3px; }
+
+/* Envío de artículos con una sesión que no es de autor */
+.envio-otra-cuenta {
+  margin: 0 0 1rem;
+  padding: .85rem 1rem;
+  border-left: 3px solid var(--negro);
+  background: rgba(10, 10, 10, .04);
+  font-size: .9rem;
+  line-height: 1.5;
+}

@@ -103,8 +103,8 @@ verificar() {
 }
 verificar "Tablas en public"   "select count(*) from information_schema.tables where table_schema = 'public' and table_type = 'BASE TABLE'" 52
 verificar "Filas en tema"      "select count(*) from tema" 13
-verificar "Filas en rol"       "select count(*) from rol" 4
-verificar "Filas en privilegio" "select count(*) from privilegio" 12
+verificar "Filas en rol"       "select count(*) from rol" 5
+verificar "Filas en privilegio" "select count(*) from privilegio" 14
 verificar "Usuario EmprendeUnam" "select count(*) from usuario where usua_nombre_usuario = 'EmprendeUnam'" 1
 
 if [ "$fallo" -ne 0 ]; then

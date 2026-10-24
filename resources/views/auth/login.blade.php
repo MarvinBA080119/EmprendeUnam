@@ -5,15 +5,22 @@
 @section('contenido')
     <div class="emp-acceso__encabezado">
         <h1 class="emp-titulo">Inicia sesión</h1>
-        <p class="emp-subtitulo">Entra a tu panel de autor o de administración.</p>
+        <p class="emp-subtitulo">Entra a tu panel de autor, diseño o administración.</p>
     </div>
 
-    @if ($sesionAbierta)
-        <div class="alert alert-info" role="status">
-            <span class="alert-texto">
-                Tienes una sesión abierta como <strong>{{ $sesionAbierta->usua_nombre_usuario }}</strong>.
-                Si entras con otra cuenta, esa sesión se cerrará.
-            </span>
+    @if ($sesionSitio)
+        <div class="emp-sesion-abierta" role="status">
+            <p class="emp-sesion-abierta__texto">
+                Tienes una sesión abierta como <strong>{{ $sesionSitio['usuario'] }}</strong>{{ $sesionSitio['nombrePanel'] ? ' ('.$sesionSitio['nombrePanel'].')' : '' }}.
+            </p>
+            <div class="emp-sesion-abierta__acciones">
+                <a href="{{ $sesionSitio['ruta'] }}" class="btn btn-primary">Continuar como {{ $sesionSitio['usuario'] }}</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-secondary">Cerrar sesión</button>
+                </form>
+            </div>
+            <p class="emp-sesion-abierta__nota">O escribe abajo los datos de otra cuenta: la sesión actual se cierra al entrar.</p>
         </div>
     @endif
 

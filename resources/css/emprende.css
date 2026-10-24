@@ -35,7 +35,7 @@
     --emp-n-700: #46535f;
 
     --emp-serif: 'Newsreader Variable', 'Iowan Old Style', Georgia, serif;
-    --emp-alto-cab: 4rem;
+    --emp-alto-cab: 6.5rem;
 
     /* Profundidad casi imperceptible: la hoja apenas se separa del hueso */
     --emp-sombra-hoja:
@@ -816,11 +816,35 @@ table {
 .emp-cab__logo {
     display: block;
     width: auto;
-    height: 2.5rem;
+    height: 5rem;
 }
 
 .emp-cab__logo--fca {
-    height: 2.375rem;
+    height: 4.75rem;
+}
+
+.emp-cab__marca {
+    gap: 1.25rem;
+}
+
+/* En celular los logotipos crecen 1.5 veces, no al doble: el encabezado
+   pegado arriba no debe comerse la pantalla. */
+@media (max-width: 767.98px) {
+    :root {
+        --emp-alto-cab: 5rem;
+    }
+
+    .emp-cab__logo {
+        height: 3.75rem;
+    }
+
+    .emp-cab__logo--fca {
+        height: 3.5rem;
+    }
+
+    .emp-cab__marca {
+        gap: 1rem;
+    }
 }
 
 /* --- Acceso: nota editorial sobre hueso y formulario sobre blanco -------- */
@@ -1036,6 +1060,35 @@ table {
 
 .emp-acceso__alterno a {
     font-weight: 500;
+}
+
+/* Sesión abierta en el login: con qué cuenta y las dos salidas claras */
+.emp-sesion-abierta {
+    margin-bottom: 1.75rem;
+    padding: 1rem 1.125rem;
+    border: 1px solid var(--emp-n-200);
+    border-radius: 0.625rem;
+    background-color: var(--emp-n-25);
+}
+
+.emp-sesion-abierta__texto {
+    margin: 0 0 0.75rem;
+}
+
+.emp-sesion-abierta__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.emp-sesion-abierta__acciones form {
+    margin: 0;
+}
+
+.emp-sesion-abierta__nota {
+    margin: 0.75rem 0 0;
+    color: var(--emp-n-600);
+    font-size: 0.8125rem;
 }
 
 /* --- Escritorio: barra lateral sobre hueso y hoja blanca ----------------- */
@@ -3045,100 +3098,6 @@ a.emp-fila:hover .emp-fila__lado .emp-icono {
     display: contents;
 }
 
-/* Carga del .zip */
-.emp-zip {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem 1rem;
-}
-
-.emp-zip__zona {
-    flex: 1 1 22rem;
-    display: flex;
-    align-items: center;
-    gap: 0.875rem;
-    min-width: 0;
-    padding: 0.875rem 1rem;
-    border: 1px dashed var(--emp-n-300);
-    border-radius: 0.75rem;
-    cursor: pointer;
-    transition: border-color var(--emp-rapido) ease, background-color var(--emp-rapido) ease;
-}
-
-.emp-zip__zona:hover,
-.emp-zip__zona.is-arrastrando {
-    border-color: var(--emp-cafe);
-    background-color: var(--emp-cafe-50);
-}
-
-.emp-zip__zona.tiene-archivo {
-    border-style: solid;
-    border-color: var(--emp-n-200);
-}
-
-#campo-zip:focus-visible + .emp-zip__acciones,
-.emp-zip__zona:focus-within {
-    box-shadow: var(--emp-anillo);
-}
-
-.emp-zip__texto {
-    display: flex;
-    flex-direction: column;
-    gap: 0.125rem;
-    min-width: 0;
-    font-size: 0.8125rem;
-    color: var(--emp-n-600);
-}
-
-.emp-zip__texto strong {
-    color: var(--emp-azul);
-    font-size: 0.875rem;
-    font-weight: 600;
-    overflow-wrap: anywhere;
-}
-
-.emp-zip__acciones {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.emp-zip__acciones .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-}
-
-.emp-zip-resultado {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-    gap: 1rem 2rem;
-    margin-top: 1rem;
-    padding: 1rem 1.25rem;
-    border-radius: 0.75rem;
-    background-color: var(--emp-n-50);
-    font-size: 0.8125rem;
-}
-
-.emp-zip-resultado ul {
-    margin: 0;
-    padding-left: 1rem;
-    color: var(--emp-n-700);
-    overflow-wrap: anywhere;
-}
-
-.emp-zip-resultado__rotulo {
-    margin: 0 0 0.25rem;
-    font-weight: 600;
-}
-
-.emp-zip-resultado__nota {
-    grid-column: 1 / -1;
-    margin: 0;
-    color: var(--emp-n-600);
-}
-
 /* Esquema de destacados: el acomodo del inicio (1 grande + 4) */
 .emp-esquema {
     display: grid;
@@ -3546,4 +3505,472 @@ a.emp-fila:hover .emp-fila__lado .emp-icono {
     color: var(--emp-azul);
     font-size: 0.6875rem;
     line-height: 1.25rem;
+}
+
+/* ==========================================================================
+   Mesa de diseño (cuenta de diseño) y manuscritos del administrador
+   ========================================================================== */
+
+.btn-primary .emp-boton-cuenta {
+    background-color: rgba(255, 255, 255, 0.18);
+    color: var(--emp-blanco);
+}
+
+/* Subir el PDF diseñado: la acción de cada renglón, en café papel para que
+   la lista no se llene de primarios (el primario es la descarga del .zip). */
+.btn-subir {
+    --bs-btn-color: var(--emp-cafe);
+    --bs-btn-bg: var(--emp-cafe-50);
+    --bs-btn-border-color: var(--emp-cafe-200);
+    --bs-btn-hover-color: var(--emp-cafe-hover);
+    --bs-btn-hover-bg: var(--emp-cafe-100);
+    --bs-btn-hover-border-color: var(--emp-cafe-200);
+    --bs-btn-active-color: var(--emp-cafe-hover);
+    --bs-btn-active-bg: var(--emp-cafe-200);
+    --bs-btn-active-border-color: var(--emp-cafe-200);
+    font-weight: 500;
+}
+
+/* Avance: un pliego por artículo aprobado. Azul = diseñado; hueso con hilo
+   café = falta. El texto da la cifra; la tira solo la hace visible. */
+.emp-avance {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+    margin: -1.5rem 0 1.75rem;
+}
+
+.emp-avance__texto {
+    margin: 0;
+    color: var(--emp-n-600);
+    font-size: 0.875rem;
+}
+
+.emp-avance__texto strong {
+    color: var(--emp-azul);
+    font-weight: 600;
+}
+
+.emp-avance__tira {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.emp-avance__pliego {
+    width: 0.625rem;
+    height: 1.5rem;
+    border-radius: 0.1875rem;
+    background-color: var(--emp-hueso);
+    box-shadow: inset 0 0 0 1px var(--emp-cafe-200);
+}
+
+.emp-avance__pliego.is-listo {
+    background-color: var(--emp-azul);
+    box-shadow: none;
+}
+
+.emp-avance__barra {
+    position: relative;
+    flex: 1 1 12rem;
+    max-width: 24rem;
+    height: 0.5rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background-color: var(--emp-hueso);
+    box-shadow: inset 0 0 0 1px var(--emp-cafe-200);
+}
+
+.emp-avance__barra > span {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: inherit;
+    background-color: var(--emp-azul);
+}
+
+.emp-encabezado + .emp-avance {
+    margin-top: 0;
+}
+
+/* Filtro segmentado (enlaces): pista hueso, opción activa en blanco */
+.emp-segmentos {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.125rem;
+    margin-bottom: 1.5rem;
+    padding: 0.1875rem;
+    border-radius: 0.625rem;
+    background-color: var(--emp-n-100);
+}
+
+.emp-segmentos__opcion {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2rem;
+    padding: 0 0.875rem;
+    border-radius: 0.5rem;
+    color: var(--emp-n-700);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color var(--emp-rapido) ease, color var(--emp-rapido) ease;
+}
+
+.emp-segmentos__opcion:hover {
+    color: var(--emp-azul);
+}
+
+.emp-segmentos__opcion.is-activo {
+    background-color: var(--emp-blanco);
+    color: var(--emp-azul);
+    box-shadow: 0 1px 2px rgba(0, 19, 40, 0.08), 0 0 0 1px rgba(0, 19, 40, 0.04);
+}
+
+.emp-segmentos__cuenta {
+    color: var(--emp-n-600);
+    font-size: 0.75rem;
+}
+
+.emp-segmentos__opcion.is-activo .emp-segmentos__cuenta {
+    color: var(--emp-azul);
+}
+
+.emp-segmentos__opcion:focus-visible {
+    outline: none;
+    box-shadow: var(--emp-anillo);
+}
+
+/* Lista de la mesa: renglones entre hilos, sin tarjetas */
+.emp-mesa__ayuda {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.75rem;
+    color: var(--emp-n-600);
+    font-size: 0.8125rem;
+}
+
+.emp-mesa {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--emp-n-150);
+}
+
+.emp-mesa__fila {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.5rem 1.25rem;
+    padding: 1.375rem 0.75rem 1.375rem 0;
+    border-bottom: 1px solid var(--emp-n-100);
+    transition: background-color var(--emp-rapido) ease;
+}
+
+/* La hoja: el original como papel con la esquina doblada, o diseñado en azul */
+.emp-mesa__hoja {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 3.5rem;
+    border-radius: 0.25rem;
+    background-color: var(--emp-blanco);
+    box-shadow: inset 0 0 0 1px var(--emp-n-200);
+    clip-path: polygon(0 0, calc(100% - 0.75rem) 0, 100% 0.75rem, 100% 100%, 0 100%);
+}
+
+.emp-mesa__hoja::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0.75rem;
+    height: 0.75rem;
+    background: linear-gradient(225deg, transparent 50%, var(--emp-n-200) 50%, var(--emp-n-200) calc(50% + 1px), var(--emp-hueso) calc(50% + 1px));
+}
+
+.emp-mesa__extension {
+    margin-top: 0.5rem;
+    color: var(--emp-cafe);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+}
+
+.emp-mesa__hoja.is-disenada {
+    background-color: var(--emp-azul);
+    box-shadow: none;
+    color: var(--emp-blanco);
+}
+
+.emp-mesa__hoja.is-disenada::after {
+    background: linear-gradient(225deg, transparent 50%, rgba(255, 255, 255, 0.28) 50%);
+}
+
+.emp-mesa__hoja .emp-icono {
+    margin-top: 0.375rem;
+}
+
+.emp-mesa__texto {
+    min-width: 0;
+}
+
+.emp-mesa__titulo {
+    margin: 0 0 0.25rem;
+    font-family: var(--emp-serif);
+    font-size: 1.25rem;
+    font-weight: 420;
+    line-height: 1.25;
+    letter-spacing: -0.012em;
+    text-wrap: pretty;
+}
+
+.emp-mesa__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.5rem;
+    margin: 0 0 0.625rem;
+    color: var(--emp-n-700);
+    font-size: 0.875rem;
+}
+
+.emp-mesa__meta > span:not(:last-child)::after {
+    content: '·';
+    margin-left: 0.5rem;
+    color: var(--emp-n-500);
+}
+
+.emp-mesa__seccion {
+    color: var(--emp-cafe);
+    font-weight: 500;
+}
+
+.emp-mesa__datos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin: 0.625rem 0 0;
+    color: var(--emp-n-600);
+    font-size: 0.8125rem;
+}
+
+.emp-mesa__lado {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+}
+
+.emp-mesa__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.emp-mesa__acciones .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.emp-mesa__formulario {
+    display: inline-flex;
+    gap: 0.25rem;
+    margin: 0 0 0 0.25rem;
+}
+
+/* El campo de archivo queda accesible (foco, lector) pero sin dibujarse:
+   lo representa su etiqueta con forma de botón. */
+.emp-mesa__archivo {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.emp-mesa__archivo:focus-visible + label {
+    box-shadow: var(--emp-anillo);
+}
+
+.emp-mesa__pie {
+    grid-column: 2 / -1;
+}
+
+.emp-mesa__pie:empty {
+    display: none;
+}
+
+/* Subida en curso: nombre, porcentaje y una barra azul que avanza */
+.emp-subida {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.375rem 0.75rem;
+    margin-top: 0.25rem;
+    padding: 0.75rem 0.875rem;
+    border-radius: 0.625rem;
+    background-color: var(--emp-n-50);
+    font-size: 0.8125rem;
+}
+
+.emp-subida__nombre {
+    overflow: hidden;
+    color: var(--emp-azul);
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.emp-subida__porcentaje {
+    color: var(--emp-n-700);
+}
+
+.emp-subida__barra {
+    grid-column: 1 / -1;
+    height: 0.25rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background-color: var(--emp-n-150);
+}
+
+.emp-subida__barra > span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background-color: var(--emp-azul);
+    transform: scaleX(var(--avance, 0));
+    transform-origin: left;
+    transition: transform 200ms var(--emp-ease-out);
+}
+
+.emp-subida.is-error {
+    background-color: var(--emp-cafe-50);
+}
+
+.emp-subida.is-error .emp-subida__barra {
+    display: none;
+}
+
+.emp-subida.is-error .emp-subida__nombre {
+    white-space: normal;
+}
+
+.emp-subida.is-error .emp-subida__nombre,
+.emp-subida.is-error .emp-subida__porcentaje {
+    color: var(--emp-cafe);
+}
+
+/* Arrastrar un PDF: las filas que aceptan la subida se marcan, y la que está
+   bajo el puntero toma el papel café. */
+.emp-mesa.is-arrastrando [data-mesa-fila]:has([data-subir])::before {
+    content: '';
+    position: absolute;
+    inset: 0.375rem -0.5rem;
+    border: 1px dashed var(--emp-n-300);
+    border-radius: 0.75rem;
+    pointer-events: none;
+}
+
+.emp-mesa__fila.is-destino {
+    background-color: var(--emp-cafe-50);
+}
+
+.emp-mesa__fila.is-destino::before {
+    border-color: var(--emp-cafe) !important;
+}
+
+.emp-mesa__fila.is-subiendo .emp-mesa__acciones {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* El artículo recién diseñado: su hoja pasa a azul con un solo gesto al llegar */
+@media (prefers-reduced-motion: no-preference) {
+    .emp-mesa__fila.is-recien .emp-mesa__hoja {
+        animation: emp-hoja-lista 520ms var(--emp-ease-out) both;
+    }
+
+    .emp-mesa__fila.is-recien {
+        animation: emp-fila-lista 1600ms ease-out both;
+    }
+}
+
+@keyframes emp-hoja-lista {
+    from {
+        transform: scale(0.82) rotate(-4deg);
+        opacity: 0.4;
+    }
+}
+
+@keyframes emp-fila-lista {
+    from {
+        background-color: var(--emp-cafe-50);
+    }
+}
+
+@media (max-width: 767.98px) {
+    .emp-avance {
+        margin-top: -0.75rem;
+    }
+
+    .emp-mesa__fila {
+        grid-template-columns: auto minmax(0, 1fr);
+        padding-right: 0;
+    }
+
+    .emp-mesa__lado {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .emp-mesa__pie {
+        grid-column: 1 / -1;
+    }
+}
+
+/* Aviso del número: el PDF de cada artículo llega desde la mesa de diseño */
+.emp-aviso-diseno {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    padding: 0.875rem 1rem;
+    border-radius: 0.75rem;
+    background-color: var(--emp-n-50);
+}
+
+.emp-aviso-diseno__texto {
+    flex: 1 1 22rem;
+    margin: 0;
+    color: var(--emp-n-700);
+    font-size: 0.875rem;
+}
+
+.emp-aviso-diseno__texto strong {
+    display: block;
+    color: var(--emp-azul);
+    font-weight: 600;
+}
+
+.emp-aviso-diseno .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* En pantallas táctiles no se arrastran archivos: la ayuda sobra. */
+@media (hover: none) {
+    .emp-mesa__ayuda {
+        display: none;
+    }
 }

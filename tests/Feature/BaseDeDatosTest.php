@@ -25,7 +25,7 @@ class BaseDeDatosTest extends TestCase
 
         $this->assertTrue($admin->usua_activo);
         $this->assertSame(['Administrador'], $admin->roles->pluck('rol_nombre')->all());
-        $this->assertCount(12, $admin->roles->first()->privilegios);
+        $this->assertCount(14, $admin->roles->first()->privilegios);
         $this->assertNotNull($admin->persona->correo);
         $this->assertSame('Principal', $admin->persona->correo->comu_etiqueta);
         $this->assertStringStartsWith('$2y$', $admin->getAuthPassword());
@@ -42,7 +42,8 @@ class BaseDeDatosTest extends TestCase
         );
         $this->assertSame(['CONSULTAR_CONTENIDO_PUBLICO', 'ENVIAR_MENSAJE_CONSULTORIO'], $privilegios[Rol::LECTOR]);
         $this->assertSame(['CONSULTAR_CONTENIDO_PUBLICO', 'SUSCRIBIRSE_NEWSLETTER'], $privilegios[Rol::SUSCRIPTOR_NEWSLETTER]);
-        $this->assertCount(12, $privilegios[Rol::ADMINISTRADOR]);
+        $this->assertSame(['DESCARGAR_ORIGINALES', 'SUBIR_DISENO'], $privilegios[Rol::DISENO]);
+        $this->assertCount(14, $privilegios[Rol::ADMINISTRADOR]);
     }
 
     public function test_un_usuario_sin_correo_es_rechazado_por_el_trigger_diferido(): void

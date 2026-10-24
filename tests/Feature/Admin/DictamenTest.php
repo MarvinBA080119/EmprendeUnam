@@ -145,7 +145,7 @@ class DictamenTest extends TestCase
         $autor = $this->crearAutor();
         $articulo = $this->enviarArticulo($autor);
 
-        $this->actingAs($autor)->get('/admin/articulos')->assertForbidden();
+        $this->actingAs($autor)->get('/admin/articulos')->assertRedirect('/autor');
         $this->actingAs($autor)->post("/admin/articulos/{$articulo->arti_id_autor}/aprobar")->assertForbidden();
         $this->actingAs($autor)->post("/admin/articulos/{$articulo->arti_id_autor}/rechazar", [
             'comentario' => 'Intento de autorrechazo con texto largo.',

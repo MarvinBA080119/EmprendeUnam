@@ -16,9 +16,9 @@ class LoginController extends Controller
 {
     public function __construct(private AccesoService $acceso) {}
 
-    public function create(Request $request): View
+    public function create(): View
     {
-        return view('auth.login', ['sesionAbierta' => $request->user()]);
+        return view('auth.login');
     }
 
     public function store(LoginRequest $request): RedirectResponse

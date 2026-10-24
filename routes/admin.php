@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\AutorController;
 use App\Http\Controllers\Admin\ConsultorioController;
 use App\Http\Controllers\Admin\CursoController;
 use App\Http\Controllers\Admin\EdicionController;
+use App\Http\Controllers\Admin\ManuscritoController;
 use App\Http\Controllers\Admin\NewsletterController;
 use App\Http\Controllers\Admin\PanelController;
 use Illuminate\Support\Facades\Route;
@@ -69,7 +70,10 @@ Route::middleware('privilegio:CONSULTAR_SUSCRIPTORES')->group(function () {
 Route::middleware('privilegio:DICTAMINAR_ARTICULO')->group(function () {
     Route::get('/ediciones', [EdicionController::class, 'index'])->name('ediciones.index');
     Route::get('/ediciones/nuevo', [EdicionController::class, 'create'])->name('ediciones.create');
-    Route::get('/ediciones/manuscritos', [EdicionController::class, 'manuscritos'])->name('ediciones.manuscritos');
+    Route::get('/ediciones/manuscritos', [ManuscritoController::class, 'index'])->name('ediciones.manuscritos');
+    Route::get('/ediciones/manuscritos/originales', [ManuscritoController::class, 'originales'])->name('ediciones.manuscritos.originales');
+    Route::get('/ediciones/manuscritos/disenos', [ManuscritoController::class, 'disenos'])->name('ediciones.manuscritos.disenos');
+    Route::get('/ediciones/manuscritos/{articulo}/diseno', [ManuscritoController::class, 'diseno'])->name('ediciones.manuscritos.diseno');
     Route::post('/ediciones', [EdicionController::class, 'store'])->name('ediciones.store');
     Route::get('/ediciones/{revista}', [EdicionController::class, 'show'])->name('ediciones.show');
     Route::get('/ediciones/{revista}/editar', [EdicionController::class, 'edit'])->name('ediciones.edit');
@@ -77,7 +81,6 @@ Route::middleware('privilegio:DICTAMINAR_ARTICULO')->group(function () {
     Route::delete('/ediciones/{revista}', [EdicionController::class, 'destroy'])->name('ediciones.destroy');
     Route::post('/ediciones/{revista}/portada', [EdicionController::class, 'portada'])->name('ediciones.portada');
     Route::post('/ediciones/{revista}/indice', [EdicionController::class, 'indice'])->name('ediciones.indice');
-    Route::post('/ediciones/{revista}/zip', [EdicionController::class, 'zip'])->name('ediciones.zip');
 
     Route::get('/ediciones/{revista}/articulos/nuevo', [ArticuloNumeroController::class, 'create'])->name('ediciones.articulos.create');
     Route::post('/ediciones/{revista}/articulos', [ArticuloNumeroController::class, 'store'])->name('ediciones.articulos.store');

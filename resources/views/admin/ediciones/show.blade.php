@@ -3,10 +3,9 @@
 @php
     $total = $articulos->count();
     $mostrados = $articulos->whereNotNull('arre_fecha_index')->count();
-    $conPdf = $articulos->whereNotNull('arre_url_pdf')->count();
+    $conPdf = $articulos->filter(fn ($a) => $a->rutaPdf() !== null)->count();
     $requeridos = min(\App\Models\ArticuloRevista::POSICIONES, $total);
     $porPosicion = $articulos->whereNotNull('arre_posicion_index')->keyBy('arre_posicion_index');
-    $zip = session('zip_resultado');
 @endphp
 
 @section('titulo', 'Número '.$revista->revi_num_edicion)
@@ -55,7 +54,7 @@
         </div>
     @endunless
 
-    {{-- Archivos del número y carga de los PDF maquetados ------------------- --}}
+    {{-- Archivos del número --------------------------------------------------- --}}
     <section class="emp-seccion" aria-labelledby="titulo-archivos">
         <h2 id="titulo-archivos" class="emp-seccion__titulo">Archivos del número</h2>
         <div class="emp-archivos emp-archivos--fila">
@@ -69,48 +68,19 @@
             <x-estado-archivo nombre="PDF de artículos" :estado="$total && $conPdf === $total ? 'listo' : 'falta'" :detalle="$conPdf.' de '.$total" />
         </div>
 
-        <form method="POST" action="{{ route('admin.ediciones.zip', $revista) }}" enctype="multipart/form-data" class="emp-zip" novalidate>
-            @csrf
-            <label for="campo-zip" class="emp-zip__zona" data-zona-archivo>
-                <span class="emp-archivo__icono" aria-hidden="true"><x-icono nombre="articulos" :tamano="18" /></span>
-                <span class="emp-zip__texto">
-                    <strong data-zona-nombre>Sube el .zip con los PDF maquetados</strong>
-                    <span>Cada PDF se vincula con su artículo por el número al inicio del nombre (12-titulo.pdf) o por su título.</span>
-                </span>
-            </label>
-            <input id="campo-zip" name="zip" type="file" accept=".zip,application/zip" class="visually-hidden" required>
-            <div class="emp-zip__acciones">
+        <div class="emp-aviso-diseno">
+            <span class="emp-archivo__icono" aria-hidden="true"><x-icono nombre="articulos" :tamano="18" /></span>
+            <p class="emp-aviso-diseno__texto">
+                <strong>El PDF de cada artículo llega desde la mesa de diseño.</strong>
+                Al agregar un artículo aprobado, su PDF diseñado se liga solo; si aún no lo tiene, aparece en cuanto la diseñadora lo suba.
+            </p>
+            <a href="{{ route('admin.ediciones.manuscritos') }}" class="btn btn-secondary btn-sm">
+                Manuscritos y diseños
                 @if ($pendientesDeMaquetar > 0)
-                    <a href="{{ route('admin.ediciones.manuscritos') }}" class="btn btn-quieto">
-                        <x-icono nombre="descargar" :tamano="14" /> Manuscritos aprobados ({{ $pendientesDeMaquetar }})
-                    </a>
+                    <span class="emp-num emp-boton-cuenta">{{ $pendientesDeMaquetar }}</span>
                 @endif
-                <button type="submit" class="btn btn-secondary" data-texto-enviando="Vinculando…">Vincular PDF</button>
-            </div>
-        </form>
-        @error('zip')
-            <div class="invalid-feedback d-block">{{ $message }}</div>
-        @enderror
-
-        @if ($zip)
-            <div class="emp-zip-resultado" role="status">
-                @foreach (['agregados' => 'Agregados al número', 'vinculados' => 'Vinculados', 'no_reconocidos' => 'Sin reconocer'] as $clave => $rotulo)
-                    @if (! empty($zip[$clave]))
-                        <div>
-                            <p class="emp-zip-resultado__rotulo">{{ $rotulo }} <span class="emp-num">({{ count($zip[$clave]) }})</span></p>
-                            <ul>
-                                @foreach ($zip[$clave] as $linea)
-                                    <li>{{ $linea }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                @endforeach
-                @if (! empty($zip['no_reconocidos']))
-                    <p class="emp-zip-resultado__nota">Renombra los que no se reconocieron con el número del artículo al inicio, o súbelos desde «Editar» en cada artículo.</p>
-                @endif
-            </div>
-        @endif
+            </a>
+        </div>
     </section>
 
     {{-- Destacados del inicio ---------------------------------------------- --}}
@@ -133,8 +103,8 @@
 
         @if ($articulos->isEmpty())
             <p class="emp-vacio">
-                Este número aún no tiene artículos. Sube el .zip con los PDF maquetados o
-                <a href="{{ route('admin.ediciones.articulos.create', $revista) }}">agrega uno a mano</a>.
+                Este número aún no tiene artículos.
+                <a href="{{ route('admin.ediciones.articulos.create', $revista) }}">Agrega el primero</a>: elige un artículo aprobado y su PDF diseñado se liga solo.
             </p>
         @else
             <div class="emp-esquema" data-esquema aria-hidden="true">
@@ -175,11 +145,16 @@
                                         {{ $entrada->arre_seccion ? $entrada->arre_seccion.' · ' : '' }}{{ $entrada->arre_autores }}
                                     </p>
                                     <p class="emp-numero-articulo__estados">
-                                        @if ($entrada->arre_url_pdf)
-                                            <span class="emp-insignia emp-insignia-aprobado">PDF maquetado</span>
-                                        @else
-                                            <span class="emp-insignia emp-insignia-revision">Sin PDF</span>
-                                        @endif
+                                        @switch ($entrada->origenPdf())
+                                            @case ('diseno')
+                                                <span class="emp-insignia emp-insignia-aprobado">PDF diseñado</span>
+                                                @break
+                                            @case ('numero')
+                                                <span class="emp-insignia emp-insignia-aprobado">PDF subido</span>
+                                                @break
+                                            @default
+                                                <span class="emp-insignia emp-insignia-revision">{{ $entrada->arti_id_autor ? 'Falta el PDF diseñado' : 'Sin PDF' }}</span>
+                                        @endswitch
                                         @if ($entrada->arre_posicion_index)
                                             <span class="emp-insignia emp-insignia-aprobado">En el inicio desde {{ $entrada->arre_fecha_index->format('d/m/Y') }}</span>
                                         @elseif ($entrada->arre_fecha_index)

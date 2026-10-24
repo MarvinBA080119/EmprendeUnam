@@ -403,6 +403,9 @@ create table ARTICULO (
    ARTI_FECHA_REGISTRO      DATE                 not null,
    ARTI_FECHA_MODIFICACION  DATE                 not null,
    ARTI_COMENTARIO_RECHAZO  VARCHAR(350)         null,
+   ARTI_URL_PDF_DISENO      VARCHAR(256)         null,
+   ARTI_FECHA_DISENO        TIMESTAMP            null,
+   ARTI_ID_DISENADOR        INT4                 null,
    constraint PK_ARTICULO primary key (ARTI_ID_AUTOR)
 );
 
@@ -418,6 +421,13 @@ ARTI_ID_AUTOR
 /*==============================================================*/
 create  index ARTICULOTEMA_FK on ARTICULO (
 TEMA_ID_TEMA
+);
+
+/*==============================================================*/
+/* Index: ARTICULODISENADOR_FK                              */
+/*==============================================================*/
+create  index ARTICULODISENADOR_FK on ARTICULO (
+ARTI_ID_DISENADOR
 );
 
 /*==============================================================*/
@@ -1712,6 +1722,11 @@ alter table ARTICULO
       references TEMA (TEMA_ID_TEMA)
       on delete restrict on update restrict;
 
+alter table ARTICULO
+   add constraint FK_ARTICULO_DISENADOR_USUARIO foreign key (ARTI_ID_DISENADOR)
+      references USUARIO (USUA_ID_USUARIO)
+      on delete restrict on update restrict;
+
 alter table AUTOR
    add constraint FK_AUTOR_COAUTOR_AUTOR foreign key (AUTO_ID_COAUTOR)
       references AUTOR (AUTO_ID_AUTOR)
@@ -2039,6 +2054,15 @@ alter table ARTICULO
 
 alter table ARTICULO
    add constraint CK_ARTI_RECHAZO check (ARTI_STATUS <> 'RECHAZADO' or ARTI_COMENTARIO_RECHAZO is not null);
+
+/* PDF diseñado: las tres columnas van juntas y solo en artículos aprobados */
+alter table ARTICULO
+   add constraint CK_ARTI_DISENO_COMPLETO check (
+      (ARTI_URL_PDF_DISENO is null and ARTI_FECHA_DISENO is null and ARTI_ID_DISENADOR is null)
+   or (ARTI_URL_PDF_DISENO is not null and ARTI_FECHA_DISENO is not null and ARTI_ID_DISENADOR is not null));
+
+alter table ARTICULO
+   add constraint CK_ARTI_DISENO_APROBADO check (ARTI_URL_PDF_DISENO is null or ARTI_STATUS = 'APROBADO');
 
 alter table MENSAJE
    add constraint CK_MENS_STATUS check (MENS_STATUS in ('PENDIENTE', 'CONTESTADO', 'RECHAZADO'));

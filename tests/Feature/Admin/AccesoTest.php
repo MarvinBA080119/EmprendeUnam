@@ -19,8 +19,9 @@ class AccesoTest extends TestCase
     {
         $autor = $this->crearAutor();
 
-        $this->actingAs($autor)->get('/admin')->assertForbidden();
-        $this->actingAs($autor)->get('/admin/autores')->assertForbidden();
+        // Un panel ajeno lleva al propio con un aviso (no a un 403 sin salida).
+        $this->actingAs($autor)->get('/admin')->assertRedirect('/autor')->assertSessionHas('aviso');
+        $this->actingAs($autor)->get('/admin/autores')->assertRedirect('/autor');
     }
 
     public function test_un_autor_entra_a_su_panel(): void
@@ -39,6 +40,6 @@ class AccesoTest extends TestCase
         $admin = $this->administrador();
 
         $this->actingAs($admin)->get('/admin')->assertOk();
-        $this->actingAs($autor)->get('/admin')->assertForbidden();
+        $this->actingAs($autor)->get('/admin')->assertRedirect('/autor');
     }
 }

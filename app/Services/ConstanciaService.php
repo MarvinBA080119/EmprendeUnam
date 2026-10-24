@@ -29,7 +29,7 @@ use Throwable;
  */
 class ConstanciaService
 {
-    public function __construct(private ArticuloService $articulos) {}
+    public function __construct(private ArticuloService $articulos, private DisenoService $diseno) {}
 
     /**
      * Aprueba un artículo en revisión, genera su constancia (PDF con QR) y
@@ -95,6 +95,9 @@ class ConstanciaService
                 route('autor.articulos.aprobado', $articulo),
             ));
         }
+
+        // La mesa de diseño recibe el artículo para diseñarlo.
+        $this->diseno->avisarAprobado($articulo);
 
         return $constancia;
     }

@@ -6,12 +6,12 @@
     <x-encabezado titulo="Portada del sitio"
                   descripcion="El número principal aparece en el inicio del sitio con sus 5 destacados; al cambiarlo, el anterior pasa al histórico.">
         <x-slot:acciones>
-            @if ($pendientesDeMaquetar > 0)
-                <a href="{{ route('admin.ediciones.manuscritos') }}" class="btn btn-secondary">
-                    <x-icono nombre="descargar" :tamano="14" /> Manuscritos aprobados
+            <a href="{{ route('admin.ediciones.manuscritos') }}" class="btn btn-secondary">
+                Manuscritos y diseños
+                @if ($pendientesDeMaquetar > 0)
                     <span class="emp-num emp-boton-cuenta">{{ $pendientesDeMaquetar }}</span>
-                </a>
-            @endif
+                @endif
+            </a>
             <a href="{{ route('admin.ediciones.create') }}" class="btn btn-primary"><x-icono nombre="mas" :tamano="14" /> Registrar número</a>
         </x-slot:acciones>
     </x-encabezado>

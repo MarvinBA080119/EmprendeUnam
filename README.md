@@ -30,6 +30,7 @@ php artisan key:generate
 scripts/crear_bd.sh           # crea el usuario 'emprende' y la base 'emprendeunam' y carga los SQL
 php artisan migrate           # solo tablas técnicas de Laravel (sesiones, caché, colas)
 php artisan emprende:clave-admin   # contraseña del administrador (se pide oculta)
+php artisan emprende:crear-diseno  # cuenta «Diseño»: correo y contraseña (se piden en la terminal)
 
 npm run build                 # o: npm run dev
 php artisan serve
@@ -165,11 +166,12 @@ cd /var/www/emprendeunam
 sudo bash scripts/crear_bd.sh                       # usuario 'emprende' en PostgreSQL y base 'emprendeunam'
 sudo -iu emprende php /var/www/emprendeunam/artisan migrate --force   # solo tablas técnicas de Laravel
 sudo -iu emprende php /var/www/emprendeunam/artisan emprende:clave-admin   # contraseña del administrador
+sudo -iu emprende php /var/www/emprendeunam/artisan emprende:crear-diseno  # cuenta «Diseño» (mesa de diseño)
 ```
 
 `crear_bd.sh` lee `DB_PASSWORD` de `.env`, carga
 `database/EMP_FINAL_corregido.sql` y `database/datos_iniciales.sql` y verifica
-los conteos (52 tablas, 13 temas, 4 roles, 12 privilegios y el usuario
+los conteos (52 tablas, 13 temas, 5 roles, 14 privilegios y el usuario
 `EmprendeUnam`). Si la base ya existe, se niega a continuar; `--forzar` la
 borra y la recrea (**se pierden los datos**).
 
@@ -181,6 +183,12 @@ caracteres), guarda solo el hash, cierra las sesiones abiertas del
 administrador y lo anota en `storage/logs/admin-*.log`. Sirve también para
 cambiarla después. Su correo provisional es `admin@emprendeunam.invalid`
 (ver `PENDIENTES.md`).
+
+La **cuenta de diseño** (usuario **`Diseño`**, sin nombre propio) se crea con
+`php artisan emprende:crear-diseno`: pide el correo y la contraseña sin
+mostrarla y nunca la escribe en un archivo. Si la cuenta ya existe, el mismo
+comando cambia su correo o su contraseña (Enter conserva el valor actual) y
+cierra sus sesiones abiertas.
 
 ### 6. SELinux y permisos
 
@@ -225,8 +233,9 @@ pm.start_servers = 4
 pm.min_spare_servers = 2
 pm.max_spare_servers = 6
 
-php_admin_value[upload_max_filesize] = 8M
-php_admin_value[post_max_size] = 10M
+; El PDF completo del número admite 50 MB y el PDF diseñado de un artículo, 30 MB.
+php_admin_value[upload_max_filesize] = 55M
+php_admin_value[post_max_size] = 60M
 php_admin_value[memory_limit] = 256M
 php_admin_value[date.timezone] = America/Mexico_City
 php_admin_flag[expose_php] = off
@@ -268,7 +277,7 @@ server {
     root /var/www/emprendeunam/public;
     index index.php;
     charset utf-8;
-    client_max_body_size 10m;
+    client_max_body_size 60m;   # igual que post_max_size de PHP
     server_tokens off;
 
     add_header Strict-Transport-Security "max-age=31536000" always;
@@ -444,6 +453,7 @@ psql -h 127.0.0.1 -U emprende -d emprendeunam -f database/cambios/2026-10-15_art
 |---|---|
 | `2026-10-15_arti_resumen.sql` | Columna `arti_resumen varchar(500)` en `articulo` (resumen de hasta 50 palabras). |
 | `2026-10-22_documentos_y_edicion.sql` | `constancia.cons_tipo` (constancia, carta de agradecimiento, carta de cesión) y `cons_folio` nulo; `revista.revi_url_flipbook` y `revi_en_portada`; tablas `articulo_revista` (artículos del número y los 5 del índice) y `articulo_curso`. **Aplícalo con el usuario de la aplicación**, no con `postgres`. |
+| `2026-10-24_diseno.sql` | `articulo.arti_url_pdf_diseno`, `arti_fecha_diseno` y `arti_id_disenador` (PDF diseñado de cada artículo, solo en aprobados); rol `Diseño` con los privilegios `DESCARGAR_ORIGINALES` y `SUBIR_DISENO` (también para el Administrador). Después, `php artisan emprende:crear-diseno`. |
 
 Una base creada con `scripts/crear_bd.sh` después de la fecha de un script ya
 incluye ese cambio.

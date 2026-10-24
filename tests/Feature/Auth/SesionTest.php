@@ -189,4 +189,46 @@ class SesionTest extends TestCase
             }
         });
     }
+
+    public function test_el_administrador_no_termina_en_el_panel_de_autor_desde_el_sitio(): void
+    {
+        // Recorrido reportado: el administrador vuelve al sitio, abre «Envío de
+        // artículos» y de ahí intentaba entrar al panel de autor.
+        $this->actingAs($this->administrador());
+
+        $this->get('/envio-de-articulos')
+            ->assertOk()
+            ->assertSee('Sesión iniciada como')
+            ->assertSee('Cerrar sesión y entrar como autor')
+            ->assertDontSee(route('autor.articulos.create'));
+
+        $this->get('/autor')->assertRedirect('/admin')->assertSessionHas('aviso');
+        $this->get('/autor/articulos/nuevo')->assertRedirect('/admin');
+    }
+
+    public function test_el_autor_en_el_sitio_ve_su_panel_y_el_envio(): void
+    {
+        $this->actingAs($this->crearAutor());
+
+        $this->get('/envio-de-articulos')
+            ->assertOk()
+            ->assertSee(route('autor.articulos.create'))
+            ->assertDontSee('Cerrar sesión y entrar como autor');
+
+        $this->get('/admin')->assertRedirect('/autor');
+    }
+
+    public function test_el_login_con_sesion_abierta_ofrece_continuar_o_cerrar(): void
+    {
+        $this->actingAs($this->administrador())
+            ->get('/iniciar-sesion')
+            ->assertOk()
+            ->assertSee('Continuar como EmprendeUnam')
+            ->assertSee('(administración)');
+    }
+
+    public function test_sin_sesion_el_sitio_no_muestra_la_franja(): void
+    {
+        $this->get('/envio-de-articulos')->assertOk()->assertDontSee('Sesión iniciada como');
+    }
 }
