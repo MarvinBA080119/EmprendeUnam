@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\NumeroRequest;
 use App\Models\Revista;
 use App\Services\EdicionService;
+use App\Services\FlipbookService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -28,7 +29,10 @@ class EdicionController extends Controller
 
     public function create(): View
     {
-        return view('admin.ediciones.formulario', ['revista' => new Revista(['revi_anio' => (string) now()->year])]);
+        return view('admin.ediciones.formulario', [
+            'revista' => new Revista(['revi_anio' => (string) now()->year]),
+            'flipbooks' => app(FlipbookService::class)->listar(),
+        ]);
     }
 
     public function store(NumeroRequest $request): RedirectResponse
@@ -59,7 +63,10 @@ class EdicionController extends Controller
 
     public function edit(Revista $revista): View
     {
-        return view('admin.ediciones.formulario', ['revista' => $revista]);
+        return view('admin.ediciones.formulario', [
+            'revista' => $revista,
+            'flipbooks' => app(FlipbookService::class)->listar(),
+        ]);
     }
 
     public function update(NumeroRequest $request, Revista $revista): RedirectResponse

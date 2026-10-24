@@ -4001,9 +4001,22 @@ a.emp-fila:hover .emp-fila__lado .emp-icono {
 .emp-galeria__titulo,
 .emp-constancia__titulo,
 .emp-etiqueta,
-.emp-chip,
-.emp-tabla td {
+.emp-chip {
     overflow-wrap: anywhere;
+}
+
+/* En tablas, «anywhere» encogería las columnas hasta partir los botones
+   («Edita r»): las celdas parten solo palabras que no caben y los botones
+   y estados nunca se parten. */
+.emp-tabla td {
+    overflow-wrap: break-word;
+}
+
+.emp-tabla .btn,
+.emp-tabla .emp-insignia,
+.emp-tabla td:has(> .btn),
+.emp-tabla td:has(> form) {
+    white-space: nowrap;
 }
 
 /* El texto del encabezado ocupa el renglón; las acciones bajan si no caben */
@@ -4311,18 +4324,25 @@ a.emp-fila:hover .emp-fila__lado .emp-icono {
     transition: color var(--emp-rapido) ease, background-color var(--emp-rapido) ease;
 }
 
-.emp-numero-articulo:hover .emp-asa {
-    color: var(--emp-n-600);
+.emp-numero-articulo[draggable="true"] {
+    cursor: grab;
 }
 
-.emp-asa:hover {
-    color: var(--emp-cafe) !important;
-    background-color: var(--emp-cafe-50);
-}
-
-.emp-asa:active {
+.emp-numero-articulo[draggable="true"]:active {
     cursor: grabbing;
 }
+
+/* Los controles de adentro conservan su cursor */
+.emp-numero-articulo .btn,
+.emp-numero-articulo label,
+.emp-numero-articulo a {
+    cursor: pointer;
+}
+
+.emp-numero-articulo:hover .emp-asa {
+    color: var(--emp-cafe);
+}
+
 
 .emp-esquema__casilla[draggable="true"] {
     cursor: grab;
@@ -4451,4 +4471,480 @@ a.emp-fila:hover .emp-fila__lado .emp-icono {
 .emp-hoja label[for]:has(+ input[type="file"]),
 .emp-hoja summary {
     cursor: pointer;
+}
+
+/* ==========================================================================
+   Generador de flipbooks
+   Dos columnas: datos (número y PDF) y la escena (pasos, avance, hojas que
+   van saliendo y la vista previa). Una sola sombra: la de la vista previa.
+   ========================================================================== */
+.emp-generador {
+    display: grid;
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background-color: var(--emp-n-50);
+}
+
+.emp-generador__datos {
+    display: flex;
+    flex-direction: column;
+}
+
+.emp-generador__datos .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: auto;
+}
+
+/* Número de edición grande, con «No.» delante */
+.emp-numero-edicion {
+    position: relative;
+}
+
+.emp-numero-edicion__prefijo {
+    position: absolute;
+    top: 50%;
+    left: 0.875rem;
+    transform: translateY(-50%);
+    color: var(--emp-n-600);
+    font-size: 0.875rem;
+    pointer-events: none;
+}
+
+.emp-numero-edicion .form-control {
+    min-height: 3.25rem;
+    padding-left: 2.75rem;
+    font-family: var(--emp-serif);
+    font-size: 1.625rem;
+    letter-spacing: -0.01em;
+}
+
+/* Zona del PDF: hoja punteada que se tiñe al arrastrar y se asienta con archivo */
+.emp-carga {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 1rem;
+    border: 1px dashed var(--emp-n-300);
+    border-radius: 0.75rem;
+    background-color: var(--emp-blanco);
+    cursor: pointer;
+    transition: border-color var(--emp-rapido) ease, background-color var(--emp-rapido) ease;
+}
+
+.emp-carga:hover,
+.emp-carga.is-arrastrando {
+    border-color: var(--emp-cafe);
+    background-color: var(--emp-cafe-50);
+}
+
+.emp-carga.tiene-archivo {
+    border-style: solid;
+    border-color: var(--emp-n-200);
+}
+
+.emp-carga.is-invalid {
+    border-color: var(--emp-cafe);
+}
+
+#flip-pdf:focus-visible + .emp-carga {
+    box-shadow: var(--emp-anillo);
+}
+
+.emp-carga__hoja {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2.5rem;
+    height: 3.125rem;
+    border-radius: 0.25rem;
+    background-color: var(--emp-n-25);
+    box-shadow: inset 0 0 0 1px var(--emp-n-200);
+    color: var(--emp-cafe);
+}
+
+.emp-carga.tiene-archivo .emp-carga__hoja {
+    background-color: var(--emp-azul);
+    box-shadow: none;
+    color: var(--emp-blanco);
+}
+
+.emp-carga__texto {
+    display: grid;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.emp-carga__texto strong {
+    overflow: hidden;
+    color: var(--emp-azul);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.emp-carga__texto span {
+    color: var(--emp-n-600);
+    font-size: 0.8125rem;
+}
+
+/* Escena */
+.emp-generador__escena {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-width: 0;
+    padding: 1.25rem 1.5rem;
+    border-radius: 0.75rem;
+    background-color: var(--emp-blanco);
+}
+
+.emp-pasos-flip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.emp-pasos-flip li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.125rem 0.625rem;
+    align-content: start;
+}
+
+.emp-pasos-flip__marca {
+    display: grid;
+    grid-row: 1 / span 2;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px var(--emp-n-300);
+    color: transparent;
+    transition: background-color 240ms var(--emp-ease-out), color 240ms var(--emp-ease-out), box-shadow 240ms ease;
+}
+
+.emp-pasos-flip__nombre {
+    color: var(--emp-n-700);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.emp-pasos-flip__detalle {
+    color: var(--emp-n-600);
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.emp-pasos-flip li.is-actual .emp-pasos-flip__marca {
+    box-shadow: inset 0 0 0 2px var(--emp-cafe);
+}
+
+.emp-pasos-flip li.is-actual .emp-pasos-flip__nombre {
+    color: var(--emp-cafe);
+}
+
+.emp-pasos-flip li.is-hecho .emp-pasos-flip__marca {
+    background-color: var(--emp-azul);
+    box-shadow: none;
+    color: var(--emp-blanco);
+}
+
+.emp-pasos-flip li.is-hecho .emp-pasos-flip__nombre {
+    color: var(--emp-azul);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .emp-pasos-flip li.is-actual .emp-pasos-flip__marca {
+        animation: emp-paso-actual 1400ms ease-in-out infinite;
+    }
+}
+
+@keyframes emp-paso-actual {
+    50% {
+        box-shadow: inset 0 0 0 2px var(--emp-cafe), 0 0 0 4px var(--emp-cafe-50);
+    }
+}
+
+/* Barra de avance */
+.emp-progreso__fila {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.8125rem;
+}
+
+.emp-progreso__texto {
+    color: var(--emp-azul);
+    font-weight: 500;
+}
+
+.emp-progreso__cifra {
+    color: var(--emp-n-700);
+}
+
+.emp-progreso__barra {
+    display: block;
+    height: 0.375rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background-color: var(--emp-n-100);
+}
+
+.emp-progreso__barra > span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background-color: var(--emp-azul);
+    transform: scaleX(var(--avance, 0));
+    transform-origin: left;
+    transition: transform 400ms var(--emp-ease-out);
+}
+
+.emp-progreso.is-error .emp-progreso__texto {
+    color: var(--emp-cafe);
+}
+
+.emp-progreso.is-error .emp-progreso__barra > span {
+    background-color: var(--emp-cafe-200);
+}
+
+/* Tira de hojas convertidas: aparecen una a una */
+.emp-tira-hojas {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0 0 0.25rem;
+    overflow-x: auto;
+    list-style: none;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+}
+
+.emp-tira-hojas:empty {
+    display: none;
+}
+
+.emp-tira-hojas__hoja {
+    position: relative;
+    flex: none;
+    width: 3.5rem;
+    aspect-ratio: 17 / 22;
+    overflow: hidden;
+    border-radius: 0.25rem;
+    background-color: var(--emp-n-50);
+    box-shadow: inset 0 0 0 1px var(--emp-n-150);
+}
+
+.emp-tira-hojas__hoja img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.emp-tira-hojas__hoja span {
+    position: absolute;
+    right: 0.1875rem;
+    bottom: 0.1875rem;
+    padding: 0 0.25rem;
+    border-radius: 0.1875rem;
+    background-color: rgba(0, 19, 40, 0.72);
+    color: var(--emp-blanco);
+    font-size: 0.625rem;
+    font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .emp-tira-hojas__hoja {
+        animation: emp-hoja-sale 360ms var(--emp-ease-out) both;
+    }
+}
+
+@keyframes emp-hoja-sale {
+    from {
+        opacity: 0;
+        transform: translateY(6px) scale(0.96);
+    }
+}
+
+/* Vista previa del flipbook terminado */
+.emp-vista-flip__marco {
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    border-radius: 0.75rem;
+    background-color: #ededed;
+    box-shadow: 0 0 0 1px rgba(0, 19, 40, 0.06), 0 18px 40px -24px rgba(0, 19, 40, 0.4);
+}
+
+.emp-vista-flip__marco iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.emp-vista-flip__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 0.875rem;
+}
+
+.emp-vista-flip__nota {
+    flex: 1 1 18rem;
+    margin: 0;
+    color: var(--emp-n-700);
+    font-size: 0.8125rem;
+}
+
+.emp-vista-flip__acciones .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+/* Galería de flipbooks generados */
+.emp-flipbooks {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+    gap: 1.75rem 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.emp-flipbook {
+    display: grid;
+    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: 0.75rem 1rem;
+}
+
+.emp-flipbook__portada {
+    position: relative;
+    display: block;
+    grid-row: 1 / span 2;
+    aspect-ratio: 17 / 22;
+    overflow: hidden;
+    border-radius: 0.375rem;
+    background-color: var(--emp-n-50);
+    box-shadow: 0 0 0 1px rgba(0, 19, 40, 0.08), 0 8px 20px -12px rgba(0, 19, 40, 0.35);
+}
+
+.emp-flipbook__portada img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 300ms var(--emp-ease-out);
+}
+
+.emp-flipbook__ver {
+    position: absolute;
+    inset: auto 0 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.375rem;
+    background-color: rgba(0, 19, 40, 0.78);
+    color: var(--emp-blanco);
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity var(--emp-rapido) ease, transform var(--emp-rapido) var(--emp-ease-out);
+}
+
+@media (hover: hover) {
+    .emp-flipbook__portada:hover img {
+        transform: scale(1.03);
+    }
+
+    .emp-flipbook__portada:hover .emp-flipbook__ver {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (hover: none) {
+    .emp-flipbook__ver {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.emp-flipbook__portada:focus-visible {
+    outline: none;
+    box-shadow: var(--emp-anillo);
+}
+
+.emp-flipbook__datos {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.emp-flipbook__numero {
+    margin: 0;
+    font-family: var(--emp-serif);
+    font-size: 1.375rem;
+    line-height: 1.1;
+}
+
+.emp-flipbook__meta {
+    margin: 0 0 0.25rem;
+    color: var(--emp-n-600);
+    font-size: 0.8125rem;
+    white-space: nowrap;
+}
+
+.emp-flipbook__acciones {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+}
+
+.emp-flipbook__acciones .btn {
+    white-space: nowrap;
+}
+
+/* El aviso de error solo ocupa lugar cuando hay un error que mostrar */
+.emp-generador [data-error-flipbook]:not([hidden]) {
+    display: block;
+}
+
+.emp-flipbook__acciones form {
+    margin: 0;
+}
+
+.emp-flipbook__acciones .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+@media (max-width: 991.98px) {
+    .emp-generador {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 1rem;
+    }
+
+    .emp-pasos-flip {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.75rem;
+    }
 }

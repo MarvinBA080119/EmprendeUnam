@@ -38,8 +38,31 @@
                              :valor="$revista->revi_fecha_publicacion?->format('Y-m-d')" />
                 </div>
                 <div class="col-12 col-md-6">
-                    <x-campo nombre="flipbook" etiqueta="Enlace al eBook" tipo="url" opcional maxlength="256"
-                             :valor="$revista->revi_url_flipbook" placeholder="https://" />
+                    @php
+                        $ebook = old('flipbook', $revista->revi_url_flipbook);
+                        $ebookGenerado = $flipbooks->firstWhere('ruta', $ebook);
+                    @endphp
+                    <div class="mb-3" data-ebook>
+                        <label for="campo-ebook-origen" class="form-label">Enlace al eBook <span class="emp-opcional">(opcional)</span></label>
+                        <select id="campo-ebook-origen" class="form-select mb-2" data-ebook-origen hidden>
+                            <option value="" @selected(! $ebook)>Sin eBook</option>
+                            @foreach ($flipbooks as $flipbook)
+                                <option value="{{ $flipbook['ruta'] }}" @selected($ebookGenerado && $ebook === $flipbook['ruta'])>
+                                    Flipbook generado · No. {{ $flipbook['numero'] }} ({{ $flipbook['paginas'] }} páginas)
+                                </option>
+                            @endforeach
+                            <option value="otro" @selected($ebook && ! $ebookGenerado)>Otro enlace (https://…)</option>
+                        </select>
+                        <input id="campo-flipbook" name="flipbook" type="text" maxlength="256" value="{{ $ebook }}"
+                               placeholder="https://" data-ebook-enlace aria-describedby="campo-flipbook-ayuda"
+                               @class(['form-control', 'is-invalid' => $errors->has('flipbook')])>
+                        <div id="campo-flipbook-ayuda" class="form-text">
+                            Elige un flipbook generado en <a href="{{ route('admin.flipbooks.index') }}">Flipbooks</a> o pega otro enlace que empiece con https://.
+                        </div>
+                        @error('flipbook')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
             </div>
 

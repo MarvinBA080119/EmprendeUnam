@@ -536,13 +536,19 @@ Superficie de operación. El número principal se presenta con su portada en min
 - **Cursos:** fichas marcables (con «+» gris que pasa a palomita café al marcarla); las sugeridas llevan «Sugerido». Al final, «Agregar otro curso» como ficha punteada en café. El diálogo (32rem) busca entre los vigentes, lista nombre, institución y «Agregar / Agregado», y debajo de un separador «¿No está en la lista?» registra uno nuevo.
 
 ### Destacados: arrastrar y soltar
-Asa de seis puntos a la izquierda de cada artículo (gris `emp-n-400`, más oscura al pasar sobre la fila, café sobre café papel al pasar sobre ella; cursor de mano). Al arrastrar, las casillas del esquema se vuelven punteadas y la que queda bajo el puntero toma borde café y fondo café papel; lo arrastrado baja a 45% de opacidad. La página se desplaza sola cerca de los bordes. En pantallas táctiles el asa no aparece.
+Toda la fila del artículo se arrastra (cursor de mano abierta); el asa de seis puntos a la izquierda solo lo indica (gris `emp-n-400`, más oscura al pasar sobre la fila, café sobre café papel al pasar sobre ella; cursor de mano). Al arrastrar, las casillas del esquema se vuelven punteadas y la que queda bajo el puntero toma borde café y fondo café papel; lo arrastrado baja a 45% de opacidad. La página se desplaza sola cerca de los bordes. En pantallas táctiles el asa no aparece.
 
 ### Indicadores de interacción
 Lo que se pulsa se distingue del texto sin ruido: el botón quieto sin ícono lleva subrayado tenue `emp-n-300` que se vuelve café bruma; con ícono, el ícono sube de 70% a 100% de opacidad al pasar. Los enlaces dentro de párrafos y estados de archivo van en café con subrayado café bruma. Las opciones no elegidas de segmentos y posiciones toman un velo blanco al pasar. «Volver» adelanta su flecha 2px. Acciones discretas con ícono mínimo: «Quitar» (×), «Eliminar número» (bote).
 
 ### Textos largos
 Títulos de página y párrafos se parten donde haga falta (`overflow-wrap: anywhere`) y crecen; en listas, títulos y metadatos se recortan a 2 renglones (3 en la mesa de diseño y el número principal) con puntos suspensivos y el texto completo en `title`.
+
+### Generador de flipbooks
+Superficie de operación en dos columnas sobre hueso (`emp-n-50`, radio 16px): a la izquierda los datos (número en Newsreader 26px con el prefijo «No.», zona punteada para el PDF que se vuelve sólida con el nombre y el peso al elegirlo, un solo primario «Generar flipbook»); a la derecha, en blanco, la escena: tres pasos (Subir · Convertir · Armar) con marca circular que pasa a café con palomita, una barra de 4px que crece con `scaleX` y su cifra tabular, y una tira de miniaturas que aparecen conforme se convierten (entrada 240ms, opacidad y 6px). Al terminar, la vista previa del visor en un marco 16:10 y «Abrir en otra pestaña». Debajo, «Generados»: portada 17:22 con «Ver» al pasar, número en Newsreader, páginas y fecha tabulares, insignia «eBook del No. X» o «Sin usar» y acciones quietas apiladas.
+
+### Tarjetas del sitio público
+Cada artículo del inicio, del buscador y del consultorio se pulsa completo: el enlace del título se extiende sobre la tarjeta (`::after`), el título se vuelve rojo al pasar y el foco se dibuja alrededor de toda la tarjeta. En el consultorio, un clic en la tarjeta abre o cierra la respuesta. Títulos a 3 renglones (4 en el principal) y descripciones a 4, con puntos suspensivos, aunque el texto no tenga espacios.
 
 ### Mesa de diseño
 Superficie de operación para la cuenta Diseño, con el mismo saludo de los paneles (fecha, «Mesa de diseño» en Display y una frase con lo pendiente) y un solo primario: descargar los textos pendientes en .zip.

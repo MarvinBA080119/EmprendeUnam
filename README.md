@@ -56,6 +56,7 @@ sistema propio, **`emprende`**; Nginx solo lee `public/`. Los comandos con
 sudo dnf -y update
 sudo dnf -y install epel-release
 sudo dnf -y install git unzip nginx policycoreutils-python-utils
+sudo dnf -y install poppler-utils   # pdftoppm y pdfinfo: generador de flipbooks
 ```
 
 **PHP 8.3 y Node.js 22**
@@ -540,6 +541,28 @@ El sitio público conserva el diseño del sitio original de la revista:
 
 Si se edita algún archivo de `config/sitio/` en producción, hay que ejecutar
 `php artisan optimize` para que se vea el cambio.
+
+## Flipbooks
+
+En **Administración → Flipbooks** se escribe el número de edición y se sube el
+PDF completo; el servidor convierte cada página en `1.jpg`, `2.jpg`… y arma el
+visor (StPageFlip, plantilla en `resources/flipbook/plantilla/`).
+
+- Requiere `poppler-utils` (`pdftoppm`, `pdfinfo`) y la extensión GD de PHP:
+  `sudo dnf -y install poppler-utils php-gd`.
+- La conversión corre en la **cola** (`queue:work`, servicio de systemd), por
+  lotes de 25 s: tras actualizar, reinicia la cola para que tome el código.
+- Se guarda en `storage/app/private/flipbooks/{numero}/` (`img/`, `img/hd/`,
+  `img/thumbs/`, `index.html`) y se sirve en `/flipbook/{numero}`: es público
+  solo si un número visible lo usa como eBook; el administrador siempre lo ve.
+- Si el número existe en el gestor y no tiene eBook, queda ligado solo; si no,
+  se elige en el formulario del número («Enlace al eBook» → «Flipbook generado»).
+- «Actualizar índice» rehace el índice del visor con los artículos y páginas del
+  gestor sin volver a convertir.
+- Variables opcionales en `.env`: `EMPRENDE_PDFTOPPM`, `EMPRENDE_PDFINFO` (rutas
+  de los programas) y `EMPRENDE_FLIPBOOK_MAX_PAGINAS` (300 por omisión).
+- Con SELinux, `storage/` ya tiene el contexto de escritura (sección 6); tras
+  `git pull` ejecuta `sudo restorecon -R` sobre la carpeta de la aplicación.
 
 ## Pruebas
 

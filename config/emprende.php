@@ -14,6 +14,13 @@ return [
     // upload_max_filesize y post_max_size de PHP y client_max_body_size del servidor web.
     'pdf_max_revista_kb' => (int) env('EMPRENDE_PDF_MAX_REVISTA_KB', 51200),
 
+    // Generador de flipbooks: binarios de poppler-utils y máximo de páginas.
+    'flipbook' => [
+        'pdftoppm' => env('EMPRENDE_PDFTOPPM', 'pdftoppm'),
+        'pdfinfo' => env('EMPRENDE_PDFINFO', 'pdfinfo'),
+        'max_paginas' => (int) env('EMPRENDE_FLIPBOOK_MAX_PAGINAS', 300),
+    ],
+
     // PDF diseñado (maquetado) de cada artículo, que sube la cuenta de diseño.
     'pdf_diseno_max_kb' => (int) env('EMPRENDE_PDF_DISENO_MAX_KB', 30720),
 

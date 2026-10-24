@@ -1,0 +1,140 @@
+================================================================================
+NOTICES - Revista Emprendedores (FCA UNAM)
+================================================================================
+Atribuciones de software de terceros utilizado en este producto.
+Documento requerido para cumplimiento legal en distribución comercial.
+
+Última actualización: 2026-05-27
+================================================================================
+
+
+--------------------------------------------------------------------------------
+1. StPageFlip (page-flip)
+--------------------------------------------------------------------------------
+Versión:    2.0.7
+Autor:      Oleg Litovski (Nodlik)
+URL:        https://github.com/Nodlik/StPageFlip
+Licencia:   MIT License
+
+Copyright (c) 2020 Oleg Litovski
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+--------------------------------------------------------------------------------
+2. jQuery
+--------------------------------------------------------------------------------
+Versión:    1.12.4
+Autores:    JS Foundation and other contributors
+URL:        https://jquery.com/
+Licencia:   MIT License
+
+Copyright JS Foundation and other contributors, https://js.foundation/
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+
+--------------------------------------------------------------------------------
+3. Bootstrap
+--------------------------------------------------------------------------------
+Versión:    3.4.1
+Autores:    Twitter, Inc. y contribuidores de Bootstrap
+URL:        https://getbootstrap.com/
+Licencia:   MIT License
+
+Copyright (c) 2011-2019 Twitter, Inc.
+Copyright (c) 2011-2019 The Bootstrap Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+
+--------------------------------------------------------------------------------
+4. Google Fonts: Playfair Display, Cormorant Garamond, Montserrat
+--------------------------------------------------------------------------------
+URL:        https://fonts.google.com/
+Licencia:   SIL Open Font License, Version 1.1 (OFL-1.1)
+
+Permite uso, estudio, modificación y redistribución del software (incluyendo
+las fuentes), tanto en aplicaciones libres como comerciales, sin pago de
+regalías. Texto completo: https://scripts.sil.org/OFL
+
+
+================================================================================
+RESUMEN PARA DISTRIBUCIÓN COMERCIAL
+================================================================================
+
+✅ TODAS las dependencias del software (StPageFlip, jQuery, Bootstrap, Google
+   Fonts) están bajo licencias permisivas que autorizan:
+   - Uso comercial
+   - Distribución (incluyendo distribución bajo suscripción de pago)
+   - Modificación
+   - Uso privado
+
+✅ NO se requiere pago de regalías ni licencias adicionales.
+
+✅ La única obligación es preservar este archivo NOTICES.txt junto con la
+   distribución del producto.
+
+
+================================================================================
+CONTENIDO EDITORIAL
+================================================================================
+
+El contenido editorial de la Revista Emprendedores (textos, imágenes, diseño,
+artículos, etc.) es propiedad intelectual de la Facultad de Contaduría y
+Administración (FCA) de la Universidad Nacional Autónoma de México (UNAM).
+Todos los derechos reservados sobre el contenido.
+
+Las marcas "UNAM", "FCA", "Emprendedores" y los escudos institucionales son
+propiedad de la Universidad Nacional Autónoma de México y se usan bajo
+autorización institucional.
+
+================================================================================

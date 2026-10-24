@@ -97,7 +97,7 @@
         </div>
         <p class="emp-seccion__texto">
             Elige {{ $requeridos === 5 ? '1 artículo principal y 4 secundarios' : 'la posición de cada artículo' }}: arrastra un
-            artículo a una casilla del esquema (o entre casillas para intercambiarlos) o usa los botones de posición. Para rotarlos,
+            artículo (desde cualquier parte de su recuadro) a una casilla del esquema (o entre casillas para intercambiarlos) o usa los botones de posición. Para rotarlos,
             cambia algunos por los que aún no se han mostrado.
             @if ($total > 0)
                 Se han mostrado <strong class="emp-num">{{ $mostrados }} de {{ $total }}</strong>.
@@ -139,10 +139,10 @@
                             $actual = (int) old("posiciones.$id", $entrada->arre_posicion_index);
                             $susCursos = $cursos[$id];
                         @endphp
-                        <li class="emp-numero-articulo" data-articulo="{{ $id }}" data-titulo="{{ $entrada->arre_titulo }}"
+                        <li class="emp-numero-articulo" draggable="true" data-articulo="{{ $id }}" data-titulo="{{ $entrada->arre_titulo }}"
                             data-cursos="{{ $susCursos->count() }}">
                             <div class="emp-numero-articulo__principal">
-                                <span class="emp-asa" data-asa draggable="true" title="Arrastrar a una casilla del esquema" aria-hidden="true">
+                                <span class="emp-asa" title="Arrastra el artículo a una casilla del esquema" aria-hidden="true">
                                     <x-icono nombre="asa" :tamano="14" />
                                 </span>
                                 <span class="emp-numero-articulo__miniatura" aria-hidden="true">
