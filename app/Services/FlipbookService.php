@@ -198,11 +198,14 @@ class FlipbookService
         // reducen de ella (más rápido que rasterizar tres veces).
         $this->rasterizar("{$base}/fuente.pdf", $pagina, self::ANCHO_HD, "{$base}/img/hd/{$pagina}");
 
-        if (extension_loaded('gd')) {
-            $this->reducir("{$base}/img/hd/{$pagina}.jpg", self::ANCHO, "{$base}/img/{$pagina}.jpg", 82);
-            $this->reducir("{$base}/img/hd/{$pagina}.jpg", self::ANCHO_MINIATURA, "{$base}/img/thumbs/{$pagina}.jpg", 72);
-        } else {
+        // Si GD falta o no puede con la imagen (memoria, formato), se rasteriza
+        // de nuevo con pdftoppm: más lento, pero no depende de GD.
+        $normal = "{$base}/img/{$pagina}.jpg";
+        $miniatura = "{$base}/img/thumbs/{$pagina}.jpg";
+        if (! $this->reducir("{$base}/img/hd/{$pagina}.jpg", self::ANCHO, $normal, 82)) {
             $this->rasterizar("{$base}/fuente.pdf", $pagina, self::ANCHO, "{$base}/img/{$pagina}");
+        }
+        if (! $this->reducir("{$base}/img/hd/{$pagina}.jpg", self::ANCHO_MINIATURA, $miniatura, 72)) {
             $this->rasterizar("{$base}/fuente.pdf", $pagina, self::ANCHO_MINIATURA, "{$base}/img/thumbs/{$pagina}");
         }
     }
@@ -229,14 +232,26 @@ class FlipbookService
         }
     }
 
-    private function reducir(string $origen, int $ancho, string $destino, int $calidad): void
+    private function reducir(string $origen, int $ancho, string $destino, int $calidad): bool
     {
-        $imagen = imagecreatefromjpeg($origen);
-        $reducida = imagescale($imagen, $ancho, -1, IMG_BICUBIC);
-        imageinterlace($reducida, true);
-        imagejpeg($reducida, $destino, $calidad);
+        if (! extension_loaded('gd')) {
+            return false;
+        }
+
+        $imagen = @imagecreatefromjpeg($origen);
+        if ($imagen === false) {
+            return false;
+        }
+        $reducida = @imagescale($imagen, $ancho, -1, IMG_BICUBIC);
         imagedestroy($imagen);
+        if ($reducida === false) {
+            return false;
+        }
+        imageinterlace($reducida, true);
+        $listo = imagejpeg($reducida, $destino, $calidad);
         imagedestroy($reducida);
+
+        return $listo && is_file($destino);
     }
 
     /* ------------------------------------------------------------------ */
