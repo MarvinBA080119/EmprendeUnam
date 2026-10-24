@@ -16,9 +16,10 @@
                font-family: Geist, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
                font-size: 15px; line-height: 1.6; background: #ffffff; color: #001328;
                -webkit-font-smoothing: antialiased; }
-        header { display: flex; align-items: center; gap: 0.875rem; height: 4rem; padding: 0 1.5rem; background: #001328; }
-        header img { display: block; width: auto; height: 2.5rem; }
-        header img + img { height: 2.375rem; }
+        header { display: flex; align-items: center; gap: 1.25rem; height: 6.5rem; padding: 0 1.5rem; background: #001328; }
+        header img { display: block; width: auto; height: 5rem; }
+        header img + img { height: 4.75rem; }
+        @media (max-width: 767.98px) { header { height: 5rem; gap: 1rem; } header img { height: 3.75rem; } header img + img { height: 3.5rem; } }
         main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 4rem 1.5rem; }
         .caja { max-width: 32rem; text-align: center; }
         .codigo { margin: 0 0 1rem; font-size: 13px; color: #56626e; font-variant-numeric: tabular-nums; }

@@ -42,7 +42,8 @@ class SeguridadTest extends TestCase
         $this->actingAs($this->crearAutor());
 
         foreach (['/admin', '/admin/articulos', '/admin/autores', '/admin/consultorio', '/admin/cursos', '/admin/newsletter', '/admin/autores/datos'] as $ruta) {
-            $this->get($ruta)->assertForbidden();
+            $this->get($ruta)->assertRedirect('/autor');
+            $this->getJson($ruta)->assertForbidden();
         }
         $this->post('/admin/newsletter/avisar', ['titulo' => 'x', 'enlace' => 'https://example.com'])->assertForbidden();
     }

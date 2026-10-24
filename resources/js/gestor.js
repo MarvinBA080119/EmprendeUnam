@@ -2,7 +2,6 @@
  * Gestor de portada (administrador):
  *  - vista previa inmediata de la portada elegida (también al arrastrarla);
  *  - estado de cada archivo elegido («Por subir», nombre y tamaño);
- *  - zona del .zip de PDF maquetados;
  *  - destacados: una posición la ocupa un solo artículo y el esquema del
  *    inicio se actualiza al elegir.
  * Todo funciona sin JavaScript (el servidor valida); esto solo adelanta lo que
@@ -74,21 +73,6 @@ function estadoArchivos() {
     });
 }
 
-function zonaZip() {
-    const zona = document.querySelector('[data-zona-archivo]');
-    const campo = document.getElementById('campo-zip');
-    if (!zona || !campo) return;
-    const nombre = zona.querySelector('[data-zona-nombre]');
-    const mostrar = () => {
-        const archivo = campo.files?.[0];
-        if (!archivo) return;
-        nombre.textContent = `${archivo.name} · ${peso(archivo.size)}`;
-        zona.classList.add('tiene-archivo');
-    };
-    campo.addEventListener('change', mostrar);
-    aceptarArrastre(zona, campo, mostrar);
-}
-
 function destacados() {
     const formulario = document.querySelector('[data-form-destacados]');
     const esquema = document.querySelector('[data-esquema]');
@@ -137,6 +121,5 @@ function destacados() {
 export function iniciarGestor() {
     vistaPortada();
     estadoArchivos();
-    zonaZip();
     destacados();
 }

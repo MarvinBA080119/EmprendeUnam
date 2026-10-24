@@ -52,6 +52,25 @@ class ArticuloRevista extends Model
         return $this->belongsTo(Articulo::class, 'arti_id_autor', 'arti_id_autor');
     }
 
+    /**
+     * PDF que se publica para este artículo: el que el administrador subió en
+     * el número o, si no hay, el PDF diseñado del artículo del sistema.
+     */
+    public function rutaPdf(): ?string
+    {
+        return $this->arre_url_pdf ?? $this->articulo?->arti_url_pdf_diseno;
+    }
+
+    /** «numero» (subido en el número), «diseno» (de la cuenta de diseño) o null. */
+    public function origenPdf(): ?string
+    {
+        return match (true) {
+            $this->arre_url_pdf !== null => 'numero',
+            $this->articulo?->arti_url_pdf_diseno !== null => 'diseno',
+            default => null,
+        };
+    }
+
     /** Ajustes del administrador (articulo_curso.arcu_incluido). */
     public function cursos(): BelongsToMany
     {

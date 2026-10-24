@@ -25,12 +25,14 @@
                             @class(['form-select', 'is-invalid' => $errors->has('arti_id_autor')])>
                         <option value="">Entrada editorial (no pasó por el sistema)</option>
                         @foreach ($aprobados as $aprobado)
-                            <option value="{{ $aprobado->arti_id_autor }}" @selected($elegido === (string) $aprobado->arti_id_autor)>{{ $aprobado->arti_titulo }}</option>
+                            <option value="{{ $aprobado->arti_id_autor }}" @selected($elegido === (string) $aprobado->arti_id_autor)>
+                                {{ $aprobado->arti_titulo }} — {{ $aprobado->arti_url_pdf_diseno ? 'PDF diseñado listo' : 'falta el PDF diseñado' }}
+                            </option>
                         @endforeach
                     </select>
                     <div id="campo-arti-ayuda" class="form-text">
-                        Si eliges un artículo aprobado, el título y los autores pueden quedar vacíos: se toman de él, y su
-                        autor podrá descargar la carta de agradecimiento cuando el número sea visible.
+                        Si eliges un artículo aprobado, el título y los autores pueden quedar vacíos: se toman de él. Su PDF
+                        diseñado se publica solo (si aún falta, aparece en cuanto la mesa de diseño lo suba).
                     </div>
                     @error('arti_id_autor')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -58,8 +60,15 @@
                     @enderror
                 </div>
 
+                @php
+                    $ayudaPdf = match (true) {
+                        (bool) $entrada->arre_url_pdf => 'Ya tiene un PDF subido aquí; súbelo solo para reemplazarlo.',
+                        (bool) $entrada->articulo?->arti_url_pdf_diseno => 'Se publica el PDF diseñado del artículo. Sube uno aquí solo si este número debe usar otro.',
+                        default => 'Para artículos del sistema no hace falta: se usa el PDF de la mesa de diseño. Sin ningún PDF se abre el número completo.',
+                    };
+                @endphp
                 <x-campo nombre="pdf" etiqueta="PDF del artículo" tipo="file" opcional accept="application/pdf"
-                         :ayuda="($entrada->arre_url_pdf ? 'Ya tiene PDF; súbelo solo para reemplazarlo. ' : 'Sin PDF propio se abre el número completo. ').'Hasta '.round(config('emprende.pdf_max_kb') / 1024).' MB.'" />
+                         :ayuda="$ayudaPdf.' Hasta '.round(config('emprende.pdf_max_kb') / 1024).' MB.'" />
                 <x-campo nombre="imagen" etiqueta="Imagen del artículo" tipo="file" opcional accept="image/jpeg,image/png,image/webp"
                          :ayuda="($entrada->arre_url_imagen ? 'Ya tiene imagen; súbela solo para reemplazarla. ' : '').'JPG, PNG o WebP de hasta 5 MB.'" />
 

@@ -48,6 +48,28 @@
 
 <a href="#contenido" class="visually-hidden-focusable btn btn-dark m-2">Ir al contenido</a>
 
+{{-- Sesión abierta: se dice con qué cuenta, para no entrar a ciegas a otro panel. --}}
+@if ($sesionSitio)
+    <div class="sesion-sitio" role="region" aria-label="Sesión iniciada">
+        <div class="container sesion-sitio__fila">
+            <span class="sesion-sitio__quien">
+                <i class="bi bi-person-circle" aria-hidden="true"></i>
+                Sesión iniciada como <strong>{{ $sesionSitio['usuario'] }}</strong>
+                @if ($sesionSitio['nombrePanel'])
+                    <span class="sesion-sitio__panel">· {{ $sesionSitio['nombrePanel'] }}</span>
+                @endif
+            </span>
+            <span class="sesion-sitio__acciones">
+                <a href="{{ $sesionSitio['ruta'] }}">Ir a mi panel</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit">Cerrar sesión</button>
+                </form>
+            </span>
+        </div>
+    </div>
+@endif
+
 {{-- Envoltorio que permite fusionar logos + navbar en una sola fila en móvil --}}
 <div class="cabecera">
 

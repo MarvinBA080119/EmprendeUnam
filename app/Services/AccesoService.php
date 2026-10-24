@@ -89,16 +89,36 @@ class AccesoService
         TienePrivilegio::olvidar();
     }
 
-    /** Ruta de inicio según el rol: el administrador va a /admin y el autor a /autor. */
-    public function rutaInicio(Usuario $usuario): string
+    /** Paneles del sistema y su nombre visible, en orden de prioridad. */
+    public const PANELES = [
+        'admin' => 'administración',
+        'diseno' => 'diseño',
+        'autor' => 'autor',
+    ];
+
+    /**
+     * Panel que le corresponde a la cuenta según su rol: «admin», «diseno» o
+     * «autor». El administrador tiene todos los privilegios (también los del
+     * autor), así que el panel se decide por el rol y no por privilegio.
+     */
+    public function panelDe(Usuario $usuario): ?string
     {
         $usuario->loadMissing('roles');
 
         return match (true) {
-            $usuario->tieneRol(Rol::ADMINISTRADOR) => route('admin.panel'),
-            $usuario->tieneRol(Rol::AUTOR) => route('autor.panel'),
-            default => route('inicio'),
+            $usuario->tieneRol(Rol::ADMINISTRADOR) => 'admin',
+            $usuario->tieneRol(Rol::DISENO) => 'diseno',
+            $usuario->tieneRol(Rol::AUTOR) => 'autor',
+            default => null,
         };
+    }
+
+    /** Ruta de inicio según el rol: /admin, /diseno o /autor. */
+    public function rutaInicio(Usuario $usuario): string
+    {
+        $panel = $this->panelDe($usuario);
+
+        return $panel === null ? route('inicio') : route($panel.'.panel');
     }
 
     /**

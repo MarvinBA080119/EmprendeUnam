@@ -68,7 +68,7 @@ class SitioService
         $general['config']['ebook_url'] = $revista->revi_url_flipbook;
 
         $articulo = function (ArticuloRevista $entrada) use ($pdfNumero, $imagenPortada) {
-            $pdf = $entrada->arre_url_pdf ? route('edicion.articulo.pdf', $entrada) : $pdfNumero;
+            $pdf = $entrada->rutaPdf() ? route('edicion.articulo.pdf', $entrada) : $pdfNumero;
 
             return [
                 'categoria' => (string) $entrada->arre_seccion,

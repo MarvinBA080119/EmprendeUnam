@@ -6,7 +6,7 @@
 
 @section('contenido')
     <x-encabezado :titulo="$editando ? 'Editar el número '.$revista->revi_num_edicion : 'Registrar número'"
-                  descripcion="Datos del número, portada, PDF completo, eBook y, si ya los tienes, los PDF maquetados de los artículos en un .zip."
+                  descripcion="Datos del número, portada, PDF completo y eBook. Los artículos se agregan uno por uno desde la página del número."
                   :volver="$editando ? route('admin.ediciones.show', $revista) : route('admin.ediciones.index')"
                   :volver-texto="$editando ? 'Número '.$revista->revi_num_edicion : 'Portada del sitio'" />
 
@@ -49,8 +49,6 @@
                 @foreach ([
                     ['pdf', 'Número completo (PDF)', 'application/pdf,.pdf', (bool) $revista->revi_url_revista_pdf,
                         'Hasta '.round(config('emprende.pdf_max_revista_kb') / 1024).' MB.', ! $editando],
-                    ['zip', 'PDF maquetados de los artículos (.zip)', '.zip,application/zip', false,
-                        'Opcional. Si cada PDF empieza con el número del artículo (como en «Manuscritos aprobados»), se vincula solo.', false],
                 ] as [$campo, $etiqueta, $acepta, $guardado, $ayuda, $requerido])
                     <div class="mb-3">
                         <div class="emp-etiqueta-fila">

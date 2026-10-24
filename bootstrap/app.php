@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\EncabezadosSeguridad;
 use App\Http\Middleware\ExpiraPorInactividad;
+use App\Http\Middleware\PanelDelRol;
 use App\Http\Middleware\SinCache;
 use App\Http\Middleware\TienePrivilegio;
 use App\Models\Usuario;
@@ -22,20 +23,26 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function () {
-            Route::middleware(['web', 'auth'])
+            Route::middleware(['web', 'auth', 'panel:autor'])
                 ->prefix('autor')
                 ->name('autor.')
                 ->group(base_path('routes/autor.php'));
 
-            Route::middleware(['web', 'auth'])
+            Route::middleware(['web', 'auth', 'panel:admin'])
                 ->prefix('admin')
                 ->name('admin.')
                 ->group(base_path('routes/admin.php'));
+
+            Route::middleware(['web', 'auth', 'panel:diseno'])
+                ->prefix('diseno')
+                ->name('diseno.')
+                ->group(base_path('routes/diseno.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'privilegio' => TienePrivilegio::class,
+            'panel' => PanelDelRol::class,
         ]);
 
         $middleware->web(append: [

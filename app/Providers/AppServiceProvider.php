@@ -5,8 +5,11 @@ namespace App\Providers;
 use App\Auth\UsuarioProvider;
 use App\Models\Articulo;
 use App\Models\Constancia;
+use App\Models\Usuario;
 use App\Policies\ArticuloPolicy;
 use App\Policies\ConstanciaPolicy;
+use App\Services\AccesoService;
+use App\Services\DisenoService;
 use App\Services\PanelAdminService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
@@ -70,6 +73,25 @@ class AppServiceProvider extends ServiceProvider
         // Contadores de pendientes en la barra lateral del administrador.
         View::composer('layouts.admin', function ($vista) {
             $vista->with('pendientes', app(PanelAdminService::class)->contadores());
+        });
+
+        // Pendientes de la mesa de diseño en su barra lateral.
+        View::composer('layouts.diseno', function ($vista) {
+            $vista->with('conteosDiseno', app(DisenoService::class)->conteos());
+        });
+
+        // Sesión abierta en el sitio público: quién está dentro y qué panel le toca.
+        View::composer(['layouts.sitio', 'sitio.envio_articulos', 'auth.login'], function ($vista) {
+            $usuario = Auth::user();
+            $acceso = app(AccesoService::class);
+            $panel = $usuario instanceof Usuario ? $acceso->panelDe($usuario) : null;
+
+            $vista->with('sesionSitio', $usuario instanceof Usuario ? [
+                'usuario' => $usuario->usua_nombre_usuario,
+                'panel' => $panel,
+                'nombrePanel' => AccesoService::PANELES[$panel] ?? null,
+                'ruta' => $acceso->rutaInicio($usuario),
+            ] : null);
         });
 
         // Componentes Blade anónimos en resources/views/componentes (<x-nombre />).

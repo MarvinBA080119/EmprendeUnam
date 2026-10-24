@@ -30,7 +30,7 @@ class EdicionArchivoController extends Controller
 
     public function articuloPdf(Request $request, ArticuloRevista $entrada): StreamedResponse
     {
-        return $this->entregar($request, $entrada->revista, $entrada->arre_url_pdf, 'articulo-'.$entrada->arre_id_articulo_revista.'.pdf');
+        return $this->entregar($request, $entrada->revista, $entrada->rutaPdf(), 'articulo-'.$entrada->arre_id_articulo_revista.'.pdf');
     }
 
     public function articuloImagen(Request $request, ArticuloRevista $entrada): StreamedResponse

@@ -96,13 +96,24 @@
                     </ol>
 
                     <div class="acciones-envio">
-                        @auth
+                        @if ($sesionSitio && $sesionSitio['panel'] === 'autor')
                             <a href="{{ route('autor.articulos.create') }}" class="btn-enviar">Enviar artículo</a>
                             <a href="{{ route('autor.panel') }}" class="btn-lux"><span>Ir a mi panel</span></a>
+                        @elseif ($sesionSitio)
+                            {{-- Otra cuenta (administración o diseño): no se envían artículos con ella. --}}
+                            <p class="envio-otra-cuenta">
+                                Tienes sesión como <strong>{{ $sesionSitio['usuario'] }}</strong>{{ $sesionSitio['nombrePanel'] ? ' ('.$sesionSitio['nombrePanel'].')' : '' }}.
+                                Para enviar un artículo, cierra esa sesión y entra con tu cuenta de autor.
+                            </p>
+                            <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn-enviar">Cerrar sesión y entrar como autor</button>
+                            </form>
+                            <a href="{{ $sesionSitio['ruta'] }}" class="btn-lux"><span>Ir a mi panel</span></a>
                         @else
                             <a href="{{ route('registro') }}" class="btn-enviar">Registrarme como autor</a>
                             <a href="{{ route('login') }}" class="btn-lux"><span>Ya tengo cuenta</span></a>
-                        @endauth
+                        @endif
                     </div>
 
                     <p class="form-nota">

@@ -89,7 +89,7 @@ class PanelTest extends TestCase
         $autor = $this->crearAutor();
 
         foreach (['/admin/consultorio', '/admin/cursos', '/admin/newsletter', '/admin/newsletter/exportar', '/admin/articulos/datos'] as $ruta) {
-            $this->actingAs($autor)->get($ruta)->assertForbidden();
+            $this->actingAs($autor)->get($ruta)->assertRedirect('/autor');
         }
     }
 }

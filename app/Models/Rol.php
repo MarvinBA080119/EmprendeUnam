@@ -11,6 +11,8 @@ class Rol extends Model
 
     public const AUTOR = 'Autor';
 
+    public const DISENO = 'Diseño';
+
     public const LECTOR = 'Lector';
 
     public const SUSCRIPTOR_NEWSLETTER = 'Suscriptor_newsletter';

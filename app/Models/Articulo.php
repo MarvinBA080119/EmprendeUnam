@@ -32,6 +32,9 @@ class Articulo extends Model
         'arti_fecha_registro',
         'arti_fecha_modificacion',
         'arti_comentario_rechazo',
+        'arti_url_pdf_diseno',
+        'arti_fecha_diseno',
+        'arti_id_disenador',
     ];
 
     protected function casts(): array
@@ -40,7 +43,19 @@ class Articulo extends Model
             'arti_status' => EstatusArticulo::class,
             'arti_fecha_registro' => 'date',
             'arti_fecha_modificacion' => 'date',
+            'arti_fecha_diseno' => 'datetime',
         ];
+    }
+
+    /** Cuenta de diseño que subió el PDF diseñado (arti_id_disenador). */
+    public function disenador(): BelongsTo
+    {
+        return $this->belongsTo(Usuario::class, 'arti_id_disenador', 'usua_id_usuario');
+    }
+
+    public function tieneDiseno(): bool
+    {
+        return $this->arti_url_pdf_diseno !== null;
     }
 
     public function tema(): BelongsTo
